@@ -1,0 +1,50 @@
+No existe un método mágico único, porque nuestro cerebro no funciona como un disco rígido donde solo "guardás" un archivo. El cerebro aprende mejor cuando tiene que **esforzarse por recordar** y cuando **conecta la información nueva con lo que ya sabe**.
+
+Si miramos lo que dice la ciencia cognitiva actual, la "fórmula ganadora" no es una sola técnica, sino la combinación de dos metodologías principales: **la Evocación Activa** y la **Repetición Espaciada**.
+
+Aquí tenés el desglose de cómo implementarlo para que lo que estudies realmente se quede en tu memoria a largo plazo.
+
+---
+
+## 1. El Núcleo: Evocación Activa (*Active Recall*)
+
+La mayoría de las personas estudia leyendo y releyendo sus apuntes. Eso genera una "ilusión de competencia" (sentís que lo sabés porque te resulta familiar al verlo), pero es un aprendizaje pasivo.
+
+La evocación activa da vuelta el proceso: **forzás a tu cerebro a buscar la información desde adentro** sin mirar los apuntes. Cada vez que hacés este esfuerzo físico y mental, las conexiones neuronales de ese recuerdo se vuelven más gruesas y fuertes.
+
+* **Cómo aplicarlo:** Al terminar de leer una sección, cerrá el libro y escribí un resumen de memoria, o respondete a vos mismo preguntas clave.
+
+## 2. El Cronograma: Repetición Espaciada (*Spaced Repetition*)
+
+Si estudiás algo hoy, mañana habrás olvidado una gran parte (un fenómeno conocido como la *Curva del Olvido* de Ebbinghaus). Para ganarle a esta curva, tenés que repasar la información justo en el momento en que estás a punto de olvidarla.
+
+En lugar de meterte una panzada de 8 horas de estudio el día anterior, dividí ese tiempo en sesiones de 1 hora a lo largo de una o dos semanas.
+
+* **Cómo aplicarlo:** Podés usar software de tarjetas de memoria (*flashcards*) como **Anki**. Estas herramientas usan algoritmos que te muestran la tarjeta hoy, si la recordás te la muestran en 3 días, luego en 10, luego en un mes, optimizando el tiempo de estudio.
+
+---
+
+## Técnicas Complementarias de Alto Impacto
+
+Para potenciar la evocación y el espaciado, los expertos usan estas tres herramientas:
+
+### La Técnica Feynman (Para entender a fondo)
+
+Si no podés explicarlo de forma sencilla, no lo entendiste. Esta técnica consiste en simular que le estás enseñando el tema a un nene de 10 años.
+
+1. Elegí el concepto.
+2. Explicalo usando un lenguaje ultra simple y sin tecnicismos.
+3. Identificá dónde te trabaste o dónde tuviste que usar palabras difíciles (esos son tus baches de conocimiento).
+4. Volvé a los libros a rellenar esos baches.
+
+### Práctica Entrelazada (*Interleaving*)
+
+En lugar de estudiar un solo tema de principio a fin (bloque A, luego bloque B), alterná entre temas o tipos de problemas en una misma sesión. Si estás estudiando redes o desarrollo, pasá de un concepto teórico a un problema práctico y luego a un tema satélite. Esto entrena al cerebro para **identificar qué herramienta usar** en cada situación, imitando cómo se presentan los desafíos en la vida real.
+
+### Palacios de la Memoria (Para datos puros y listas)
+
+Ideal para cuando necesitás memorizar datos abstractos, listas o estructuras rígidas que no tienen una lógica intrínseca. Consiste en asociar esos datos con imágenes mentales muy bizarras o llamativas y "ubicarlas" en un lugar físico que conozcas perfectamente (como tu casa). Al recorrer mentalmente tu casa, vas "recogiendo" los conceptos.
+
+---
+
+> 💡 **En resumen:** El cerebro aprende por necesidad. Si solo leés, el cerebro asume que esa información está disponible afuera y no la guarda. Si te ponés a prueba (Evocación), espaciás los repasos (Repetición Espaciada) y lo explicás simple (Feynman), el cerebro entiende que esa información es vital y la consolida.

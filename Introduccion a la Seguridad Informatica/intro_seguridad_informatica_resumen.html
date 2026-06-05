@@ -1,0 +1,3418 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hub de Ciberdefensa — Resumen de Seguridad Informática</title>
+  
+  <!-- SEO Tags -->
+  <meta name="description" content="Plataforma de estudio interactiva para el examen final de la Maestría en Ciberdefensa. Incluye resumen detallado, flashcards, simulador de examen y glosario de términos.">
+  <meta name="author" content="Antigravity Ciberdefensa Engine">
+  
+  <!-- Google Fonts: Outfit (Títulos) e Inter (Textos) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==========================================================================
+       1. VARIABLES Y SISTEMA DE DISEÑO (CSS CUSTOM PROPERTIES)
+       ========================================================================== */
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: 'Outfit', var(--font-sans);
+      
+      /* Colores Base (Light Theme por Defecto) */
+      --bg-primary: #f8fafc;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #f1f5f9;
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-tertiary: #94a3b8;
+      
+      --border-color: #e2e8f0;
+      --border-hover: #cbd5e1;
+      
+      /* Sombras y Efectos */
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.02);
+      --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+      --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.05), 0 4px 6px -2px rgba(0,0,0,0.02), 0 20px 25px -5px rgba(0,0,0,0.02);
+      
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(226, 232, 240, 0.6);
+      --glass-backdrop: blur(12px);
+      
+      /* Radios de Borde */
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      
+      /* Colores de Enfoque Temático (HSL) */
+      --primary-h: 250;
+      --primary-s: 84%;
+      --primary-l: 64%;
+      --color-primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
+      --color-primary-hover: hsl(var(--primary-h), var(--primary-s), calc(var(--primary-l) - 8%));
+      --color-primary-light: hsl(var(--primary-h), var(--primary-s), 95%);
+      
+      /* Badges y Colores Temáticos por Unidad */
+      --c-purple: #8b5cf6;
+      --c-purple-bg: #eedeff;
+      --c-teal: #0d9488;
+      --c-teal-bg: #ccfbf1;
+      --c-blue: #2563eb;
+      --c-blue-bg: #dbeafe;
+      --c-amber: #d97706;
+      --c-amber-bg: #fef3c7;
+      --c-coral: #db2777;
+      --c-coral-bg: #fce7f3;
+      --c-green: #10b981;
+      --c-green-bg: #d1fae5;
+    }
+
+    [data-theme="dark"] {
+      /* Colores Base (Dark Theme) */
+      --bg-primary: #0b0f19;
+      --bg-secondary: #111827;
+      --bg-tertiary: #1f2937;
+      --text-primary: #f9fafb;
+      --text-secondary: #9ca3af;
+      --text-tertiary: #6b7280;
+      
+      --border-color: #2c3547;
+      --border-hover: #3e4c66;
+      
+      /* Sombras y Efectos */
+      --shadow-sm: 0 2px 8px rgba(0,0,0,0.3);
+      --shadow-md: 0 8px 24px rgba(0,0,0,0.4);
+      --shadow-lg: 0 16px 48px rgba(0,0,0,0.5);
+      
+      --glass-bg: rgba(17, 24, 39, 0.75);
+      --glass-border: rgba(44, 53, 71, 0.5);
+      
+      --color-primary-light: rgba(139, 92, 246, 0.15);
+      
+      /* Badges en Oscuro */
+      --c-purple: #a78bfa;
+      --c-purple-bg: #2e1065;
+      --c-teal: #2dd4bf;
+      --c-teal-bg: #115e59;
+      --c-blue: #60a5fa;
+      --c-blue-bg: #1e3a8a;
+      --c-amber: #fbbf24;
+      --c-amber-bg: #78350f;
+      --c-coral: #f472b6;
+      --c-coral-bg: #831843;
+      --c-green: #34d399;
+      --c-green-bg: #064e3b;
+    }
+
+    /* ==========================================================================
+       2. REGLAS GENERALES Y RESET
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.25s ease, border-color 0.25s ease;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      padding: 0;
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+
+    /* Contenedor Principal */
+    .app-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ==========================================================================
+       3. MAQUETACIÓN: CABECERA E INFO
+       ========================================================================== */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand .logo {
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, var(--c-purple), var(--c-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 2px 8px rgba(139,92,246, 0.3));
+    }
+
+    .brand h1 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+    }
+
+    .brand p {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.2rem;
+      font-family: var(--font-sans);
+      font-size: 0.875rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .btn:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .btn-icon {
+      width: 40px;
+      height: 40px;
+      padding: 0;
+      border-radius: 50%;
+      font-size: 1.1rem;
+    }
+
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: white;
+      border-color: var(--color-primary);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--color-primary-hover);
+      border-color: var(--color-primary-hover);
+    }
+
+    /* Dashboard Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: linear-gradient(to bottom, var(--c-purple), var(--c-blue));
+    }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       4. PESTAÑAS (TABS NAVIGATION)
+       ========================================================================== */
+    .study-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      overflow-x: auto;
+      scrollbar-width: none; /* Firefox */
+    }
+
+    .study-tabs::-webkit-scrollbar {
+      display: none; /* Safari / Chrome */
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.25rem;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border: none;
+      background: none;
+      cursor: pointer;
+      border-radius: var(--radius-md);
+      white-space: nowrap;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+      background-color: var(--bg-tertiary);
+    }
+
+    .tab-btn.active {
+      color: var(--color-primary);
+      background-color: var(--color-primary-light);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       5. BADGES Y CONTROLES VISUALES GENERALES
+       ========================================================================== */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 9999px;
+      white-space: nowrap;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-purple { background-color: var(--c-purple-bg); color: var(--c-purple); }
+    .badge-teal   { background-color: var(--c-teal-bg); color: var(--c-teal); }
+    .badge-blue   { background-color: var(--c-blue-bg); color: var(--c-blue); }
+    .badge-amber  { background-color: var(--c-amber-bg); color: var(--c-amber); }
+    .badge-coral  { background-color: var(--c-coral-bg); color: var(--c-coral); }
+    .badge-green  { background-color: var(--c-green-bg); color: var(--c-green); }
+
+    /* ==========================================================================
+       6. ESTILOS PESTAÑA: UNIDADES DE ESTUDIO (TAB 1)
+       ========================================================================== */
+    .unidades-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 1.9fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .unidades-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .unidades-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .card-unidad {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .card-unidad:hover {
+      border-color: var(--border-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-unidad.active {
+      border-color: var(--color-primary);
+      background-color: var(--color-primary-light);
+      box-shadow: 0 0 0 1px var(--color-primary), var(--shadow-md);
+    }
+
+    .card-unidad-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-unidad-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .card-unidad-sub {
+      font-size: 0.825rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    /* Detalle de Unidad en pantalla lateral */
+    .unidad-detalle-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 1.5rem;
+    }
+
+    .detalle-title-area {
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .detalle-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-top: 0.5rem;
+    }
+
+    .conceptos-detalle-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .concepto-box {
+      background-color: var(--bg-tertiary);
+      border-left: 4px solid var(--color-primary);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .concepto-box.purple { border-left-color: var(--c-purple); }
+    .concepto-box.teal   { border-left-color: var(--c-teal); }
+    .concepto-box.blue   { border-left-color: var(--c-blue); }
+    .concepto-box.amber  { border-left-color: var(--c-amber); }
+    .concepto-box.coral  { border-left-color: var(--c-coral); }
+
+    .concepto-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .concepto-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Cuadro de Examen Tips */
+    .exam-tip-box {
+      background-color: var(--color-primary-light);
+      border: 1px dashed var(--color-primary);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      line-height: 1.5;
+    }
+
+    .exam-tip-box strong {
+      color: var(--color-primary);
+      font-weight: 600;
+    }
+
+    /* ==========================================================================
+       7. TERMINOS INTERACTIVOS (HIGHLIGHTS Y TOOLTIPS)
+       ========================================================================== */
+    .term-highlight {
+      font-weight: 600;
+      color: var(--color-primary);
+      border-bottom: 2px dashed var(--color-primary);
+      cursor: help;
+      padding: 0 2px;
+      border-radius: 2px;
+      transition: all 0.15s ease;
+      display: inline-block;
+    }
+
+    .term-highlight:hover {
+      background-color: var(--color-primary-light);
+      color: var(--color-primary-hover);
+      border-bottom-style: solid;
+    }
+
+    /* Tarjeta Flotante Tooltip */
+    .tooltip-card {
+      position: absolute;
+      z-index: 10000;
+      width: 330px;
+      background-color: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: var(--glass-backdrop);
+      -webkit-backdrop-filter: var(--glass-backdrop);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: none;
+      opacity: 0;
+      transform: scale(0.95) translateY(5px);
+      transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1), transform 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+
+    .tooltip-card.active {
+      display: block;
+      opacity: 1;
+      transform: scale(1) translateY(0);
+      pointer-events: auto;
+    }
+
+    .tooltip-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .tooltip-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+    }
+
+    .tooltip-badge {
+      font-size: 0.65rem;
+      padding: 0.15rem 0.5rem;
+    }
+
+    .tooltip-expansion {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.5rem;
+      line-height: 1.3;
+      font-style: italic;
+    }
+
+    .tooltip-body {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+
+    .tooltip-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .tooltip-link:hover {
+      color: var(--color-primary-hover);
+      text-decoration: underline;
+    }
+
+    /* ==========================================================================
+       8. ESTILOS PESTAÑA: FLASHCARDS MODO 3D (TAB 2)
+       ========================================================================== */
+    .flashcards-container {
+      max-width: 600px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .flashcards-selector {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      background-color: var(--bg-secondary);
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+    }
+
+    .select-dropdown {
+      font-family: var(--font-sans);
+      font-size: 0.9rem;
+      padding: 0.5rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* 3D Card Engine */
+    .flashcard-wrapper {
+      perspective: 1200px;
+      width: 100%;
+      height: 320px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .flashcard {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .flashcard-wrapper:hover .flashcard {
+      transform: translateY(-2px);
+    }
+
+    .flashcard.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .flashcard-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: var(--radius-xl);
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .flashcard-front {
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 1.5rem;
+    }
+
+    .flashcard-front h3 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+
+    .flashcard-back {
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      transform: rotateY(180deg);
+      overflow-y: auto;
+    }
+
+    .flashcard-back h4 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+    }
+
+    .flashcard-back p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .flashcard-hint {
+      font-size: 0.8rem;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    /* Controles de Flashcard */
+    .flashcard-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .flashcard-progress-bar {
+      width: 100%;
+      height: 6px;
+      background-color: var(--border-color);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .flashcard-progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--c-purple), var(--c-blue));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .flashcard-stats-text {
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    /* ==========================================================================
+       9. ESTILOS PESTAÑA: SIMULADOR DE EXAMEN (TAB 3)
+       ========================================================================== */
+    .quiz-container {
+      max-width: 700px;
+      margin: 0 auto;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .quiz-config {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .quiz-config h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .quiz-modes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 600px) {
+      .quiz-modes {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .quiz-mode-card {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .quiz-mode-card:hover {
+      border-color: var(--border-hover);
+      background-color: var(--bg-tertiary);
+    }
+
+    .quiz-mode-card.active {
+      border-color: var(--color-primary);
+      background-color: var(--color-primary-light);
+    }
+
+    .quiz-mode-title {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .quiz-mode-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+
+    /* Examen en Proceso */
+    .quiz-active {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1rem;
+    }
+
+    .quiz-q-num {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .quiz-score-badge {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--c-green);
+      background-color: var(--c-green-bg);
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+    }
+
+    .quiz-question-box {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+      margin-bottom: 0.5rem;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .quiz-option {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.4rem;
+      cursor: pointer;
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      text-align: left;
+      transition: all 0.15s ease;
+      outline: none;
+    }
+
+    .quiz-option:hover:not(:disabled) {
+      border-color: var(--border-hover);
+      background-color: var(--bg-tertiary);
+      transform: translateX(4px);
+    }
+
+    .quiz-option.correct {
+      border-color: var(--c-green);
+      background-color: var(--c-green-bg);
+      color: var(--text-primary);
+    }
+
+    .quiz-option.incorrect {
+      border-color: var(--c-coral);
+      background-color: var(--c-coral-bg);
+      color: var(--text-primary);
+    }
+
+    .quiz-explanation-panel {
+      background-color: var(--color-primary-light);
+      border: 1px solid var(--color-primary);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .quiz-explanation-title {
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+
+    /* Resultados del Examen */
+    .quiz-results {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .circle-progress-wrapper {
+      position: relative;
+      width: 150px;
+      height: 150px;
+    }
+
+    .circle-progress-svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+
+    .circle-bg {
+      fill: none;
+      stroke: var(--border-color);
+      stroke-width: 8;
+    }
+
+    .circle-bar {
+      fill: none;
+      stroke: var(--color-primary);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 440;
+      stroke-dashoffset: 440;
+      transition: stroke-dashoffset 1s ease-in-out;
+    }
+
+    .circle-percentage {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+    }
+
+    .quiz-result-title {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    .quiz-result-score {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+    }
+
+    .quiz-recommendations {
+      text-align: left;
+      width: 100%;
+      background-color: var(--bg-tertiary);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      border: 1px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .quiz-recommendations h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .quiz-recommendations ul {
+      margin-left: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    /* ==========================================================================
+       10. ESTILOS PESTAÑA: BUSCADOR Y GLOSARIO (TAB 4)
+       ========================================================================== */
+    .search-area {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .search-input-wrapper {
+      position: relative;
+      display: flex;
+      width: 100%;
+    }
+
+    .search-input-icon {
+      position: absolute;
+      left: 1.25rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: var(--text-tertiary);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      font-family: var(--font-sans);
+      font-size: 1.05rem;
+      padding: 1rem 1rem 1rem 3.25rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      outline: none;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .search-input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-primary-light), var(--shadow-md);
+    }
+
+    /* Glosario Categorías */
+    .glossary-letters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .letter-btn {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      background-color: var(--bg-secondary);
+      font-family: var(--font-sans);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .letter-btn:hover {
+      border-color: var(--border-hover);
+      color: var(--text-primary);
+      background-color: var(--bg-tertiary);
+    }
+
+    .letter-btn.active {
+      background-color: var(--color-primary);
+      border-color: var(--color-primary);
+      color: white;
+    }
+
+    /* Layout Resultados de Búsqueda */
+    .search-results-section {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .results-group-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .glossary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1rem;
+    }
+
+    .glossary-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .glossary-card:hover {
+      border-color: var(--border-hover);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+
+    .glossary-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .glossary-card-title {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .glossary-card-expansion {
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .glossary-card-desc {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    .glossary-card-link {
+      align-self: flex-start;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      text-decoration: none;
+      margin-top: 0.5rem;
+    }
+
+    .glossary-card-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Conceptos Encontrados */
+    .found-concepts-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+
+    .found-concept-row {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.5rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .found-concept-row:hover {
+      border-color: var(--border-hover);
+      transform: translateX(4px);
+    }
+
+    .found-concept-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .found-concept-nav {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      white-space: nowrap;
+    }
+
+    /* ==========================================================================
+       11. PIE DE PÁGINA (FOOTER)
+       ========================================================================== */
+    .app-footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      color: var(--text-tertiary);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    
+    <!-- ==========================================================================
+         A. ENCABEZADO
+         ========================================================================== -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="logo">🛡️</span>
+        <div>
+          <h1>Ciberdefensa Hub</h1>
+          <p>Guía Interactiva de Repaso · 10 Unidades del Programa Oficial</p>
+        </div>
+      </div>
+      <div class="header-controls">
+        <button id="theme-toggle" class="btn btn-icon" aria-label="Alternar modo oscuro/claro">🌙</button>
+      </div>
+    </header>
+
+    <!-- ==========================================================================
+         B. TABLERO DE ESTADÍSTICAS
+         ========================================================================== -->
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num">10</div>
+        <div class="stat-label">Unidades Curriculares</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">80</div>
+        <div class="stat-label">Conceptos Explicados</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">65</div>
+        <div class="stat-label">Términos con Tooltips</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="progress-val">0%</div>
+        <div class="stat-label">Progreso de Repaso</div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         C. BARRA DE NAVEGACIÓN (TABS)
+         ========================================================================== -->
+    <nav class="study-tabs" aria-label="Estudio interactivo">
+      <button class="tab-btn active" data-tab="unidades">📚 Unidades de Estudio</button>
+      <button class="tab-btn" data-tab="flashcards">🃏 Flashcards de Repaso</button>
+      <button class="tab-btn" data-tab="simulador">📝 Simulador de Examen</button>
+      <button class="tab-btn" data-tab="glosario">🔍 Glosario & Buscador</button>
+    </nav>
+
+    <!-- ==========================================================================
+         D. CONTENIDOS (TABS CONTENT)
+         ========================================================================== -->
+    <main class="tab-content-container">
+
+      <!-- Pestaña 1: Unidades de Estudio -->
+      <div id="unidades-tab" class="tab-content active">
+        <h2 class="sr-only">Unidades de Estudio Oficiales</h2>
+        <div class="unidades-layout">
+          <!-- Columna Izquierda: Grid de Unidades -->
+          <div class="unidades-grid" id="unidades-grid">
+            <!-- Se inyecta dinámicamente -->
+          </div>
+          <!-- Columna Derecha: Detalle de Conceptos -->
+          <div class="unidad-detalle-panel" id="unidad-detalle-panel">
+            <!-- Se inyecta dinámicamente al hacer clic -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña 2: Flashcards -->
+      <div id="flashcards-tab" class="tab-content">
+        <h2 class="sr-only">Fichas de Aprendizaje y Memoria Activa</h2>
+        <div class="flashcards-container">
+          <div class="flashcards-selector">
+            <span style="font-weight:600; font-size:0.9rem;">Seleccionar Tema:</span>
+            <select id="flashcards-unit-select" class="select-dropdown">
+              <option value="all">Todas las Unidades (80 conceptos)</option>
+              <!-- Se inyecta dinámicamente -->
+            </select>
+          </div>
+
+          <div class="flashcard-wrapper" id="flashcard-wrapper" onclick="flipFlashcard()">
+            <div class="flashcard" id="flashcard">
+              <!-- Frente -->
+              <div class="flashcard-face flashcard-front">
+                <span class="badge badge-purple" id="fc-badge">Unidad I</span>
+                <h3 id="fc-concept-name">Concepto</h3>
+                <span class="flashcard-hint">Hacer clic para revelar explicación 🔄</span>
+              </div>
+              <!-- Reverso -->
+              <div class="flashcard-face flashcard-back">
+                <div>
+                  <h4 id="fc-concept-back-title">Concepto</h4>
+                  <p id="fc-concept-desc">Definición detallada...</p>
+                </div>
+                <span class="flashcard-hint" style="margin-top: 1rem; align-self: center;">Volver a girar 🔄</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flashcard-controls">
+            <button class="btn" onclick="evaluateFlashcard(false)">Repasar 👎</button>
+            <button class="btn btn-primary" onclick="evaluateFlashcard(true)">Me lo sé 👍</button>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:1rem;">
+            <div class="flashcard-progress-bar">
+              <div class="flashcard-progress-fill" id="fc-progress-fill"></div>
+            </div>
+            <div class="flashcard-stats-text" id="fc-stats-text">Ficha 1 de 80 · Aprendido: 0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña 3: Simulador de Examen -->
+      <div id="simulador-tab" class="tab-content">
+        <h2 class="sr-only">Simulador de Examen Tipo Test</h2>
+        <div class="quiz-container" id="quiz-container">
+          <!-- Modos de Configuración de Examen -->
+          <div class="quiz-config" id="quiz-config-view">
+            <h2>Simulador de Examen de Ciberdefensa</h2>
+            <p style="color:var(--text-secondary); font-size:0.95rem; margin-bottom:1rem;">
+              Pon a prueba tus conocimientos para el examen final. Selecciona el modo que prefieras para entrenar tu memoria activa y retención.
+            </p>
+            
+            <div class="quiz-modes">
+              <div class="quiz-mode-card active" onclick="selectQuizMode('simulacro')" id="qm-simulacro">
+                <span class="badge badge-purple" style="align-self:flex-start;">Recomendado</span>
+                <span class="quiz-mode-title" style="margin-top:0.5rem;">Simulacro Completo</span>
+                <span class="quiz-mode-desc">20 preguntas aleatorias de todas las 10 unidades del programa académico oficial.</span>
+              </div>
+              <div class="quiz-mode-card" onclick="selectQuizMode('unidad')" id="qm-unidad">
+                <span class="badge badge-teal" style="align-self:flex-start;">Práctica Enfocada</span>
+                <span class="quiz-mode-title" style="margin-top:0.5rem;">Por Unidad Específica</span>
+                <span class="quiz-mode-desc">Preguntas del contenido particular de la unidad que elijas repasar.</span>
+              </div>
+            </div>
+
+            <div id="quiz-unit-select-container" style="display:none; flex-direction:column; gap:0.5rem;">
+              <span style="font-weight:600; font-size:0.9rem;">Elegir Unidad:</span>
+              <select id="quiz-unit-select" class="select-dropdown" style="width:100%;">
+                <!-- Se inyecta dinámicamente -->
+              </select>
+            </div>
+
+            <button class="btn btn-primary" onclick="startQuiz()" style="padding:0.9rem; font-size:1rem; margin-top:1rem;">Iniciar Examen 📝</button>
+          </div>
+
+          <!-- Examen Activo -->
+          <div class="quiz-active" id="quiz-active-view" style="display:none;">
+            <div class="quiz-header">
+              <div class="quiz-q-num" id="quiz-question-number">Pregunta 1 de 20</div>
+              <div class="quiz-score-badge" id="quiz-score-badge">Aciertos: 0/0</div>
+            </div>
+            
+            <div class="flashcard-progress-bar">
+              <div class="flashcard-progress-fill" id="quiz-progress-fill"></div>
+            </div>
+
+            <div class="quiz-question-box" id="quiz-question-text">
+              ¿Cuál es la diferencia entre seguridad de la información y seguridad informática?
+            </div>
+
+            <div class="quiz-options" id="quiz-options-container">
+              <!-- Se inyecta dinámicamente -->
+            </div>
+
+            <!-- Panel de explicación -->
+            <div class="quiz-explanation-panel" id="quiz-explanation-panel" style="display:none;">
+              <span class="quiz-explanation-title" id="quiz-explanation-status">¡Correcto!</span>
+              <span id="quiz-explanation-text"></span>
+            </div>
+
+            <button class="btn btn-primary" id="quiz-next-btn" onclick="nextQuizQuestion()" style="align-self:flex-end; display:none;">Siguiente Pregunta →</button>
+          </div>
+
+          <!-- Resultados de Examen -->
+          <div class="quiz-results" id="quiz-results-view" style="display:none;">
+            <div class="circle-progress-wrapper">
+              <svg class="circle-progress-svg">
+                <circle class="circle-bg" cx="75" cy="75" r="70"></circle>
+                <circle class="circle-bar" id="circle-progress-bar" cx="75" cy="75" r="70"></circle>
+              </svg>
+              <div class="circle-percentage" id="quiz-final-percentage">0%</div>
+            </div>
+
+            <div class="quiz-result-title" id="quiz-final-title">¡Gran esfuerzo!</div>
+            <div class="quiz-result-score" id="quiz-final-score-text">Obtuviste 14 de 20 aciertos.</div>
+
+            <div class="quiz-recommendations" id="quiz-recommendations-panel">
+              <h4>Recomendaciones de Repaso:</h4>
+              <ul id="quiz-recommendations-list">
+                <!-- Recomendaciones dinámicas -->
+              </ul>
+            </div>
+
+            <button class="btn btn-primary" onclick="resetQuiz()" style="padding:0.75rem 1.5rem;">Volver a Intentar 🔄</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña 4: Glosario & Buscador -->
+      <div id="glosario-tab" class="tab-content">
+        <h2 class="sr-only">Buscador y Glosario Exhaustivo</h2>
+        <div class="search-area">
+          <div class="search-input-wrapper">
+            <span class="search-input-icon">🔍</span>
+            <input type="text" class="search-input" id="search-input" placeholder="Buscar conceptos, siglas, herramientas, metodologías o autores (ej: ISO, Cano, SAML)...">
+          </div>
+          
+          <div class="glossary-letters" id="glossary-letters-container">
+            <!-- Letras dinámicas -->
+          </div>
+        </div>
+
+        <div class="search-results-section" id="search-results-section">
+          <!-- Glosario de siglas y herramientas -->
+          <div id="glossary-results-container">
+            <h3 class="results-group-title" id="glossary-group-title">Glosario de Términos (Siglas y Herramientas)</h3>
+            <div class="glossary-grid" id="glossary-results-grid">
+              <!-- Se inyecta dinámicamente -->
+            </div>
+          </div>
+
+          <!-- Conceptos de Unidades encontrados -->
+          <div id="concepts-results-container" style="margin-top:1rem;">
+            <h3 class="results-group-title">Conceptos en Unidades de Estudio</h3>
+            <div class="found-concepts-grid" id="concepts-results-grid">
+              <!-- Se inyecta dinámicamente -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ==========================================================================
+         E. TARJETA FLOTANTE DE TOOLTIP (GLOSARIO)
+         ========================================================================== -->
+    <div id="tooltip-card" class="tooltip-card" role="tooltip" aria-hidden="true">
+      <div class="tooltip-header">
+        <span class="tooltip-title" id="tt-title">SAML</span>
+        <span class="badge tooltip-badge badge-purple" id="tt-badge">Sigla</span>
+      </div>
+      <div class="tooltip-expansion" id="tt-expansion">Security Assertion Markup Language</div>
+      <div class="tooltip-body" id="tt-body">Definición del término técnico...</div>
+      <a href="#" target="_blank" class="tooltip-link" id="tt-link">Saber más ↗</a>
+    </div>
+
+    <!-- ==========================================================================
+         F. PIE DE PÁGINA
+         ========================================================================== -->
+    <footer class="app-footer">
+      <p>© 2026 Maestría en Ciberdefensa · Introducción a la Seguridad Informática</p>
+      <p style="margin-top:0.25rem; font-size:0.75rem;">Diseñado para preparación intensiva de examen final. Pasa el cursor por cualquier término subrayado para ver detalles técnicos y enlaces.</p>
+    </footer>
+
+  </div>
+
+  <!-- ==========================================================================
+       G. SCRIPTS E INTERACTIVIDAD DE LA PLATAFORMA
+       ========================================================================== -->
+  <script>
+    /* ==========================================================================
+       1. BASE DE CONOCIMIENTO (GLOSARIO Y ENLACES)
+       ========================================================================== */
+    const KNOWLEDGE_BASE = {
+      "CIA": {
+        name: "Tríada CIA (C-I-A Triad)",
+        category: "Concepto Fundamental",
+        expansion: "Confidencialidad, Integridad y Disponibilidad",
+        desc: "Los tres pilares esenciales de la seguridad de la información. La Confidencialidad evita divulgaciones no autorizadas, la Integridad impide alteraciones no deseadas y la Disponibilidad garantiza el acceso oportuno a los sistemas.",
+        link: "https://es.wikipedia.org/wiki/Tr%C3%ADada_CIA"
+      },
+      "DDoS": {
+        name: "Ataque DDoS",
+        category: "Amenaza / Ataque",
+        expansion: "Denegación de Servicio Distribuida (Distributed Denial of Service)",
+        desc: "Ataque coordinado que busca saturar los recursos, canales de red o capacidad de procesamiento de un sistema desde múltiples fuentes comprometidas de forma simultánea, dejándolo inoperable.",
+        link: "https://es.wikipedia.org/wiki/Ataque_de_denegaci%C3%B3n_de_servicio"
+      },
+      "HA": {
+        name: "Alta Disponibilidad (HA)",
+        category: "Metodología",
+        expansion: "High Availability",
+        desc: "Diseño e implementación de infraestructuras tolerantes a fallos (mediante balanceadores, clustering y failover) orientadas a garantizar que los servicios permanezcan operativos el mayor porcentaje de tiempo posible.",
+        link: "https://es.wikipedia.org/wiki/Alta_disponibilidad"
+      },
+      "ALE": {
+        name: "ALE",
+        category: "Métrica / Riesgo",
+        expansion: "Expectativa de Pérdida Anual (Annual Loss Expectancy)",
+        desc: "Cálculo cuantitativo de riesgo que mide el coste financiero total esperado de una amenaza específica durante un año natural. Se calcula multiplicando el SLE por el ARO (ALE = SLE × ARO).",
+        link: "https://en.wikipedia.org/wiki/Annual_loss_expectancy"
+      },
+      "SLE": {
+        name: "SLE",
+        category: "Métrica / Riesgo",
+        expansion: "Expectativa de Pérdida Única (Single Loss Expectancy)",
+        desc: "El impacto monetario total estimado de un solo suceso adverso. Es el resultado de multiplicar el Valor del Activo (Asset Value, AV) por el Factor de Exposición (Exposure Factor, EF).",
+        link: "https://en.wikipedia.org/wiki/Single_loss_expectancy"
+      },
+      "ARO": {
+        name: "ARO",
+        category: "Métrica / Riesgo",
+        expansion: "Tasa de Ocurrencia Anual (Annual Rate of Occurrence)",
+        desc: "La frecuencia estadística anual con la que se prevé que una amenaza en particular afecte de forma exitosa a los activos de la organización.",
+        link: "https://en.wikipedia.org/wiki/Annual_loss_expectancy"
+      },
+      "ROI": {
+        name: "ROI",
+        category: "Concepto de Negocio",
+        expansion: "Retorno de la Inversión (Return on Investment)",
+        desc: "Indicador financiero clásico que compara el beneficio neto obtenido de una inversión con el coste total de realizarla, clave para justificar la adquisición de soluciones y controles de ciberseguridad.",
+        link: "https://es.wikipedia.org/wiki/Retorno_de_la_inversi%C3%B3n"
+      },
+      "COBIT": {
+        name: "COBIT",
+        category: "Estándar / Marco",
+        expansion: "Objetivos de Control para la Información y Tecnologías Relacionadas",
+        desc: "El marco de trabajo para el gobierno y gestión de TI empresariales desarrollado por ISACA. Diferencia claramente las responsabilidades estratégicas del Gobierno de la ejecución de la Gestión.",
+        link: "https://es.wikipedia.org/wiki/COBIT"
+      },
+      "SGSI": {
+        name: "SGSI",
+        category: "Estándar / Proceso",
+        expansion: "Sistema de Gestión de la Seguridad de la Información",
+        desc: "Marco sistemático de políticas, procesos, capacitación y controles técnicos adoptado por una empresa para resguardar la confidencialidad, integridad y disponibilidad de sus activos críticos.",
+        link: "https://es.wikipedia.org/wiki/Sistema_de_gesti%C3%B3n_de_la_seguridad_de_la_informaci%C3%B3n"
+      },
+      "ISO 27001": {
+        name: "ISO/IEC 27001",
+        category: "Estándar Internacional",
+        expansion: "Normativa de Requisitos para un SGSI",
+        desc: "Única norma internacional certificable de seguridad que establece las pautas organizativas para estructurar, operar y perfeccionar un SGSI. Incluye en su Anexo A un catálogo exhaustivo de controles de referencia.",
+        link: "https://es.wikipedia.org/wiki/ISO/IEC_27001"
+      },
+      "ISO 27002": {
+        name: "ISO/IEC 27002",
+        category: "Estándar Internacional",
+        expansion: "Código de Buenas Prácticas de Controles de Seguridad",
+        desc: "Estándar guía complementario que proporciona recomendaciones prácticas y especificaciones de implementación para cada uno de los controles descritos en el Anexo A de la norma ISO 27001.",
+        link: "https://es.wikipedia.org/wiki/ISO/IEC_27002"
+      },
+      "ISO 27014": {
+        name: "ISO/IEC 27014",
+        category: "Estándar Internacional",
+        expansion: "Directrices para el Gobierno de la Seguridad de la Información",
+        desc: "Norma internacional que proporciona guías sobre los principios y modelos de gobernanza aplicables a los comités directivos de las organizaciones para guiar y evaluar la ciberseguridad.",
+        link: "https://en.wikipedia.org/wiki/ISO/IEC_27000-series#ISO/IEC_27014"
+      },
+      "PDCA": {
+        name: "Ciclo PDCA (Deming)",
+        category: "Metodología",
+        expansion: "Plan-Do-Check-Act (Planificar-Hacer-Verificar-Actuar)",
+        desc: "Modelo iterativo de cuatro pasos enfocado en la mejora continua de procesos. Es el corazón operativo requerido para el mantenimiento activo de cualquier SGSI compatible con ISO 27001.",
+        link: "https://es.wikipedia.org/wiki/C%C3%ADculo_de_Deming"
+      },
+      "CISO": {
+        name: "CISO",
+        category: "Rol Organizacional",
+        expansion: "Director de Seguridad de la Información (Chief Information Security Officer)",
+        desc: "Ejecutivo responsable de la estrategia de ciberseguridad corporativa. Diseña políticas, lidera la respuesta a incidentes y actúa de enlace principal entre el equipo técnico y el directorio corporativo.",
+        link: "https://es.wikipedia.org/wiki/Director_de_seguridad_de_la_informaci%C3%B3n"
+      },
+      "KPI": {
+        name: "KPI",
+        category: "Métrica",
+        expansion: "Indicador Clave de Rendimiento (Key Performance Indicator)",
+        desc: "Métrica cuantitativa diseñada para medir el nivel de eficacia técnica o progreso operativo de un proceso, proyecto o control de seguridad implementado.",
+        link: "https://es.wikipedia.org/wiki/Indicador_clave_de_rendimiento"
+      },
+      "KRI": {
+        name: "KRI",
+        category: "Métrica / Riesgo",
+        expansion: "Indicador Clave de Riesgo (Key Risk Indicator)",
+        desc: "Indicador proactivo enfocado en monitorear los niveles de exposición al riesgo de la empresa, alertando con antelación si se superan los niveles autorizados de tolerancia al riesgo.",
+        link: "https://en.wikipedia.org/wiki/Key_risk_indicator"
+      },
+      "CMM": {
+        name: "Modelo CMM",
+        category: "Metodología",
+        expansion: "Modelo de Madurez de la Capacidad (Capability Maturity Model)",
+        desc: "Marco de referencia para calificar la robustez de los procesos organizativos de TI. Evalúa del nivel 1 (procesos caóticos, ad-hoc) al nivel 5 (procesos maduros, automatizados y optimizados).",
+        link: "https://es.wikipedia.org/wiki/Capability_Maturity_Model"
+      },
+      "RRHH": {
+        name: "Recursos Humanos (RRHH)",
+        category: "Concepto de Negocio",
+        expansion: "Seguridad asociada al factor humano",
+        desc: "Dominio organizativo enfocado en mitigar la amenaza interna estructurando pautas de seguridad aplicables antes de la contratación, durante la relación laboral y en el cese de funciones (offboarding).",
+        link: "https://es.wikipedia.org/wiki/Recursos_humanos"
+      },
+      "GDPR": {
+        name: "GDPR",
+        category: "Marco Legal / Regulación",
+        expansion: "Reglamento General de Protección de Datos de la Unión Europea",
+        desc: "La regulación de privacidad y privacidad de datos de la UE más estricta del mundo. Es extraterritorial y exige a las organizaciones globales proteger los datos personales e informar brechas de seguridad.",
+        link: "https://es.wikipedia.org/wiki/Reglamento_General_de_Protecci%C3%B3n_de_Datos"
+      },
+      "PCI-DSS": {
+        name: "PCI-DSS",
+        category: "Estándar de la Industria",
+        expansion: "Estándar de Seguridad de Datos para la Industria de Tarjetas de Pago",
+        desc: "Exigente estándar técnico y operativo diseñado por las principales marcas de tarjetas financieras para proteger los datos de titulares y transacciones bancarias, reduciendo el fraude electrónico.",
+        link: "https://es.wikipedia.org/wiki/PCI_DSS"
+      },
+      "HIPAA": {
+        name: "HIPAA",
+        category: "Marco Legal / Regulación",
+        expansion: "Health Insurance Portability and Accountability Act",
+        desc: "Ley federal de EE.UU. que establece directrices regulatorias obligatorias destinadas a resguardar la privacidad, acceso restringido y seguridad de los historiales clínicos e información médica de pacientes.",
+        link: "https://es.wikipedia.org/wiki/Health_Insurance_Portability_and_Accountability_Act"
+      },
+      "SoD": {
+        name: "SoD",
+        category: "Metodología",
+        expansion: "Segregación de Funciones (Segregation of Duties)",
+        desc: "Concepto que dicta que las tareas y accesos de un proceso crítico de negocio deben ser fragmentados entre distintas personas para impedir la materialización de fraudes o sabotajes individuales.",
+        link: "https://es.wikipedia.org/wiki/Separaci%C3%B3n_de_funciones"
+      },
+      "MAC": {
+        name: "Control de Acceso MAC",
+        category: "Concepto de Acceso",
+        expansion: "Control de Acceso Mandatorio (Mandatory Access Control)",
+        desc: "Esquema centralizado de control de acceso en el que las autorizaciones de lectura o escritura son definidas estrictamente por el sistema basándose en etiquetas de seguridad inmutables.",
+        link: "https://es.wikipedia.org/wiki/Control_de_acceso_mandatorio"
+      },
+      "DAC": {
+        name: "Control de Acceso DAC",
+        category: "Concepto de Acceso",
+        expansion: "Control de Acceso Discrecional (Discretionary Access Control)",
+        desc: "Modelo clásico de asignación de permisos (ej: Unix permissions) donde el creador o propietario original del objeto goza de autonomía discrecional total para transferir autorizaciones de acceso.",
+        link: "https://es.wikipedia.org/wiki/Control_de_acceso_discrecional"
+      },
+      "RBAC": {
+        name: "Control de Acceso RBAC",
+        category: "Concepto de Acceso",
+        expansion: "Control de Acceso Basado en Roles (Role-Based Access Control)",
+        desc: "Modelo que vincula los privilegios a funciones organizativas (roles) en vez de usuarios particulares. Simplifica la administración de identidades en corporaciones complejas.",
+        link: "https://es.wikipedia.org/wiki/Control_de_acceso_basado_en_roles"
+      },
+      "MFA": {
+        name: "MFA",
+        category: "Tecnología de Seguridad",
+        expansion: "Autenticación Multi-Factor (Multi-Factor Authentication)",
+        desc: "Mecanismo defensivo de validación de identidad que exige presentar por lo menos dos factores válidos independientes de distintas categorías: conocimiento (contraseña), posesión (token) o inherencia (biometría).",
+        link: "https://es.wikipedia.org/wiki/Doble_factor_de_autenticaci%C3%B3n"
+      },
+      "TOTP": {
+        name: "TOTP",
+        category: "Tecnología / Protocolo",
+        expansion: "Time-based One-time Password (RFC 6238)",
+        desc: "Algoritmo de generación de contraseñas dinámicas temporales de un solo uso de corta duración (típicamente 30 segundos) calculadas mediante una clave criptográfica semilla y la hora UTC actual.",
+        link: "https://es.wikipedia.org/wiki/Algoritmo_de_contrase%C3%B1a_única_basada_en_tiempo"
+      },
+      "IdP": {
+        name: "IdP",
+        category: "Tecnología / Rol de Red",
+        expansion: "Proveedor de Identidad (Identity Provider)",
+        desc: "Sistema federado responsable de registrar, resguardar las identidades corporativas y emitir los tokens que validan la sesión de los usuarios ante los distintos servicios remotos integrados.",
+        link: "https://es.wikipedia.org/wiki/Proveedor_de_identidad"
+      },
+      "SAML": {
+        name: "SAML",
+        category: "Estándar / Protocolo",
+        expansion: "Security Assertion Markup Language",
+        desc: "Protocolo e intercambio de aserciones basado en XML concebido para transmitir de forma segura la autenticación y autorización del usuario entre un IdP y múltiples Proveedores de Servicios (SP).",
+        link: "https://es.wikipedia.org/wiki/Security_Assertion_Markup_Language"
+      },
+      "OAuth 2.0": {
+        name: "OAuth 2.0",
+        category: "Estándar / Protocolo",
+        expansion: "Open Authorization Protocol",
+        desc: "Framework para delegación de autorización segura que permite a aplicaciones de terceros interactuar con recursos del usuario emitiendo tokens temporales y restringidos, sin requerir credenciales primarias.",
+        link: "https://es.wikipedia.org/wiki/OAuth"
+      },
+      "OpenID Connect": {
+        name: "OpenID Connect",
+        category: "Estándar / Protocolo",
+        expansion: "Capa de identidad construida sobre OAuth 2.0",
+        desc: "Estándar de autenticación construido de forma nativa sobre OAuth 2.0 que incorpora el uso de JSON Web Tokens (JWT) (ID Tokens) para habilitar el inicio de sesión único (SSO) de manera flexible.",
+        link: "https://es.wikipedia.org/wiki/OpenID#OpenID_Connect_(OIDC)"
+      },
+      "SSO": {
+        name: "SSO",
+        category: "Tecnología de Seguridad",
+        expansion: "Inicio de Sesión Único (Single Sign-On)",
+        desc: "Servicio de control de accesos que permite a un usuario autenticarse una sola vez en un portal centralizado y obtener acceso instantáneo y autorizado a múltiples sistemas web independientes sin reintroducir contraseñas.",
+        link: "https://es.wikipedia.org/wiki/Inicio_de_sesi%C3%B3n_%C3%BAnico"
+      },
+      "Keycloak": {
+        name: "Keycloak",
+        category: "Herramienta Open-Source",
+        expansion: "Plataforma de código abierto para gestión de identidades y accesos",
+        desc: "Poderoso software IAM de código abierto liderado por Red Hat. Provee capacidades integrales para implementar SSO, autenticación de dos factores, y soporte nativo para OpenID Connect y SAML.",
+        link: "https://www.keycloak.org/"
+      },
+      "SELinux": {
+        name: "SELinux",
+        category: "Tecnología S.O.",
+        expansion: "Security-Enhanced Linux",
+        desc: "Extensión de seguridad para el kernel de Linux. Añade mecanismos de control de acceso mandatorio (MAC) que aíslan a los procesos del sistema, bloqueando la propagación y escalamiento de posibles exploits.",
+        link: "https://es.wikipedia.org/wiki/Security-Enhanced_Linux"
+      },
+      "CVE": {
+        name: "CVE",
+        category: "Estándar de la Industria",
+        expansion: "Vulnerabilidades y Exposiciones Comunes (Common Vulnerabilities and Exposures)",
+        desc: "Registro público de referencia universal financiado por el gobierno de EE.UU. que asigna un código estructurado identificativo único a toda falla de ciberseguridad divulgada públicamente en el mundo.",
+        link: "https://es.wikipedia.org/wiki/Common_Vulnerabilities_and_Exposures"
+      },
+      "CVSS": {
+        name: "CVSS",
+        category: "Estándar de la Industria",
+        expansion: "Common Vulnerability Scoring System",
+        desc: "Estándar industrial abierto que proporciona una fórmula sistemática para valorar la gravedad técnica de una vulnerabilidad. Genera una puntuación cuantificable del 0.0 al 10.0.",
+        link: "https://es.wikipedia.org/wiki/CVSS"
+      },
+      "Nessus": {
+        name: "Nessus",
+        category: "Herramienta Propietaria",
+        expansion: "Escáner líder de vulnerabilidades informáticas",
+        desc: "Escáner comercial insignia de la firma Tenable. Ampliamente empleado por auditores informáticos para automatizar el descubrimiento de activos de red, debilidades de configuración y parches ausentes.",
+        link: "https://es.wikipedia.org/wiki/Nessus_(software)"
+      },
+      "OpenVAS": {
+        name: "OpenVAS",
+        category: "Herramienta Open-Source",
+        expansion: "Open Vulnerability Assessment System",
+        desc: "El escáner de vulnerabilidades de red de código abierto más popular del mercado, mantenido de forma comercial en la plataforma Greenbone Enterprise mediante actualizaciones constantes de firmas de fallas.",
+        link: "https://es.wikipedia.org/wiki/OpenVAS"
+      },
+      "Qualys": {
+        name: "Qualys Cloud",
+        category: "Herramienta Corporativa",
+        expansion: "Plataforma SaaS de gestión continua de vulnerabilidades",
+        desc: "Completa solución corporativa basada en la nube orientada a la detección automatizada de brechas de seguridad, cumplimiento normativo global, monitorización de hosts y gestión de parches integrada.",
+        link: "https://www.qualys.com/"
+      },
+      "SDLC": {
+        name: "SDLC",
+        category: "Metodología",
+        expansion: "Ciclo de Vida de Desarrollo de Software (Software Development Life Cycle)",
+        desc: "Estructura por fases secuenciales empleada en ingeniería para planificar, analizar, diseñar, codificar, evaluar, desplegar y mantener de forma consistente y controlada un producto de software.",
+        link: "https://es.wikipedia.org/wiki/Ciclo_de_vida_del_desarrollo_de_software"
+      },
+      "Microsoft SDL": {
+        name: "Microsoft SDL",
+        category: "Metodología / Proceso",
+        expansion: "Security Development Lifecycle",
+        desc: "Metodología de ingeniería de software desarrollada por Microsoft que introduce sistemáticamente rigurosas prácticas y herramientas de desarrollo seguro en cada una de las etapas del ciclo SDLC tradicional.",
+        link: "https://en.wikipedia.org/wiki/Security_Development_Lifecycle"
+      },
+      "OWASP": {
+        name: "OWASP",
+        category: "Organización / Consorcio",
+        expansion: "Open Web Application Security Project",
+        desc: "Comunidad internacional y fundación sin ánimo de lucro orientada a elevar de forma abierta el estándar de seguridad de las aplicaciones web a través de guías técnicas, estándares y herramientas de libre acceso.",
+        link: "https://es.wikipedia.org/wiki/OWASP"
+      },
+      "OWASP Top 10": {
+        name: "OWASP Top 10",
+        category: "Estándar de la Industria",
+        expansion: "Los 10 riesgos más críticos de seguridad en aplicaciones web",
+        desc: "Documento de concientización mundial de referencia obligada en auditoría de software que compendia los diez vectores de ataque más recurrentes, catastróficos y críticos para la seguridad en la web.",
+        link: "https://owasp.org/www-project-top-ten/"
+      },
+      "SQLi": {
+        name: "Inyección SQL (SQLi)",
+        category: "Amenaza / Vulnerabilidad",
+        expansion: "SQL Injection",
+        desc: "Fallo de entrada en el que comandos maliciosos son inyectados y concatenados de manera directa a la base de datos a través de entradas no sanitizadas del usuario, permitiendo el robo de información.",
+        link: "https://es.wikipedia.org/wiki/Inyecci%C3%B3n_SQL"
+      },
+      "XSS": {
+        name: "Cross-Site Scripting (XSS)",
+        category: "Amenaza / Vulnerabilidad",
+        expansion: "Scripting en Sitios Cruzados",
+        desc: "Vulnerabilidad web consistente en la inyección e interpretación de código cliente (JavaScript) malicioso en los navegadores de los visitantes para sustraer tokens de sesión corporativos y falsificar peticiones.",
+        link: "https://es.wikipedia.org/wiki/Cross-site_scripting"
+      },
+      "SAST": {
+        name: "SAST (Análisis Estático)",
+        category: "Metodología",
+        expansion: "Static Application Security Testing",
+        desc: "Pruebas de seguridad de 'caja blanca' que analizan los archivos de código fuente inactivo o los binarios en busca de bugs de seguridad y fallos lógicos antes de su compilación y despliegue final.",
+        link: "https://es.wikipedia.org/wiki/Pruebas_de_seguridad_de_aplicaciones_est%C3%A1ticas"
+      },
+      "DAST": {
+        name: "DAST (Análisis Dinámico)",
+        category: "Metodología",
+        expansion: "Dynamic Application Security Testing",
+        desc: "Pruebas de seguridad externas de 'caja negra' que auditan e interactúan con la aplicación activa en tiempo de ejecución para detectar vulnerabilidades en el entorno, puertos y lógica activa.",
+        link: "https://es.wikipedia.org/wiki/Pruebas_de_seguridad_de_aplicaciones_din%C3%A1micas"
+      },
+      "SonarQube": {
+        name: "SonarQube",
+        category: "Herramienta de Análisis",
+        expansion: "Plataforma de análisis de calidad y seguridad de código",
+        desc: "Solución líder que evalúa la base de código del software a nivel SAST. Mide e informa continuamente sobre bugs lógicos, brechas de seguridad, deuda técnica y porcentaje de cobertura en tuberías de CI/CD.",
+        link: "https://es.wikipedia.org/wiki/SonarQube"
+      },
+      "Semgrep": {
+        name: "Semgrep",
+        category: "Herramienta Open-Source",
+        expansion: "Analizador estático de código ultrarrápido",
+        desc: "Herramienta SAST open-source rápida que permite buscar brechas mediante reglas modulares de fácil definición, ideal para su integración automatizada en etapas de control de código de desarrolladores.",
+        link: "https://semgrep.dev/"
+      },
+      "PHPStan": {
+        name: "PHPStan",
+        category: "Herramienta de Análisis",
+        expansion: "PHP Static Analysis Tool",
+        desc: "Motor de análisis de código estático de gran aceptación en ecosistemas PHP. Analiza la consistencia de tipos y busca errores sutiles de programación antes de la ejecución de tests unitarios de la aplicación.",
+        link: "https://phpstan.org/"
+      },
+      "Burp Suite": {
+        name: "Burp Suite",
+        category: "Herramienta de Pentesting",
+        expansion: "Proxy y Suite de Auditoría de Aplicaciones Web",
+        desc: "Herramienta comercial insignia de la firma PortSwigger. Intercepta, analiza y modifica el tráfico web HTTP interactuando entre el navegador y la app de destino, estándar de oro para auditores web.",
+        link: "https://es.wikipedia.org/wiki/Burp_Suite"
+      },
+      "OWASP ZAP": {
+        name: "OWASP ZAP",
+        category: "Herramienta Open-Source",
+        expansion: "Zed Attack Proxy",
+        desc: "Práctico y potente proxy interactivo open-source desarrollado por OWASP para automatizar escaneos de vulnerabilidades en aplicaciones web dinámicas (DAST) y realizar auditorías manuales de forma rápida.",
+        link: "https://es.wikipedia.org/wiki/OWASP_ZAP"
+      },
+      "STRIDE": {
+        name: "Modelo STRIDE",
+        category: "Metodología",
+        expansion: "Spoofing, Tampering, Repudiation, Info Disclosure, DoS, Elevation of Privilege",
+        desc: "Esquema mnemotécnico formal concebido por Microsoft para clasificar amenazas lógicas en arquitecturas de software: Suplantación, Alteración, Repudio, Divulgación, Denegación de Servicio y Elevación de Privilegios.",
+        link: "https://es.wikipedia.org/wiki/STRIDE_(seguridad)"
+      },
+      "CSRF": {
+        name: "Ataque CSRF",
+        category: "Amenaza / Vulnerabilidad",
+        expansion: "Falsificación de Petición en Sitios Cruzados",
+        desc: "Ataque web que obliga a la sesión del navegador de un usuario legítimo actualmente autenticado a ejecutar de forma involuntaria acciones maliciosas o no deseadas en el servidor de destino.",
+        link: "https://es.wikipedia.org/wiki/Cross-site_request_forgery"
+      },
+      "NIST": {
+        name: "NIST",
+        category: "Organismo Gubernamental",
+        expansion: "National Institute of Standards and Technology (EE.UU.)",
+        desc: "Organismo de estándares científicos del gobierno de los EE.UU. Su división de ciberseguridad emite marcos y guías internacionales (serie SP 800) considerados de gran importancia práctica y teórica a nivel global.",
+        link: "https://es.wikipedia.org/wiki/Instituto_Nacional_de_Est%C3%A1ndares_y_Tecnolog%C3%ADa"
+      },
+      "NIST SP 800-61": {
+        name: "NIST SP 800-61",
+        category: "Estándar / Marco",
+        expansion: "Guía de Manejo de Incidentes de Seguridad Informática",
+        desc: "Publicación técnica internacional del NIST que prescribe las mejores prácticas para estructurar las capacidades operativas internas para la preparación, contención, erradicación y respuesta reactiva a incidentes.",
+        link: "https://csrc.nist.gov/publications/detail/sp/800-61/rev-2/final"
+      },
+      "CERT": {
+        name: "CERT",
+        category: "Equipo de Seguridad",
+        expansion: "Computer Emergency Response Team",
+        desc: "Equipo de respuesta a incidentes tecnológicos. Grupo formal de expertos con responsabilidad regional, nacional u organizativa dedicados al monitoreo activo y mitigación de amenazas a la seguridad de red.",
+        link: "https://es.wikipedia.org/wiki/Equipo_de_respuesta_ante_emergencias_inform%C3%A1ticas"
+      },
+      "CSIRT": {
+        name: "CSIRT",
+        category: "Equipo de Seguridad",
+        expansion: "Computer Security Incident Response Team",
+        desc: "Término organizativo genérico e internacional para el grupo de especialistas encargados de proveer capacidades de respuesta inmediatas, coordinadas y documentadas a incidentes de seguridad digital.",
+        link: "https://es.wikipedia.org/wiki/Equipo_de_respuesta_ante_emergencias_inform%C3%A1ticas"
+      },
+      "SIEM": {
+        name: "SIEM",
+        category: "Tecnología de Seguridad",
+        expansion: "Security Information and Event Management",
+        desc: "Tecnología que unifica la gestión de datos e información (SIM) con la correlación de registros en tiempo real (SEM) procedentes de servidores, sistemas de detección y firewalls para descubrir ciberataques.",
+        link: "https://es.wikipedia.org/wiki/Informaci%C3%B3n_de_seguridad_y_gesti%C3%B3n_de_eventos"
+      },
+      "ELK Stack": {
+        name: "ELK Stack",
+        category: "Herramienta Open-Source",
+        expansion: "Elasticsearch, Logstash y Kibana",
+        desc: "Famosa suite open-source para analítica de logs. Logstash recopila e ingiere registros de servidores, Elasticsearch los indexa y almacena, y Kibana proporciona potentes tableros visuales de control interactivos.",
+        link: "https://es.wikipedia.org/wiki/Elasticsearch#ELK_Stack"
+      },
+      "Splunk": {
+        name: "Splunk",
+        category: "Herramienta Propietaria",
+        expansion: "Plataforma empresarial de recopilación e indexación de logs",
+        desc: "Software comercial líder concebido para buscar, monitorear, analizar y correlacionar a gran escala flujos masivos de logs y datos procedentes de cualquier componente tecnológico empresarial.",
+        link: "https://es.wikipedia.org/wiki/Splunk"
+      },
+      "ASLR": {
+        name: "ASLR",
+        category: "Tecnología S.O.",
+        expansion: "Aleatorización del Diseño del Espacio de Direcciones",
+        desc: "Mecanismo defensivo de sistemas operativos que aleatoriza las posiciones en memoria de programas y bibliotecas durante el arranque, neutralizando ataques predefinidos de desbordamiento de búfer.",
+        link: "https://es.wikipedia.org/wiki/Address_Space_Layout_Randomization"
+      },
+      "DEP": {
+        name: "DEP / Bit NX",
+        category: "Tecnología Hardware/Software",
+        expansion: "Data Execution Prevention (Prevención de Ejecución de Datos)",
+        desc: "Mecanismo que marca porciones de la memoria del sistema (como la pila o montón) como no ejecutables. Evita la ejecución de instrucciones maliciosas introducidas de forma fraudulenta.",
+        link: "https://es.wikipedia.org/wiki/Prevenci%C3%B3n_de_ejecuci%C3%B3n_de_datos"
+      },
+      "CIS Benchmarks": {
+        name: "CIS Benchmarks",
+        category: "Estándar / Buenas Prácticas",
+        expansion: "Guías de Configuración de Endurecimiento de Seguridad",
+        desc: "Guías globales detalladas editadas por el Center for Internet Security que definen la configuración técnica ideal de endurecimiento (hardening) requerida para securizar bases de datos, redes y S.O.",
+        link: "https://www.cisecurity.org/cis-benchmarks"
+      },
+      "Brotby": {
+        name: "Gary Brotby",
+        category: "Autor de Referencia",
+        expansion: "Escritor y experto global en gobernanza y métricas de seguridad",
+        desc: "Autor clave reconocido por su metodología sobre métricas pragmáticas de ciberseguridad. Postula que los indicadores de seguridad técnica de la información deben ligarse estrictamente al riesgo y valor del negocio.",
+        link: "https://www.amazon.com/Pragmatic-Security-Metrics-Applying-Analytics/dp/1439819000"
+      },
+      "Cano": {
+        name: "Jeimy Cano",
+        category: "Autor de Referencia",
+        expansion: "Académico latinoamericano Ph.D. experto en Ciberdefensa",
+        desc: "Renombrado académico colombiano especialista en ciberseguridad. Autor de la tesis de la 'inseguridad informática residual', planteando que la ciberseguridad es transitoria y la vulnerabilidad es la constante.",
+        link: "https://scholar.google.com/citations?user=Y7c2u98AAAAJ"
+      },
+      "Ross": {
+        name: "Ronald Ross",
+        category: "Autor de Referencia",
+        expansion: "Fellow y Científico de Computación del NIST",
+        desc: "Reconocido científico del NIST estadounidense y redactor de guías clave de ciberseguridad. Formuló que el cumplimiento reglamentario (compliance) representa el nivel mínimo básico o piso táctico.",
+        link: "https://www.nist.gov/people/ronald-s-ross"
+      }
+    };
+
+    /* ==========================================================================
+       2. DATOS DE LAS 10 UNIDADES DE ESTUDIO
+       ========================================================================== */
+    const units = [
+      {
+        num: "I", 
+        title: "Fundamentos de la Seguridad de la Información",
+        sub: "Tríada CIA, vulnerabilidades, amenazas, riesgo, controles defensivos, principio de no repudio.",
+        badge: "badge-purple", 
+        color: "purple",
+        concepts: [
+          { name: "Confidencialidad", desc: "Propiedad que garantiza que la información sensible sea únicamente accesible para los usuarios explícitamente autorizados. Es la base técnica en la que se apoyan el control de acceso lógico y el cifrado." },
+          { name: "Integridad", desc: "Salvaguarda de la exactitud y completitud de los activos de información. Evita la alteración o manipulación no autorizada a través de hashes, firmas digitales y sumas de verificación (checksums)." },
+          { name: "Disponibilidad", desc: "Propiedad de asegurar que los sistemas, redes y datos permanezcan accesibles y utilizables de forma oportuna para los usuarios legítimos. Se protege con HA, copias de seguridad y mitigación de DDoS." },
+          { name: "Vulnerabilidad", desc: "Debilidad, fallo o imperfección intrínseca en el diseño, codificación, configuración o mantenimiento de un sistema que es susceptible de ser aprovechada de forma maliciosa por un atacante." },
+          { name: "Amenaza", desc: "Evento o agente potencial (actor malicioso, desastre climático o error humano) que puede explotar una vulnerabilidad existente para causar daños graves o pérdidas de información en la organización." },
+          { name: "Riesgo", desc: "La probabilidad matemática de que una amenaza específica aproveche una vulnerabilidad del sistema para ocasionar impactos de negocio. Fórmula conceptual básica: Riesgo = Probabilidad × Impacto." },
+          { name: "Control", desc: "Salvaguarda o contramedida técnica, administrativa u operativa que se implementa activamente en los sistemas y procesos de la organización a fin de mitigar vulnerabilidades y disminuir el riesgo." },
+          { name: "No repudio", desc: "Garantía criptográfica de que ninguna parte interviniente en una comunicación o transacción digital puede negar falsamente haber realizado dicha acción, apoyado en registros (logs) seguros y firmas digitales." }
+        ],
+        tip: "<strong>Para el examen:</strong> Presta especial atención al planteamiento teórico de 'inseguridad informática' elaborado por Jeimy Cano: la ciberseguridad es una ilusión permanente, ya que la vulnerabilidad y el riesgo residual son dinámicos y constantes. Distingue entre Seguridad de la Información (procesos amplios y negocio) de la Seguridad Informática (puramente tecnológica, sistemas y redes)."
+      },
+      {
+        num: "II", 
+        title: "Gestión del Riesgo",
+        sub: "Tipologías de riesgo, apetito y tolerancia, cálculo cualitativo vs cuantitativo, marco COBIT.",
+        badge: "badge-teal", 
+        color: "teal",
+        concepts: [
+          { name: "Riesgo inherente", desc: "Nivel de riesgo intrínseco de un activo ante amenazas externas antes de la adopción o despliegue de cualquier tipo de salvaguarda o control técnico de mitigación. Punto de partida de auditoría." },
+          { name: "Riesgo residual", desc: "El riesgo latente permanente que subsiste tras la correcta implementación de controles de seguridad de la información. Este riesgo remanente debe ser aprobado por la junta directiva y mantenerse por debajo del apetito de riesgo." },
+          { name: "Apetito de riesgo", desc: "El volumen y tipo de riesgo general que una corporación está formalmente dispuesta a asumir, tolerar o perseguir en el camino hacia la consecución de sus objetivos de negocio primarios." },
+          { name: "Identificar amenazas", desc: "Fase crítica inicial de la gestión de ciberriesgos consistente en mapear los activos, inventariar vulnerabilidades asociadas y determinar los vectores de amenaza potenciales que pueden explotarlos." },
+          { name: "Análisis cualitativo", desc: "Evaluación del riesgo ágil y basada en la experiencia táctica. Clasifica la gravedad del riesgo mediante escalas subjetivas cualitativas como Alto/Medio/Bajo, de gran utilidad ante la falta de registros históricos." },
+          { name: "Análisis cuantitativo", desc: "Valoración financiera del riesgo basada en cálculos numéricos e históricos reales. Estima costes exactos del impacto empleando métricas estandarizadas como ALE, calculada mediante el producto SLE × ARO." },
+          { name: "COBIT 5 / 2019", desc: "Framework de gobierno corporativo que estandariza la seguridad. En COBIT 5, el proceso enfocado a la mitigación y control del riesgo se define como APO12; y fue reformulado en COBIT 2019." },
+          { name: "Tratamiento del riesgo", desc: "Las cuatro decisiones de negocio fundamentales para abordar el riesgo analizado: mitigar (aplicar controles), transferir (contratar un seguro), aceptar (asumir el impacto) o evitar (cancelar la actividad riesgosa)." }
+        ],
+        tip: "<strong>Para el examen:</strong> Memoriza las fórmulas cuantitativas básicas de ciberriesgo: SLE = Valor del Activo × Factor de Exposición (EF). ALE = Expectativa de Pérdida Anual = SLE × Tasa de Ocurrencia Anual (ARO). La gestión de riesgo es un ciclo de vida constante e iterativo, no un evento aislado."
+      },
+      {
+        num: "III", 
+        title: "Gobierno y Gestión de la Seguridad",
+        sub: "Gobierno estratégico vs gestión, SGSI, normas ISO 27001, 27002, 27014, SoA y PDCA.",
+        badge: "badge-blue", 
+        color: "blue",
+        concepts: [
+          { name: "Gobierno vs gestión", desc: "El Gobierno (Dirección) evalúa opciones, define el rumbo estratégico y monitoriza el cumplimiento. La Gestión (CISO) planifica, ejecuta, construye y opera las soluciones técnicas de seguridad." },
+          { name: "SGSI (ISO 27001)", desc: "El Sistema de Gestión de la Seguridad de la Información es el marco formal para regular la confidencialidad de la información empresarial, guiado por el ciclo iterativo PDCA." },
+          { name: "ISO 27001:2013", desc: "La norma internacional de referencia que regula los requisitos mandatorios de un SGSI. Incluye en su Anexo A un catálogo de controles estructurados en dominios operativos." },
+          { name: "ISO 27002:2013", desc: "Código internacional de directrices de ciberseguridad. Ofrece la descripción práctica de la implementación de controles para los requisitos del Anexo A de la norma ISO 27001." },
+          { name: "ISO 27014", desc: "Estándar de gobernanza de ciberseguridad. Estandariza la supervisión estratégica que debe realizar el consejo directivo y los comités ejecutivos corporativos." },
+          { name: "Declaración de Aplicabilidad", desc: "Conocida como SoA (Statement of Applicability). Es el documento mandatorio en auditorías ISO 27001 que justifica individualmente qué controles del Anexo A se aplican o excluyen en la empresa." },
+          { name: "Alcance del SGSI", desc: "La definición explícita y documentada de los activos de TI, sistemas físicos, fronteras de red y unidades de negocio específicos que son resguardados bajo el amparo de la certificación del SGSI." },
+          { name: "COBIT para gobierno", desc: "Marco holístico de gobierno que abarca el total de TI de la empresa. Actúa de forma totalmente complementaria con ISO 27001: el primero establece la gobernanza y el segundo la gestión de seguridad." }
+        ],
+        tip: "<strong>Para el examen:</strong> Domina la diferencia conceptual entre gobierno y gestión. Recuerda que la norma ISO 27001 es el único estándar certificable de la familia, mientras que la norma ISO 27002 es simplemente una guía de mejores prácticas de control. El ciclo de Deming o PDCA es la piedra angular del SGSI."
+      },
+      {
+        num: "IV", 
+        title: "Factor Humano y Métricas de Seguridad",
+        sub: "Estrategias del CISO, ingeniería social y phishing, métricas de Brotby y madurez de procesos CMM.",
+        badge: "badge-amber", 
+        color: "amber",
+        concepts: [
+          { name: "Rol del CISO", desc: "Directivo de alto rango encargado de traducir la ciberseguridad técnica en lenguaje y valor de negocio. Define la política de riesgo lógico y alinea los proyectos informáticos con la empresa." },
+          { name: "Ingeniería social", desc: "Metodología de intrusión psicológica enfocada en engañar o manipular a los colaboradores de una empresa (vector humano) para que revelen credenciales o ejecuten ficheros con malware (phishing)." },
+          { name: "Concientización", desc: "Programas educativos de Awareness diseñados de manera general para imbuir una cultura de ciberseguridad preventiva y autocuidado en todos los empleados no técnicos de la corporación." },
+          { name: "Capacitación técnica", desc: "Entrenamiento especializado en controles defensivos avanzados y remediación de brechas lógicas, dirigido a personal con responsabilidades en administración de TI y desarrollo." },
+          { name: "Indicadores (KPIs/KRIs)", desc: "Los KPIs analizan retrospectivamente la eficiencia y el cumplimiento de hitos de los controles defensivos. Los KRIs miden proactivamente la elevación de riesgos lógicos antes de un incidente." },
+          { name: "Modelos de madurez", desc: "Marcos como CMM que auditan el nivel de estandarización de procesos de seguridad desde el nivel 1 (procesos caóticos reactivos) hasta el nivel 5 (procesos dinámicos autolimpiables)." },
+          { name: "RRHH y seguridad", desc: "El control del factor humano durante todo el ciclo del empleo, integrando auditorías de antecedentes (background checks), acuerdos de confidencialidad y pautas estrictas de baja (offboarding)." },
+          { name: "Métricas útiles", desc: "De acuerdo a las premisas de Gary Brotby, las métricas defensivas deben ser pragmáticas: fáciles de recopilar, expresadas de forma comprensible para ejecutivos y directamente vinculadas al riesgo." }
+        ],
+        tip: "<strong>Para el examen:</strong> El factor humano se cataloga de forma unánime como el eslabón más frágil en ciberseguridad. Recuerda que no se deben medir aspectos técnicos irrelevantes; el directorio requiere métricas asociadas a pérdidas financieras evitadas e impacto."
+      },
+      {
+        num: "V", 
+        title: "Cumplimiento Normativo y Políticas de Ciberseguridad",
+        sub: "Estructura de políticas y estándares, regulaciones sectoriales (GDPR, PCI-DSS), SoD y Ross.",
+        badge: "badge-coral", 
+        color: "coral",
+        concepts: [
+          { name: "Política de seguridad", desc: "Documento maestro de alto nivel firmado por el comité ejecutivo. Dicta de forma imperativa qué activos deben ser resguardados y define el marco organizativo de seguridad." },
+          { name: "Estándar/Procedimiento", desc: "Documentos técnicos de bajo nivel. Los estándares imponen directrices técnicas obligatorias (ej: longitud de password) y los procedimientos detallan los pasos secuenciales de ejecución." },
+          { name: "Compliance como driver", desc: "El cumplimiento regulatorio actúa como catalizador para movilizar presupuestos y forzar controles lógicos mínimos, pero por sí solo no garantiza protección real contra amenazas avanzadas." },
+          { name: "Marco regulatorio", desc: "Compendio de leyes locales y globales de obligado acatamiento de acuerdo al sector corporativo: Ley de Datos Personales local, GDPR europea, HIPAA médica, PCI-DSS de pagos, etc." },
+          { name: "Auditoría de cumplimiento", desc: "Verificación e inspección periódica rigurosa (interna o externa) diseñada para certificar si la empresa cumple efectivamente con las políticas institucionales y leyes aplicables." },
+          { name: "Segregación de funciones", desc: "Principio de control de accesos SoD (Segregation of Duties). Asegura la fragmentación de tareas críticas (ej: transferir fondos) para que requieran la validación de más de un usuario." },
+          { name: "ISO 27002 dominios", desc: "La estructura original define 14 dominios de controles lógicos: políticas de seguridad, organización interna, seguridad ligada al personal, control de accesos, cifrado, física, etc." },
+          { name: "Compliance Beyond (Ross)", desc: "Premisa de Ronald Ross que postula que las empresas deben ir más allá del mero cumplimiento de regulaciones. Estar en cumplimiento ('compliant') es simplemente el piso de la seguridad, no el techo." }
+        ],
+        tip: "<strong>Para el examen:</strong> Memoriza el orden de la jerarquía documental de seguridad: 1. Políticas (liderazgo, qué y por qué), 2. Estándares (requisitos técnicos obligatorios), 3. Procedimientos (pasos de ejecución, cómo), 4. Directrices (guidelines opcionales)."
+      },
+      {
+        num: "VI", 
+        title: "Control de Acceso",
+        sub: "Esquemas DAC, MAC, RBAC, modelos de Bell-LaPadula y Biba, seguridad avanzada en Linux.",
+        badge: "badge-purple", 
+        color: "purple",
+        concepts: [
+          { name: "DAC (Discrecional)", desc: "Mecanismo clásica de control (permisos rwx en Unix) donde el propietario original de un recurso tiene la discreción total para asignar privilegios a otros usuarios de forma autónoma." },
+          { name: "MAC (Mandatorio)", desc: "Modelo rígido común en defensa militar. El sistema impone autorizaciones basándose en etiquetas de seguridad asociadas a usuarios (acreditación) y archivos (clasificación)." },
+          { name: "RBAC (Por roles)", desc: "Modelo que vincula privilegios lógicos a funciones o puestos laborales específicos (ej: 'cajero', 'auditor') en lugar de cuentas particulares, simplificando la gestión de permisos." },
+          { name: "Modelo Bell-LaPadula", desc: "Modelo matemático enfocado estrictamente en salvaguardar la confidencialidad militar. Aplica dos reglas de oro inmutables: 'no read up' (no leer arriba) y 'no write down' (no escribir abajo)." },
+          { name: "Modelo Biba", desc: "Modelo formal centrado de forma exclusiva en la protección de la integridad de los datos. Invierte el modelo Bell-LaPadula: 'no read down' (no leer abajo) y 'no write up' (no escribir arriba)." },
+          { name: "Modelo Chinese Wall", desc: "Esquema dinámico concebido para prevenir conflictos de interés. Bloquea de forma automática el acceso a información de empresas competidoras una vez que se accede a un sector afín." },
+          { name: "Matriz de accesos", desc: "Abstracción bidimensional teórica compuesta por filas (sujetos de red) y columnas (objetos de red) que define formalmente los permisos individuales sobre cada recurso." },
+          { name: "Linux avanzado", desc: "Soporte de políticas avanzadas de kernel a través de SELinux (MAC), asignación estricta de privilegios con sudo, ACLs extendidas, namespaces y capacidades específicas del kernel." }
+        ],
+        tip: "<strong>Para el examen:</strong> Memoriza las reglas de los modelos: Bell-LaPadula = Confidencialidad ('no read up' para evitar leer datos clasificados y 'no write down' para evitar fugar datos a niveles inferiores). Biba = Integridad ('no read down' para evitar contaminar información de alta integridad y 'no write up' para evitar corromper registros de niveles superiores)."
+      },
+      {
+        num: "VII", 
+        title: "Mecanismos de Autenticación y Gestión de Identidad",
+        sub: "Factores de autenticación, robustez contra cracking, federación de identidades y Keycloak.",
+        badge: "badge-teal", 
+        color: "teal",
+        concepts: [
+          { name: "Factor 1: algo que sabés", desc: "El factor más extendido y débil, fundamentado en el conocimiento privado de información memorizada como contraseñas estáticas, PINs lógicos o frases de paso." },
+          { name: "Factor 2: algo que tenés", desc: "Validación apoyada en la posesión de un objeto o hardware privado como tarjetas inteligentes, generadores OTP físicos, certificados instalados o TOTP móviles." },
+          { name: "Factor 3: algo que sos", desc: "Autenticación basada en factores físicos o biológicos inmutables del usuario, tales como huella dactilar, lectura de retina, reconocimiento facial u ondas de voz." },
+          { name: "MFA (Multi-Factor)", desc: "Autenticación robusta que exige combinar de forma obligatoria por lo menos dos factores válidos de categorías distintas, neutralizando el robo de contraseñas." },
+          { name: "Ataques de diccionario", desc: "Técnica de cracking automatizada que prueba palabras preestablecidas de un diccionario sobre una lista de hashes de contraseñas robadas. Se previene con salting y hashes lentos." },
+          { name: "Fuerza bruta", desc: "Auditoría o ataque que prueba sistemáticamente todas las combinaciones alfanuméricas posibles para adivinar credenciales. Se frena con bloqueo de cuentas e incrementos de coste computacional." },
+          { name: "Rainbow tables", desc: "Tablas precomputadas de hashes empleadas para revertir contraseñas a partir de sus hashes en segundos. Se mitiga mediante el uso de salting (sales únicas y dinámicas)." },
+          { name: "Identidad federada", desc: "Sistemas centralizados que posibilitan a los usuarios autenticarse una sola vez en un IdP central (como Keycloak) y acceder de forma segura a múltiples servicios externos vía SAML u OIDC." }
+        ],
+        tip: "<strong>Para el examen:</strong> Recuerda que bcrypt y argon2 son hashes lentos por diseño concebidos específicamente para contraseñas. OIDC es un protocolo de identidad moderno e interoperable edificado sobre OAuth 2.0 que hace uso de JSON Web Tokens (JWT). Entiende el flujo y propósito de Keycloak como IdP central."
+      },
+      {
+        num: "VIII", 
+        title: "Seguridad en Sistemas Operativos y Aplicaciones",
+        sub: "Técnicas de hardening, exploits de buffer overflow, severidad CVSS y defensas activas.",
+        badge: "badge-amber", 
+        color: "amber",
+        concepts: [
+          { name: "Hardening", desc: "Proceso técnico sistemático de endurecimiento defensivo de hosts y servidores a través de la desactivación de protocolos inseguros, servicios innecesarios, y aplicación de CIS Benchmarks." },
+          { name: "Gestión de parches", desc: "Estrategia para actualizar regularmente software y sistemas, minimizando la ventana de exposición temporal que existe entre el descubrimiento público de una falla y su parcheado técnico." },
+          { name: "Buffer Overflow", desc: "Desbordamiento de búfer. Sucede cuando una aplicación escribe datos más allá del límite reservado de memoria, permitiendo el control del flujo del programa (Stack Overflow) o alteración de datos (Heap)." },
+          { name: "CVE / CVSS", desc: "CVE registra e identifica públicamente fallas de seguridad a nivel internacional. CVSS clasifica y calcula cuantitativamente la severidad técnica de estas fallas en un rango de 0.0 a 10.0." },
+          { name: "Análisis de vulnerabilidades", desc: "Auditoría automatizada y pasiva diseñada para rastrear puertos, configuraciones erróneas y parches faltantes en redes empleando herramientas como Nessus, OpenVAS o Qualys." },
+          { name: "Test de intrusión (pentest)", desc: "Simulación de ataque manual y activa con consentimiento expreso, orientada a validar la explotabilidad real de fallas descubiertas y evaluar la resiliencia general de las defensas." },
+          { name: "Principio de mínimo privilegio", desc: "Directriz defensiva que limita los accesos de red, permisos de archivos e inicios de sesión a los mínimos estrictamente indispensables que requieren los usuarios para operar." },
+          { name: "Defensa en profundidad", desc: "Concepto estratégico que prescribe el despliegue sistemático de controles y barreras de seguridad dispuestas en múltiples capas concéntricas a fin de neutralizar ataques en caso de fallo de una capa." }
+        ],
+        tip: "<strong>Para el examen:</strong> Distingue con precisión entre escaneo de vulnerabilidades (pasivo, automatizado, sin explotación real) de un pentest (activo, manual, con explotación real validada). Domina las mitigaciones clave para Buffer Overflow a nivel de S.O.: ASLR, DEP/NX y stack canaries (canarios de pila)."
+      },
+      {
+        num: "IX", 
+        title: "Desarrollo Seguro de Software",
+        sub: "Metodología SDLC seguro, mitigación de OWASP Top 10, análisis SAST / DAST y modelado STRIDE.",
+        badge: "badge-blue", 
+        color: "blue",
+        concepts: [
+          { name: "SDLC Seguro", desc: "Metodología que integra controles, requisitos y directrices de ciberseguridad a lo largo de todas y cada una de las fases de la ingeniería de software tradicional." },
+          { name: "Microsoft SDL", desc: "Marco de referencia de desarrollo seguro que prescribe auditorías tempranas como modelado de amenazas en el diseño, revisiones de código estático en la codificación, fuzzing y pentests." },
+          { name: "OWASP Top 10 (2021)", desc: "Listado de concientización actualizado con las 10 vulnerabilidades más destructivas del ecosistema web, incluyendo fallos de control de accesos, inyecciones y fallos criptográficos." },
+          { name: "Injection (SQLi, XSS)", desc: "Fallas donde datos externos no saneados son interpretados como comandos ejecutables. En SQLi manipula la base de datos; en XSS ejecuta scripts cliente maliciosos en otros navegadores." },
+          { name: "Análisis estático (SAST)", desc: "Pruebas de seguridad defensivas ('caja blanca') que escanean el código fuente inactivo o los binarios recopilados buscando fallas y patrones erróneos empleando SonarQube, Semgrep o PHPStan." },
+          { name: "Análisis dinámico (DAST)", desc: "Auditoría activa de seguridad ('caja negra') que examina e interactúa de forma externa con la aplicación web activa en tiempo de ejecución empleando OWASP ZAP o Burp Suite." },
+          { name: "Threat Modeling", desc: "Modelado de amenazas proactivo realizado en etapa de arquitectura y diseño. STRIDE categoriza los ataques: Spoofing, Tampering, Repudiation, Info Disclosure, DoS, Elevation." },
+          { name: "Secure by design", desc: "Principios de ingeniería que exigen programar sistemas con fallos seguros por defecto (fail-safe), segregación de privilegios, defensa profunda y mínima superficie de ataque expuesta." }
+        ],
+        tip: "<strong>Para el examen:</strong> En ambientes web e ingeniería de software moderna, la prevención de SQLi exige usar consultas parametrizadas (parameterized queries / Eloquent ORM en Laravel). La protección contra XSS requiere sanitización profunda y codificación de salida (output encoding). Conoce la diferencia nítida entre herramientas SAST y DAST."
+      },
+      {
+        num: "X", 
+        title: "Gestión de Incidentes e Informática Forense",
+        sub: "Ciclo de vida de incidentes de NIST, forense digital, cadena de custodia e investigación forense.",
+        badge: "badge-coral", 
+        color: "coral",
+        concepts: [
+          { name: "Definición de incidente", desc: "Cualquier suceso adverso confirmado que amenace, intente o logre comprometer de forma real la confidencialidad, integridad o disponibilidad de un activo tecnológico." },
+          { name: "Fases del ciclo", desc: "El ciclo sistemático estándar definido por NIST SP 800-61 se estructura en: 1. Preparación, 2. Detección y Análisis, 3. Contención y Erradicación, 4. Recuperación, y 5. Lecciones Aprendidas." },
+          { name: "CERT / CSIRT", desc: "Equipos estructurados de ingenieros y especialistas dedicados de forma exclusiva a liderar la respuesta reactiva, análisis forense, contención y documentación de incidentes de ciberseguridad." },
+          { name: "Informática forense", desc: "Disciplina de recopilación, preservación y análisis científico de evidencias digitales recuperadas de hosts atacados, orientada a mantener su admisibilidad probatoria en procesos judiciales." },
+          { name: "Cadena de custodia", desc: "Documento legal y registro técnico ininterrumpido que certifica exhaustivamente quién recopiló, almacenó, manipuló o investigó cada elemento de evidencia forense digital." },
+          { name: "Regla de Locard", desc: "Principio fundamental de la criminalística tradicional aplicado a entornos digitales: 'Todo contacto deja un rastro'. En forense digital se traduce en logs de red, memoria RAM e índices de archivos." },
+          { name: "Antiforense", desc: "Compendio de técnicas y herramientas evasivas empleadas por ciberdelincuentes orientadas a borrar huellas lógicas, alterar marcas temporales de archivos (timestomping) y cifrar evidencias." },
+          { name: "Análisis de logs", desc: "Recopilación y monitorización a gran escala de eventos mediante tecnologías SIEM (Splunk o ELK Stack) para correlacionar registros de firewalls y servidores web y detectar incidentes." }
+        ],
+        tip: "<strong>Para el examen:</strong> Domina al detalle el orden y jerarquía del orden de volatilidad en forense: Memoria RAM y conexiones de red activas → Archivos temporales de swap → Registros locales del disco duro → Medios de copia de seguridad extraíbles. Recuerda que NIST SP 800-61 Rev 2 es la guía de referencia absoluta para Incident Response."
+      }
+    ];
+
+    /* ==========================================================================
+       3. PREGUNTAS DEL SIMULADOR DE EXAMEN (20 PREGUNTAS CLAVE)
+       ========================================================================== */
+    const quizQuestions = [
+      {
+        unit: "I",
+        text: "¿Cuál es el pilar de la tríada CIA que garantiza que la información no sea modificada o alterada de manera no autorizada?",
+        options: [
+          "Confidencialidad",
+          "Integridad",
+          "Disponibilidad",
+          "No repudio"
+        ],
+        correct: 1,
+        explanation: "La Integridad es la propiedad de salvaguardar la exactitud y completitud de los activos, asegurando que no se modifiquen de forma no autorizada. La Confidencialidad evita divulgaciones y la Disponibilidad garantiza el acceso oportuno."
+      },
+      {
+        unit: "I",
+        text: "De acuerdo a la teoría de Jeimy Cano, ¿cuál es la descripción correcta respecto a la seguridad en informática?",
+        options: [
+          "La seguridad perfecta es lograble implementando firewalls avanzados y cifrado completo.",
+          "La seguridad absoluta es imposible de alcanzar; siempre habrá una inseguridad informática o riesgo residual con el cual convivir.",
+          "El cumplimiento normativo es suficiente para anular cualquier vector de amenaza.",
+          "La única amenaza real para una organización procede de actores externos hostiles estatales."
+        ],
+        correct: 1,
+        explanation: "Jeimy Cano plantea que la ciberseguridad es transitoria y la vulnerabilidad es la constante. Por ende, la seguridad absoluta no existe y la organización siempre convive con una 'inseguridad informática residual' activa."
+      },
+      {
+        unit: "II",
+        text: "Si un servidor crítico valuado en $20,000 USD tiene un Factor de Exposición (EF) del 50% ante un ataque DDoS, y la Tasa de Ocurrencia Anual (ARO) estimada del ataque es 0.2 (una vez cada cinco años), ¿cuál es la Expectativa de Pérdida Anual (ALE)?",
+        options: [
+          "$10,000 USD",
+          "$2,000 USD",
+          "$4,000 USD",
+          "$5,000 USD"
+        ],
+        correct: 1,
+        explanation: "Paso 1: Calcular la Expectativa de Pérdida Única (SLE) = Valor del Activo × EF = $20,000 × 0.50 = $10,000. Paso 2: Calcular la Expectativa de Pérdida Anual (ALE) = SLE × ARO = $10,000 × 0.2 = $2,000 USD."
+      },
+      {
+        unit: "II",
+        text: "En la gestión de riesgos de seguridad, ¿cuál es la diferencia fundamental entre el análisis cuantitativo y el cualitativo?",
+        options: [
+          "El cuantitativo emplea escalas de valores numéricos de probabilidad subjetivas y el cualitativo usa balances bancarios.",
+          "El cualitativo clasifica la criticidad del riesgo de forma subjetiva (ej: Alto/Medio/Bajo) y el cuantitativo se apoya en datos numéricos históricos y métricas financieras reales.",
+          "El cualitativo es obligatorio bajo ISO 27001, mientras que el cuantitativo no se permite en auditorías internacionales.",
+          "No existe ninguna diferencia; son términos sinónimos en la serie ISO 27000."
+        ],
+        correct: 1,
+        explanation: "El análisis cualitativo utiliza juicios subjetivos y categorías descriptivas ágiles para valorar el riesgo. El cuantitativo asigna valores monetarios y matemáticos a la probabilidad e impacto mediante fórmulas precisas."
+      },
+      {
+        unit: "III",
+        text: "De acuerdo al marco COBIT, ¿cuál es la principal diferencia conceptual entre Gobierno y Gestión?",
+        options: [
+          "El Gobierno ejecuta los controles técnicos diariamente y la Gestión define los presupuestos corporativos anualmente.",
+          "El Gobierno evalúa opciones estratégicas, define directrices y monitorea el cumplimiento; la Gestión planifica, construye, ejecuta y opera las actividades técnicas del día a día.",
+          "El Gobierno lo ejerce exclusivamente el CISO, mientras que la Gestión es responsabilidad unánime del Directorio corporativo.",
+          "El Gobierno abarca controles puramente físicos y la Gestión abarca controles lógicos."
+        ],
+        correct: 1,
+        explanation: "Según COBIT, el Gobierno (ejercido por la Junta Directiva) define el rumbo estratégico evaluando necesidades, priorizando riesgos y monitorizando. La Gestión (liderada por el CISO y directores de TI) opera, ejecuta y construye de acuerdo a las directrices fijadas."
+      },
+      {
+        unit: "III",
+        text: "En el contexto de la certificación bajo el estándar internacional ISO/IEC 27001, ¿qué función cumple la Declaración de Aplicabilidad (Statement of Applicability - SoA)?",
+        options: [
+          "Es un contrato vinculante de servicios firmado con el auditor externo certificador.",
+          "Documento mandatorio que identifica explícitamente cuáles de los 114 controles del Anexo A de la norma se aplican o excluyen en el alcance, justificando técnicamente las decisiones.",
+          "Es el acta constitutiva formal del departamento de ciberdefensa de la organización.",
+          "Documento que contiene de forma cifrada las contraseñas del directorio central de la empresa."
+        ],
+        correct: 1,
+        explanation: "La Declaración de Aplicabilidad (SoA) es un entregable mandatorio y central para certificar ISO 27001. Contiene la justificación formal y documentada sobre la aplicabilidad técnica o exclusión de cada control contemplado en el Anexo A."
+      },
+      {
+        unit: "IV",
+        text: "Para que un CISO pueda presentar métricas de seguridad efectivas a la junta ejecutiva de directores, ¿qué característica principal deben poseer estas métricas según Gary Brotby?",
+        options: [
+          "Deben ser de un volumen masivo y técnico, listando miles de alertas diarias del firewall para demostrar actividad continua.",
+          "Deben ser complejas y presentadas únicamente con códigos alfanuméricos ininteligibles.",
+          "Deben ser pragmáticas: fáciles de recolectar, expresadas de forma clara para el negocio y directamente vinculadas al ciberriesgo de la corporación.",
+          "Deben centrarse únicamente en vulnerabilidades teóricas no críticas."
+        ],
+        correct: 2,
+        explanation: "Gary Brotby establece en su teoría de 'Métricas Pragmáticas' que los datos técnicos de seguridad deben ser simplificados e integrados en indicadores que muestren de forma directa la exposición al riesgo en términos empresariales comprensibles para no técnicos."
+      },
+      {
+        unit: "IV",
+        text: "En el Modelo de Madurez de la Capacidad (CMM) aplicado a la seguridad de la información, ¿qué describe a una organización en el Nivel 3 (Definido)?",
+        options: [
+          "Los controles lógicos se despliegan de forma caótica, ad-hoc, y totalmente reactiva ante incidentes.",
+          "Los controles y procesos de ciberseguridad se encuentran plenamente documentados, estandarizados, comunicados de forma corporativa e integrados formalmente en toda la empresa.",
+          "Las métricas se calculan automáticamente mediante IA predictiva y autolimpiable.",
+          "No existen políticas escritas y la seguridad depende de la destreza eventual de un solo administrador."
+        ],
+        correct: 1,
+        explanation: "En el Nivel 3 (Definido) del CMM, la seguridad deja de ser reactiva o departamental. Las políticas, guías y procesos defensivos se estandarizan oficialmente, documentan y comunican de forma integral a toda la corporación."
+      },
+      {
+        unit: "V",
+        text: "Dentro de la jerarquía documental de seguridad, ¿cuál es el orden correcto de los elementos, listados desde el documento más estratégico y conceptual al más operativo y detallado?",
+        options: [
+          "Procedimiento → Estándar → Política → Directriz (Guideline)",
+          "Estándar → Directriz (Guideline) → Procedimiento → Política",
+          "Política → Estándar → Procedimiento → Directriz (Guideline)",
+          "Directriz (Guideline) → Política → Estándar → Procedimiento"
+        ],
+        correct: 2,
+        explanation: "El orden correcto y jerárquico es: 1. Política (máximo nivel estratégico, define metas y firmas del Board), 2. Estándar (especificación técnica obligatoria de controles), 3. Procedimiento (guía operativa secuencial del paso a paso técnico), 4. Directriz (guideline complementario y opcional)."
+      },
+      {
+        unit: "V",
+        text: "¿Cuál es la premisa de Ronald Ross tras la enunciación de su principio estratégico de ciberseguridad 'Compliance Beyond'?",
+        options: [
+          "Las empresas deben focalizar todo su esfuerzo en cumplir normativas legales, ya que el compliance asegura un 100% de invulnerabilidad táctica.",
+          "El cumplimiento normativo y legal es meramente un piso básico elemental sobre el cual construir; la seguridad real exige ir más allá diseñando controles específicos ante amenazas reales.",
+          "El cumplimiento normativo es innecesario y obsoleto para sistemas operativos linux modernos.",
+          "La auditoría externa de cumplimiento debe realizarse diariamente sin autorización del CISO."
+        ],
+        correct: 1,
+        explanation: "Ronald Ross establece que el cumplimiento normativo ('compliance') es simplemente el nivel mínimo regulatorio exigido (el piso). La ciberseguridad real y la resiliencia exigen ir más allá ('beyond'), modelando amenazas reales de forma específica para blindar los activos críticos."
+      },
+      {
+        unit: "VI",
+        text: "En control de accesos lógicos, ¿en qué consiste el modelo de Control de Acceso Mandatorio (MAC)?",
+        options: [
+          "El creador u dueño de un archivo goza de autonomía discrecional para otorgar permisos a otros usuarios.",
+          "El sistema operativo impone las restricciones de lectura o escritura de forma mandatoria basado en etiquetas de seguridad asociadas a los sujetos y la clasificación de los objetos.",
+          "Los privilegios de acceso son asignados según el rol o departamento administrativo del usuario.",
+          "Se basa en el análisis en tiempo real del horario e IP geográfica del usuario."
+        ],
+        correct: 1,
+        explanation: "El MAC (Mandatory Access Control) es un modelo restrictivo centralizado común en defensa militar. El sistema operativo evalúa de forma inalterable las autorizaciones de acceso comparando etiquetas de confidencialidad del objeto con la acreditación formal del sujeto."
+      },
+      {
+        unit: "VI",
+        text: "El modelo formal de seguridad Bell-LaPadula se enfoca en resguardar la confidencialidad. ¿Cuáles son sus dos propiedades y reglas lógicas esenciales?",
+        options: [
+          "Simple Security Property ('no read down') y Star Property ('no write up').",
+          "Simple Security Property ('no read up' / no leer arriba) y Star Property ('no write down' / no escribir abajo).",
+          "No conflicto de intereses entre empresas y control de accesos discrecional.",
+          "Principio de separación de privilegios y uso obligatorio de cortafuegos."
+        ],
+        correct: 1,
+        explanation: "Bell-LaPadula resguarda la confidencialidad militar: 1) Propiedad Simple: 'no read up' (un sujeto no puede leer un objeto de nivel de confidencialidad superior), 2) Propiedad Star (*): 'no write down' (un sujeto no puede escribir información en objetos de nivel inferior para evitar fugas)."
+      },
+      {
+        unit: "VII",
+        text: "¿Cuál es la contramedida defensiva criptográfica más efectiva para evitar que los atacantes utilicen Rainbow Tables (tablas precomputadas) para descifrar contraseñas comprometidas a partir de sus hashes?",
+        options: [
+          "Encriptar la base de datos con claves simétricas RSA.",
+          "Desplegar un sistema de cortafuegos web (WAF) corporativo.",
+          "El uso de una 'sal' criptográfica única e impredecible (Salting) concatenada a la contraseña de cada usuario antes de aplicar el hashing lento.",
+          "Exigir contraseñas cortas que expiren cada dos horas sin excepción."
+        ],
+        correct: 2,
+        explanation: "Las Rainbow Tables funcionan contrastando hashes ya precalculados de palabras comunes. El agregado de una sal (salting) única y aleatoria por cada contraseña destruye la efectividad de las tablas precomputadas, obligando al atacante a computar la fuerza bruta desde cero."
+      },
+      {
+        unit: "VII",
+        text: "En el contexto de la identidad federada e inicio de sesión único (SSO), ¿qué protocolo actúa como una capa de identidad ligera formateada en JSON construida específicamente sobre el marco OAuth 2.0?",
+        options: [
+          "SAML",
+          "OpenID Connect (OIDC)",
+          "Active Directory Domain Services",
+          "Keycloak IAM Engine"
+        ],
+        correct: 1,
+        explanation: "OpenID Connect (OIDC) es el estándar industrial moderno concebido para añadir autenticación de usuarios sobre el protocolo de autorización OAuth 2.0. Hace uso de tokens de ID estructurados en formato JSON Web Token (JWT)."
+      },
+      {
+        unit: "VIII",
+        text: "¿Cómo se denomina al proceso técnico de securizar y endurecer la configuración de un sistema operativo aplicando CIS Benchmarks, cerrando puertos no usados y desinstalando servicios innecesarios?",
+        options: [
+          "Buffer Overflow Mitigation",
+          "Pentesting Activo",
+          "Hardening (Endurecimiento)",
+          "Vulnerability Scan Pasivo"
+        ],
+        correct: 2,
+        explanation: "El endurecimiento o 'hardening' de sistemas operativos y hosts consiste en configurar de forma restrictiva y robusta todos sus servicios, minimizando los puertos abiertos y la superficie de ataque para prevenir intrusiones."
+      },
+      {
+        unit: "VIII",
+        text: "¿Qué característica de seguridad lógica, comúnmente soportada por hardware (procesador) y sistemas operativos modernos, evita exploits de Stack Buffer Overflow denegando la ejecución en áreas de memoria reservadas para almacenar variables o datos?",
+        options: [
+          "ASLR (Aleatorización del Diseño del Espacio de Direcciones)",
+          "DEP / NX (Prevención de Ejecución de Datos / Bit No-Execute)",
+          "Nessus Escáner",
+          "Salting defensivo"
+        ],
+        correct: 1,
+        explanation: "La tecnología DEP (Data Execution Prevention) / bit NX (No-Execute) instruye al procesador para que marque físicamente las secciones de memoria de datos (como la pila o montón) como estrictamente no ejecutables, bloqueando la ejecución de malware inyectado."
+      },
+      {
+        unit: "IX",
+        text: "Durante el modelado de amenazas en la etapa de arquitectura y diseño seguro de una aplicación web, ¿qué categoría del modelo STRIDE representa la vulnerabilidad que permite falsificar o alterar información de una base de datos sin autorización?",
+        options: [
+          "Spoofing (Suplantación)",
+          "Tampering (Alteración de datos)",
+          "Repudiation (Repudio)",
+          "Elevation of Privilege (Elevación de privilegios)"
+        ],
+        correct: 1,
+        explanation: "En el acrónimo STRIDE de Microsoft: T representa 'Tampering' (Alteración maliciosa o manipulación no autorizada de datos). S representa Spoofing (suplantar identidad) y R representa Repudiation (negar acciones realizadas)."
+      },
+      {
+        unit: "IX",
+        text: "En ciberseguridad en el ciclo de vida de desarrollo de software (SDLC Seguro), ¿cuál es la diferencia fundamental entre el análisis estático (SAST) y el dinámico (DAST)?",
+        options: [
+          "SAST exige interactuar activamente con el servidor en la nube y DAST solo inspecciona archivos de configuración local.",
+          "SAST es una prueba de 'caja blanca' que escanea el código fuente en busca de fallos lógicos sin ejecutar el programa; mientras que DAST es una auditoría de 'caja negra' que interactúa con la aplicación web activa en tiempo de ejecución simulando ataques externos.",
+          "SAST es puramente analizado por el CISO de forma manual y DAST se ejecuta de manera automatizada.",
+          "No existe ninguna diferencia; ambas pruebas se ejecutan únicamente sobre la base de datos compilada."
+        ],
+        correct: 1,
+        explanation: "SAST (Static Application Security Testing) analiza el código fuente inactivo de forma interna, detectando errores de codificación tempranos de forma estática (caja blanca). DAST (Dynamic Application Security Testing) audita la app en ejecución desde fuera simulando ataques activos (caja negra)."
+      },
+      {
+        unit: "X",
+        text: "De acuerdo a la informática forense y el principio científico de recolección de evidencia digital, ¿en qué orden de volatilidad deben recopilarse los activos tecnológicos tras descubrir un incidente de intrusión?",
+        options: [
+          "Discos duros mecánicos → Logs en el SIEM → Memoria RAM → Archivos en cintas magnéticas.",
+          "Memoria RAM y conexiones de red activas → Espacio de intercambio (Swap/Páginas) → Archivos del disco duro y S.O. → Registros y logs remotos.",
+          "Backups externos → Servidor Apache → Memoria caché de la CPU → Certificados digitales.",
+          "El orden es irrelevante siempre que el equipo sea apagado y desenchufado inmediatamente."
+        ],
+        correct: 1,
+        explanation: "El orden de volatilidad forense dicta recolectar primero la información más efímera para evitar su pérdida. La RAM y las conexiones de red activas desaparecen de forma inmediata al apagar o reiniciar el host, por lo que son la prioridad absoluta antes que los archivos estáticos en disco."
+      },
+      {
+        unit: "X",
+        text: "En el ciclo de respuesta a incidentes de seguridad definido en la norma de referencia NIST SP 800-61, ¿cuál es la diferencia crítica entre la fase de Contención y la de Erradicación?",
+        options: [
+          "La contención restaura el sistema desde copias de seguridad de forma automatizada y la erradicación notifica al departamento de asuntos legales corporativos.",
+          "La contención busca aislar y frenar de inmediato la propagación del daño del ataque en curso; la erradicación se enfoca en eliminar de raíz la causa del incidente (ej: borrar malware, inhabilitar cuentas e instalar parches).",
+          "No hay diferencia técnica; representan el mismo paso operativo unificado por el CERT.",
+          "La erradicación se ejecuta de manera preventiva antes de que el incidente de seguridad ocurra."
+        ],
+        correct: 1,
+        explanation: "La Contención es la respuesta de emergencia prioritaria y rápida para limitar el daño activo y detener la propagación del intruso (aislar la red). La Erradicación es la fase posterior y profunda de limpieza, en la cual se elimina la causa raíz y las brechas que permitieron el acceso inicial."
+      }
+    ];
+
+    /* ==========================================================================
+       4. GESTOR DE ESTADOS GLOBAL (GLOBAL SYSTEM STATE)
+       ========================================================================== */
+    const state = {
+      theme: "dark",
+      activeTab: "unidades",
+      selectedUnitIdx: 0,
+      
+      // Estado de Flashcards
+      flashcardsList: [],
+      currentFlashcardIdx: 0,
+      flashcardScores: {}, // mapea index_global -> boolean (saberlo o no)
+      
+      // Estado del Quiz
+      quizMode: "simulacro", // 'simulacro' o 'unidad'
+      quizSelectedUnitIdx: 0,
+      quizCurrentQuestions: [],
+      quizCurrentQuestionIdx: 0,
+      quizAnswersGiven: [], // array de índices elegidos o null si no respondida
+      quizCorrectHits: 0,
+      quizIncorrectMisses: 0,
+      quizWrongUnits: new Set(), // guarda las unidades falladas para las recomendaciones finales
+      
+      // Glosario y Búsqueda
+      searchQuery: "",
+      selectedLetterFilter: ""
+    };
+
+    /* ==========================================================================
+       5. INICIALIZADOR DE LA PLATAFORMA (DOM CONTENT LOADED)
+       ========================================================================== */
+    document.addEventListener("DOMContentLoaded", () => {
+      // Iniciar Tema
+      initTheme();
+      
+      // Generar Vistas Principales
+      renderUnitsGrid();
+      selectUnit(0);
+      populateDropdowns();
+      
+      // Configurar Pestañas
+      initTabs();
+      
+      // Inicializar Módulo de Flashcards
+      initFlashcards("all");
+      
+      // Inicializar Módulo de Búsqueda y Glosario
+      initSearchGlosario();
+      
+      // Configurar Motor de Tooltips
+      initTooltipListeners();
+      
+      // Recalcular Progreso en Tablero
+      recalculateGlobalProgress();
+    });
+
+    /* ==========================================================================
+       6. MOTOR DE TEMA (CLARO / OSCURO)
+       ========================================================================== */
+    function initTheme() {
+      const toggle = document.getElementById("theme-toggle");
+      
+      // Leer preferencia anterior
+      const savedTheme = localStorage.getItem("ciberdefensa-theme") || "dark";
+      setTheme(savedTheme);
+      
+      toggle.addEventListener("click", () => {
+        const nextTheme = state.theme === "dark" ? "light" : "dark";
+        setTheme(nextTheme);
+      });
+    }
+
+    function setTheme(themeName) {
+      state.theme = themeName;
+      document.documentElement.setAttribute("data-theme", themeName);
+      localStorage.setItem("ciberdefensa-theme", themeName);
+      
+      const toggle = document.getElementById("theme-toggle");
+      toggle.textContent = themeName === "dark" ? "☀️" : "🌙";
+    }
+
+    /* ==========================================================================
+       7. GESTOR DE PESTAÑAS (TABS CONTROLLER)
+       ========================================================================== */
+    function initTabs() {
+      const tabs = document.querySelectorAll(".tab-btn");
+      tabs.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const targetTab = btn.dataset.tab;
+          switchTab(targetTab);
+        });
+      });
+    }
+
+    function switchTab(tabName) {
+      state.activeTab = tabName;
+      
+      // Activar Botón
+      document.querySelectorAll(".tab-btn").forEach(btn => {
+        if (btn.dataset.tab === tabName) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+      });
+      
+      // Activar Contenido
+      document.querySelectorAll(".tab-content").forEach(content => {
+        if (content.id === `${tabName}-tab`) {
+          content.classList.add("active");
+        } else {
+          content.classList.remove("active");
+        }
+      });
+      
+      // Ocultar Tooltips activos al cambiar de vista
+      hideTooltip();
+    }
+
+    /* ==========================================================================
+       8. MOTOR DE DATOS: POPULAR SELECTORES DROPDOWN
+       ========================================================================== */
+    function populateDropdowns() {
+      const fcSelect = document.getElementById("flashcards-unit-select");
+      const quizSelect = document.getElementById("quiz-unit-select");
+      
+      units.forEach((u, idx) => {
+        // Flashcards Dropdown
+        const opt1 = document.createElement("option");
+        opt1.value = idx;
+        opt1.textContent = `Unidad ${u.num}: ${u.title}`;
+        fcSelect.appendChild(opt1);
+        
+        // Quiz Dropdown
+        const opt2 = document.createElement("option");
+        opt2.value = idx;
+        opt2.textContent = `Unidad ${u.num}: ${u.title}`;
+        quizSelect.appendChild(opt2);
+      });
+      
+      // Listeners
+      fcSelect.addEventListener("change", (e) => {
+        initFlashcards(e.target.value);
+      });
+    }
+
+    /* ==========================================================================
+       9. PESTAÑA 1: MOTOR DE UNIDADES Y DETALLE
+       ========================================================================== */
+    function renderUnitsGrid() {
+      const grid = document.getElementById("unidades-grid");
+      grid.innerHTML = "";
+      
+      units.forEach((u, i) => {
+        const div = document.createElement("div");
+        div.className = `card-unidad ${state.selectedUnitIdx === i ? 'active' : ''}`;
+        div.onclick = () => selectUnit(i);
+        
+        div.innerHTML = `
+          <div class="card-unidad-header">
+            <span class="badge badge-${u.color}">Unidad ${u.num}</span>
+          </div>
+          <div class="card-unidad-title">${u.title}</div>
+          <div class="card-unidad-sub">${u.sub}</div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    function selectUnit(idx) {
+      state.selectedUnitIdx = idx;
+      
+      // Actualizar clases activas en Grid
+      const cards = document.querySelectorAll(".card-unidad");
+      cards.forEach((card, i) => {
+        if (i === idx) {
+          card.classList.add("active");
+        } else {
+          card.classList.remove("active");
+        }
+      });
+      
+      // Renderizar Detalle de Unidad
+      const u = units[idx];
+      const panel = document.getElementById("unidad-detalle-panel");
+      
+      let conceptosHtml = "";
+      u.concepts.forEach(c => {
+        conceptosHtml += `
+          <div class="concepto-box ${u.color}">
+            <h3 class="concepto-title">${c.name}</h3>
+            <p class="concepto-desc">${c.desc}</p>
+          </div>
+        `;
+      });
+      
+      panel.innerHTML = `
+        <div class="detalle-title-area">
+          <span class="badge badge-${u.color}">Unidad de Estudio ${u.num}</span>
+          <h2 class="detalle-title">${u.title}</h2>
+        </div>
+        <div class="conceptos-detalle-grid" id="detalle-conceptos-list">
+          ${conceptosHtml}
+        </div>
+        <div class="exam-tip-box">
+          ${u.tip}
+        </div>
+      `;
+      
+      // EJECUTAR TOKENIZADOR DE HIGHLIGHTS en el panel recién renderizado
+      highlightTermsInElement(document.getElementById("detalle-conceptos-list"));
+    }
+
+    /* ==========================================================================
+       10. PESTAÑA 2: MODULO DE FLASHCARDS (ESTUDIO ACTIVO)
+       ========================================================================== */
+    function initFlashcards(unitSelection) {
+      state.flashcardsList = [];
+      
+      if (unitSelection === "all") {
+        // Cargar todos los conceptos de todas las unidades
+        units.forEach((u, uIdx) => {
+          u.concepts.forEach((c, cIdx) => {
+            state.flashcardsList.push({
+              concept: c.name,
+              desc: c.desc,
+              unitNum: u.num,
+              color: u.color,
+              globalIdx: `${uIdx}-${cIdx}`
+            });
+          });
+        });
+      } else {
+        // Cargar unidad particular
+        const uIdx = parseInt(unitSelection);
+        const u = units[uIdx];
+        u.concepts.forEach((c, cIdx) => {
+          state.flashcardsList.push({
+            concept: c.name,
+            desc: c.desc,
+            unitNum: u.num,
+            color: u.color,
+            globalIdx: `${uIdx}-${cIdx}`
+          });
+        });
+      }
+      
+      // Mezclar Flashcards
+      state.flashcardsList.sort(() => Math.random() - 0.5);
+      
+      // Resetear índices de control
+      state.currentFlashcardIdx = 0;
+      
+      // Renderizar primera flashcard
+      renderFlashcard();
+    }
+
+    function renderFlashcard() {
+      const card = document.getElementById("flashcard");
+      // Quitar giro
+      card.classList.remove("flipped");
+      
+      if (state.flashcardsList.length === 0) return;
+      
+      const fc = state.flashcardsList[state.currentFlashcardIdx];
+      
+      // Modificar datos del Frente
+      const badge = document.getElementById("fc-badge");
+      badge.textContent = `Unidad ${fc.unitNum}`;
+      badge.className = `badge badge-${fc.color}`;
+      
+      document.getElementById("fc-concept-name").textContent = fc.concept;
+      
+      // Modificar datos del Reverso
+      document.getElementById("fc-concept-back-title").textContent = fc.concept;
+      
+      const descBox = document.getElementById("fc-concept-desc");
+      descBox.textContent = fc.desc;
+      
+      // Actualizar estadísticas y progreso
+      updateFlashcardProgressUI();
+    }
+
+    function flipFlashcard() {
+      const card = document.getElementById("flashcard");
+      card.classList.toggle("flipped");
+      
+      // Tokenizar reverso en cuanto se revele
+      if (card.classList.contains("flipped")) {
+        highlightTermsInElement(document.getElementById("fc-concept-desc"));
+      }
+    }
+
+    function evaluateFlashcard(learned) {
+      if (state.flashcardsList.length === 0) return;
+      
+      const fc = state.flashcardsList[state.currentFlashcardIdx];
+      
+      // Registrar respuesta en estado global de progreso
+      state.flashcardScores[fc.globalIdx] = learned;
+      
+      // Avanzar al siguiente
+      state.currentFlashcardIdx++;
+      if (state.currentFlashcardIdx >= state.flashcardsList.length) {
+        // Dar la vuelta completa
+        state.currentFlashcardIdx = 0;
+        // Volver a mezclar
+        state.flashcardsList.sort(() => Math.random() - 0.5);
+        alert("🎉 ¡Has completado todas las fichas seleccionadas! Volviendo a barajar...");
+      }
+      
+      renderFlashcard();
+      recalculateGlobalProgress();
+    }
+
+    function updateFlashcardProgressUI() {
+      const total = state.flashcardsList.length;
+      const current = state.currentFlashcardIdx + 1;
+      
+      // Calcular porcentaje aprendido
+      let learnedCount = 0;
+      state.flashcardsList.forEach(fc => {
+        if (state.flashcardScores[fc.globalIdx] === true) {
+          learnedCount++;
+        }
+      });
+      const pct = total > 0 ? Math.round((learnedCount / total) * 100) : 0;
+      
+      // Progress Bar
+      const fill = document.getElementById("fc-progress-fill");
+      const currentProgressPct = Math.round((current / total) * 100);
+      fill.style.width = `${currentProgressPct}%`;
+      
+      // Texto descriptivo
+      document.getElementById("fc-stats-text").textContent = `Ficha ${current} de ${total} · Aprendido del set: ${pct}%`;
+    }
+
+    /* ==========================================================================
+       11. PESTAÑA 3: MOTOR DEL SIMULADOR DE EXAMEN (QUIZ ENGINE)
+       ========================================================================== */
+    function selectQuizMode(mode) {
+      state.quizMode = mode;
+      
+      const mSimulacro = document.getElementById("qm-simulacro");
+      const mUnidad = document.getElementById("qm-unidad");
+      const unitSelectContainer = document.getElementById("quiz-unit-select-container");
+      
+      if (mode === "simulacro") {
+        mSimulacro.classList.add("active");
+        mUnidad.classList.remove("active");
+        unitSelectContainer.style.display = "none";
+      } else {
+        mSimulacro.classList.remove("active");
+        mUnidad.classList.add("active");
+        unitSelectContainer.style.display = "flex";
+      }
+    }
+
+    function startQuiz() {
+      state.quizCurrentQuestions = [];
+      state.quizCurrentQuestionIdx = 0;
+      state.quizAnswersGiven = [];
+      state.quizCorrectHits = 0;
+      state.quizIncorrectMisses = 0;
+      state.quizWrongUnits.clear();
+
+      // Cargar y filtrar preguntas
+      if (state.quizMode === "simulacro") {
+        // Mezclar todo el banco y tomar 20 aleatorias
+        const pool = [...quizQuestions];
+        pool.sort(() => Math.random() - 0.5);
+        state.quizCurrentQuestions = pool.slice(0, 20);
+      } else {
+        // Filtrar por unidad
+        const uIdx = parseInt(document.getElementById("quiz-unit-select").value);
+        state.quizSelectedUnitIdx = uIdx;
+        const uNum = units[uIdx].num;
+        
+        state.quizCurrentQuestions = quizQuestions.filter(q => q.unit === uNum);
+        // Mezclar las preguntas de esa unidad
+        state.quizCurrentQuestions.sort(() => Math.random() - 0.5);
+      }
+
+      if (state.quizCurrentQuestions.length === 0) {
+        alert("No hay preguntas preprogramadas para esta unidad en la demo. Se iniciará simulacro completo.");
+        selectQuizMode("simulacro");
+        startQuiz();
+        return;
+      }
+
+      // Ocultar Configuración, Mostrar Examen Activo
+      document.getElementById("quiz-config-view").style.display = "none";
+      document.getElementById("quiz-results-view").style.display = "none";
+      document.getElementById("quiz-active-view").style.display = "flex";
+
+      // Cargar primera pregunta
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+      const qIdx = state.quizCurrentQuestionIdx;
+      const q = state.quizCurrentQuestions[qIdx];
+      const total = state.quizCurrentQuestions.length;
+
+      // Header UI
+      document.getElementById("quiz-question-number").textContent = `Pregunta ${qIdx + 1} de ${total}`;
+      document.getElementById("quiz-score-badge").textContent = `Aciertos: ${state.quizCorrectHits}/${qIdx}`;
+
+      // Progress Bar
+      const progressFill = document.getElementById("quiz-progress-fill");
+      progressFill.style.width = `${Math.round((qIdx / total) * 100)}%`;
+
+      // Texto de Pregunta
+      document.getElementById("quiz-question-text").textContent = q.text;
+
+      // Opciones
+      const container = document.getElementById("quiz-options-container");
+      container.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-option";
+        btn.textContent = opt;
+        btn.onclick = () => evaluateQuizAnswer(idx);
+        container.appendChild(btn);
+      });
+
+      // Ocultar panel de explicación y botón siguiente
+      document.getElementById("quiz-explanation-panel").style.display = "none";
+      document.getElementById("quiz-next-btn").style.display = "none";
+      
+      // Tokenizar conceptos en la pregunta
+      highlightTermsInElement(document.getElementById("quiz-question-text"));
+    }
+
+    function evaluateQuizAnswer(selectedIdx) {
+      const qIdx = state.quizCurrentQuestionIdx;
+      const q = state.quizCurrentQuestions[qIdx];
+      const options = document.querySelectorAll(".quiz-option");
+
+      // Impedir dobles clicks deshabilitando opciones
+      options.forEach(opt => opt.disabled = true);
+
+      const isCorrect = selectedIdx === q.correct;
+      state.quizAnswersGiven[qIdx] = selectedIdx;
+
+      // Estilizar respuestas
+      options.forEach((opt, idx) => {
+        if (idx === q.correct) {
+          opt.classList.add("correct");
+        } else if (idx === selectedIdx && !isCorrect) {
+          opt.classList.add("incorrect");
+        }
+      });
+
+      // Calcular marcador
+      if (isCorrect) {
+        state.quizCorrectHits++;
+        document.getElementById("quiz-explanation-status").textContent = "¡Respuesta Correcta! ¡Excelente!";
+        document.getElementById("quiz-explanation-status").style.color = "var(--c-green)";
+      } else {
+        state.quizIncorrectMisses++;
+        state.quizWrongUnits.add(q.unit); // Registrar unidad de fallo
+        document.getElementById("quiz-explanation-status").textContent = "Respuesta Incorrecta.";
+        document.getElementById("quiz-explanation-status").style.color = "var(--c-coral)";
+      }
+
+      // Mostrar Explicación
+      const expPanel = document.getElementById("quiz-explanation-panel");
+      document.getElementById("quiz-explanation-text").textContent = q.explanation;
+      expPanel.style.display = "flex";
+      
+      // Tokenizar la explicación de la respuesta
+      highlightTermsInElement(document.getElementById("quiz-explanation-text"));
+
+      // Mostrar Botón Siguiente
+      document.getElementById("quiz-next-btn").style.display = "block";
+      
+      // Actualizar marcador inmediato en header
+      document.getElementById("quiz-score-badge").textContent = `Aciertos: ${state.quizCorrectHits}/${qIdx + 1}`;
+    }
+
+    function nextQuizQuestion() {
+      state.quizCurrentQuestionIdx++;
+      
+      if (state.quizCurrentQuestionIdx < state.quizCurrentQuestions.length) {
+        renderQuizQuestion();
+      } else {
+        renderQuizResults();
+      }
+    }
+
+    function renderQuizResults() {
+      // Ocultar Examen Activo, Mostrar Resultados
+      document.getElementById("quiz-active-view").style.display = "none";
+      document.getElementById("quiz-results-view").style.display = "flex";
+
+      const total = state.quizCurrentQuestions.length;
+      const score = state.quizCorrectHits;
+      const pct = Math.round((score / total) * 100);
+
+      // Anillo de progreso SVG
+      const circle = document.getElementById("circle-progress-bar");
+      const circumference = 440; // 2 * pi * r (r=70)
+      const offset = circumference - (pct / 100) * circumference;
+      circle.style.strokeDashoffset = offset;
+      
+      // Colorear círculo según resultado
+      if (pct >= 80) {
+        circle.style.stroke = "var(--c-green)";
+      } else if (pct >= 50) {
+        circle.style.stroke = "var(--c-amber)";
+      } else {
+        circle.style.stroke = "var(--c-coral)";
+      }
+
+      // Escribir puntuación
+      document.getElementById("quiz-final-percentage").textContent = `${pct}%`;
+      document.getElementById("quiz-final-score-text").textContent = `Obtuviste ${score} aciertos de ${total} preguntas evaluadas.`;
+
+      // Texto de aliento
+      const finalTitle = document.getElementById("quiz-final-title");
+      if (pct >= 85) {
+        finalTitle.textContent = "🏆 ¡Excelencia Académica!";
+      } else if (pct >= 70) {
+        finalTitle.textContent = "👍 ¡Muy Buen Desempeño!";
+      } else if (pct >= 50) {
+        finalTitle.textContent = "📚 Aprobado. Te recomendamos repasar.";
+      } else {
+        finalTitle.textContent = "⚠️ Nivel Insuficiente. Requiere Estudio.";
+      }
+
+      // Escribir Recomendaciones Dinámicas en base a unidades erradas
+      const recList = document.getElementById("quiz-recommendations-list");
+      recList.innerHTML = "";
+
+      if (state.quizWrongUnits.size === 0) {
+        const li = document.createElement("li");
+        li.textContent = "¡Perfecto! Respondiste correctamente todas las unidades. Estás listo para el examen final.";
+        recList.appendChild(li);
+      } else {
+        // Encontrar nombres de unidades correspondientes a las siglas erradas
+        state.quizWrongUnits.forEach(uNum => {
+          const matchingUnit = units.find(u => u.num === uNum);
+          if (matchingUnit) {
+            const li = document.createElement("li");
+            li.innerHTML = `Debes repasar la <strong>Unidad ${matchingUnit.num}: ${matchingUnit.title}</strong> (fallos en conceptos clave asociados).`;
+            recList.appendChild(li);
+          }
+        });
+      }
+
+      recalculateGlobalProgress();
+    }
+
+    function resetQuiz() {
+      document.getElementById("quiz-results-view").style.display = "none";
+      document.getElementById("quiz-active-view").style.display = "none";
+      document.getElementById("quiz-config-view").style.display = "flex";
+    }
+
+    /* ==========================================================================
+       12. PESTAÑA 4: MÓDULO DE GLOSARIO Y BUSCADOR CENTRAL
+       ========================================================================== */
+    function initSearchGlosario() {
+      // Inyectar abecedario del glosario
+      renderGlossaryAlphabet();
+      
+      // Renderizar todos los elementos por defecto
+      renderGlossaryResults();
+      renderConceptsSearchResults();
+      
+      // Listener de búsqueda instantánea
+      const input = document.getElementById("search-input");
+      input.addEventListener("input", (e) => {
+        state.searchQuery = e.target.value;
+        // Deseleccionar letra del abecedario
+        state.selectedLetterFilter = "";
+        document.querySelectorAll(".letter-btn").forEach(btn => btn.classList.remove("active"));
+        
+        // Filtrar
+        renderGlossaryResults();
+        renderConceptsSearchResults();
+      });
+    }
+
+    function renderGlossaryAlphabet() {
+      const container = document.getElementById("glossary-letters-container");
+      container.innerHTML = "";
+
+      // Tomar letras iniciales de los términos disponibles
+      const letters = new Set();
+      Object.keys(KNOWLEDGE_BASE).forEach(key => {
+        letters.add(key.charAt(0).toUpperCase());
+      });
+
+      const sortedLetters = Array.from(letters).sort();
+
+      // Botón "Todas"
+      const btnAll = document.createElement("button");
+      btnAll.className = "letter-btn active";
+      btnAll.textContent = "All";
+      btnAll.onclick = () => {
+        state.selectedLetterFilter = "";
+        state.searchQuery = "";
+        document.getElementById("search-input").value = "";
+        document.querySelectorAll(".letter-btn").forEach(b => b.classList.remove("active"));
+        btnAll.classList.add("active");
+        renderGlossaryResults();
+        renderConceptsSearchResults();
+      };
+      container.appendChild(btnAll);
+
+      sortedLetters.forEach(l => {
+        const btn = document.createElement("button");
+        btn.className = "letter-btn";
+        btn.textContent = l;
+        btn.onclick = () => {
+          document.querySelectorAll(".letter-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          
+          state.selectedLetterFilter = l;
+          state.searchQuery = ""; // Borrar input
+          document.getElementById("search-input").value = "";
+          
+          renderGlossaryResults();
+          renderConceptsSearchResults(); // Vaciará o filtrará
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function renderGlossaryResults() {
+      const grid = document.getElementById("glossary-results-grid");
+      grid.innerHTML = "";
+
+      const query = state.searchQuery.toLowerCase().trim();
+      const letter = state.selectedLetterFilter;
+
+      // Filtrar términos
+      let filteredKeys = Object.keys(KNOWLEDGE_BASE);
+
+      if (query !== "") {
+        filteredKeys = filteredKeys.filter(key => {
+          const t = KNOWLEDGE_BASE[key];
+          return key.toLowerCase().includes(query) || 
+                 t.name.toLowerCase().includes(query) || 
+                 (t.expansion && t.expansion.toLowerCase().includes(query)) ||
+                 t.desc.toLowerCase().includes(query) ||
+                 t.category.toLowerCase().includes(query);
+        });
+      } else if (letter !== "") {
+        filteredKeys = filteredKeys.filter(key => key.startsWith(letter));
+      }
+
+      // Ordenar alfabéticamente
+      filteredKeys.sort();
+
+      // Renderizar
+      if (filteredKeys.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; color: var(--text-tertiary); text-align:center; padding: 2rem;">No se encontraron siglas ni herramientas bajo este filtro.</div>`;
+        return;
+      }
+
+      filteredKeys.forEach(key => {
+        const t = KNOWLEDGE_BASE[key];
+        const card = document.createElement("div");
+        card.className = "glossary-card";
+        
+        let expansionHtml = t.expansion ? `<div class="glossary-card-expansion">${t.expansion}</div>` : "";
+        let linkHtml = t.link ? `<a href="${t.link}" target="_blank" class="glossary-card-link">Saber más ↗</a>` : "";
+        let catColor = getCategoryColorClass(t.category);
+
+        card.innerHTML = `
+          <div class="glossary-card-header">
+            <h4 class="glossary-card-title">${t.name}</h4>
+            <span class="badge ${catColor}" style="font-size: 0.65rem;">${t.category}</span>
+          </div>
+          ${expansionHtml}
+          <p class="glossary-card-desc">${t.desc}</p>
+          ${linkHtml}
+        `;
+        grid.appendChild(card);
+      });
+
+      // Tokenizar textos internos del glosario
+      highlightTermsInElement(grid);
+    }
+
+    function renderConceptsSearchResults() {
+      const grid = document.getElementById("concepts-results-grid");
+      const container = document.getElementById("concepts-results-container");
+      grid.innerHTML = "";
+
+      const query = state.searchQuery.toLowerCase().trim();
+
+      // Si no hay búsqueda de texto, ocultamos la sección de conceptos de unidades
+      if (query === "") {
+        container.style.display = "none";
+        return;
+      }
+
+      container.style.display = "block";
+      let matches = [];
+
+      // Recorrer todos los conceptos de todas las unidades
+      units.forEach((u, uIdx) => {
+        u.concepts.forEach((c, cIdx) => {
+          if (c.name.toLowerCase().includes(query) || c.desc.toLowerCase().includes(query)) {
+            matches.push({
+              concept: c.name,
+              desc: c.desc,
+              unitTitle: u.title,
+              unitNum: u.num,
+              unitIdx: uIdx,
+              color: u.color
+            });
+          }
+        });
+      });
+
+      if (matches.length === 0) {
+        grid.innerHTML = `<div style="color: var(--text-tertiary); text-align:center; padding: 1.5rem;">No se encontraron conceptos de estudio que coincidan con la búsqueda.</div>`;
+        return;
+      }
+
+      matches.forEach(m => {
+        const row = document.createElement("div");
+        row.className = "found-concept-row";
+        row.onclick = () => {
+          // Cambiar a pestaña 1
+          switchTab("unidades");
+          // Seleccionar unidad
+          selectUnit(m.unitIdx);
+        };
+
+        row.innerHTML = `
+          <div class="found-concept-info">
+            <span class="badge badge-${m.color}" style="font-size:0.65rem; width:fit-content; margin-bottom:0.25rem;">Unidad ${m.unitNum}</span>
+            <strong style="font-size:1.05rem; font-family:var(--font-display);">${m.concept}</strong>
+            <span style="font-size:0.85rem; color:var(--text-secondary);">${m.desc}</span>
+          </div>
+          <div class="found-concept-nav">Ir a Unidad →</div>
+        `;
+        grid.appendChild(row);
+      });
+
+      // Tokenizar textos resultantes
+      highlightTermsInElement(grid);
+    }
+
+    function getCategoryColorClass(cat) {
+      switch(cat) {
+        case "Concepto Fundamental": return "badge-purple";
+        case "Amenaza / Ataque": return "badge-coral";
+        case "Metodología": return "badge-teal";
+        case "Métrica / Riesgo": return "badge-teal";
+        case "Concepto de Negocio": return "badge-blue";
+        case "Estándar / Marco": return "badge-blue";
+        case "Estándar Internacional": return "badge-blue";
+        case "Estándar de la Industria": return "badge-blue";
+        case "Métrica": return "badge-amber";
+        case "Marco Legal / Regulación": return "badge-coral";
+        case "Concepto de Acceso": return "badge-purple";
+        case "Tecnología de Seguridad": return "badge-teal";
+        case "Tecnología / Protocolo": return "badge-teal";
+        case "Tecnología / Rol de Red": return "badge-blue";
+        case "Herramienta Open-Source": return "badge-amber";
+        case "Herramienta Propietaria": return "badge-amber";
+        case "Herramienta Corporativa": return "badge-amber";
+        case "Herramienta de Análisis": return "badge-amber";
+        case "Herramienta de Pentesting": return "badge-amber";
+        case "Organización / Consorcio": return "badge-blue";
+        case "Organismo Gubernamental": return "badge-blue";
+        case "Tecnología S.O.": return "badge-teal";
+        case "Tecnología Hardware/Software": return "badge-teal";
+        case "Autor de Referencia": return "badge-purple";
+        default: return "badge-blue";
+      }
+    }
+
+    /* ==========================================================================
+       13. TOKENIZADOR AUTOMÁTICO DE TÉRMINOS TÉCNICOS (DOM TREE WALKER)
+       ========================================================================== */
+    function highlightTermsInElement(element) {
+      if (!element) return;
+      
+      const sortedTerms = Object.keys(KNOWLEDGE_BASE).sort((a, b) => b.length - a.length);
+      
+      // Escapar términos para regex
+      const escapedTerms = sortedTerms.map(t => t.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+      
+      // Regex que busca los términos técnicos con límites de palabras (\b)
+      const regex = new RegExp(`\\b(${escapedTerms.join('|')})\\b`, 'gi');
+      
+      const walker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT, null, false);
+      const textNodes = [];
+      
+      while (walker.nextNode()) {
+        const parent = walker.currentNode.parentNode;
+        // Evitar inyecciones infinitas dentro de tags no deseados o ya reemplazados
+        if (parent.tagName === 'SCRIPT' || 
+            parent.tagName === 'STYLE' || 
+            parent.tagName === 'A' ||
+            parent.classList.contains('term-highlight') ||
+            parent.closest('.term-highlight') ||
+            parent.closest('a')) {
+          continue;
+        }
+        textNodes.push(walker.currentNode);
+      }
+      
+      // Reemplazo en reversa para no alterar punteros activos
+      for (let i = textNodes.length - 1; i >= 0; i--) {
+        const node = textNodes[i];
+        const text = node.nodeValue;
+        
+        if (regex.test(text)) {
+          regex.lastIndex = 0; // reset
+          const fragment = document.createDocumentFragment();
+          let lastIndex = 0;
+          let match;
+          
+          while ((match = regex.exec(text)) !== null) {
+            // Texto anterior al match
+            if (match.index > lastIndex) {
+              fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
+            }
+            
+            // Término detectado
+            const termText = match[1];
+            const span = document.createElement("span");
+            span.className = "term-highlight";
+            
+            // Encontrar clave exacta case-insensitive en el diccionario
+            const matchedKey = sortedTerms.find(k => k.toLowerCase() === termText.toLowerCase());
+            span.dataset.term = matchedKey;
+            span.textContent = termText;
+            
+            fragment.appendChild(span);
+            lastIndex = regex.lastIndex;
+          }
+          
+          if (lastIndex < text.length) {
+            fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+          }
+          
+          node.parentNode.replaceChild(fragment, node);
+        }
+      }
+    }
+
+    /* ==========================================================================
+       14. GESTIÓN OPERATIVA DE TOOLTIPS FLOTANTES (POPOVERS)
+       ========================================================================== */
+    let tooltipTimeout;
+
+    function initTooltipListeners() {
+      // Evento Mouseover en Escritorio
+      document.addEventListener("mouseover", (e) => {
+        const highlight = e.target.closest(".term-highlight");
+        if (!highlight) return;
+        
+        clearTimeout(tooltipTimeout);
+        const termKey = highlight.dataset.term;
+        const data = KNOWLEDGE_BASE[termKey];
+        if (!data) return;
+        
+        showTooltip(highlight, data);
+      });
+      
+      // Evento Mouseout en Escritorio
+      document.addEventListener("mouseout", (e) => {
+        const highlight = e.target.closest(".term-highlight");
+        const tooltip = e.target.closest("#tooltip-card");
+        if (!highlight && !tooltip) return;
+        
+        clearTimeout(tooltipTimeout);
+        tooltipTimeout = setTimeout(hideTooltip, 220);
+      });
+
+      // Mantener tooltip si pasamos ratón dentro del tooltip
+      const tooltipCard = document.getElementById("tooltip-card");
+      tooltipCard.addEventListener("mouseenter", () => {
+        clearTimeout(tooltipTimeout);
+      });
+      tooltipCard.addEventListener("mouseleave", () => {
+        clearTimeout(tooltipTimeout);
+        tooltipTimeout = setTimeout(hideTooltip, 220);
+      });
+
+      // Soporte Móvil Táctil: clicks/taps
+      document.addEventListener("click", (e) => {
+        const highlight = e.target.closest(".term-highlight");
+        if (highlight) {
+          // Prevenir saltos o comportamientos por defecto
+          e.preventDefault();
+          const termKey = highlight.dataset.term;
+          const data = KNOWLEDGE_BASE[termKey];
+          if (data) {
+            showTooltip(highlight, data);
+          }
+        } else if (!e.target.closest("#tooltip-card")) {
+          // Si hace clic fuera, ocultar
+          hideTooltip();
+        }
+      });
+    }
+
+    function showTooltip(targetElement, data) {
+      const tooltip = document.getElementById("tooltip-card");
+      
+      // Popular datos
+      document.getElementById("tt-title").textContent = data.name;
+      
+      const badge = document.getElementById("tt-badge");
+      badge.textContent = data.category;
+      badge.className = `badge tooltip-badge ${getCategoryColorClass(data.category)}`;
+      
+      const expBox = document.getElementById("tt-expansion");
+      if (data.expansion) {
+        expBox.textContent = data.expansion;
+        expBox.style.display = "block";
+      } else {
+        expBox.style.display = "none";
+      }
+      
+      document.getElementById("tt-body").textContent = data.desc;
+      
+      const link = document.getElementById("tt-link");
+      if (data.link) {
+        link.href = data.link;
+        link.style.display = "inline-flex";
+      } else {
+        link.style.display = "none";
+      }
+      
+      // Mostrar display para poder medir
+      tooltip.style.display = "block";
+      tooltip.offsetHeight; // Forzar reflow para transiciones fluidas
+      
+      // Posicionamiento dinámico inteligente
+      const targetRect = targetElement.getBoundingClientRect();
+      const tooltipRect = tooltip.getBoundingClientRect();
+      const scrollTop = window.scrollY || document.documentElement.scrollTop;
+      const scrollLeft = window.scrollX || document.documentElement.scrollLeft;
+      
+      // Intento por defecto: arriba del término
+      let top = targetRect.top + scrollTop - tooltipRect.height - 12;
+      let left = targetRect.left + scrollLeft + (targetRect.width / 2) - (tooltipRect.width / 2);
+      
+      // Si se sale de la pantalla superior, se posiciona abajo
+      if (targetRect.top - tooltipRect.height - 12 < 0) {
+        top = targetRect.bottom + scrollTop + 12;
+      }
+      
+      // Límites de pantalla izquierdo e izquierdo
+      if (left < 12) {
+        left = 12;
+      } else if (left + tooltipRect.width > window.innerWidth - 12) {
+        left = window.innerWidth - tooltipRect.width - 12;
+      }
+      
+      tooltip.style.top = `${top}px`;
+      tooltip.style.left = `${left}px`;
+      tooltip.classList.add("active");
+      
+      // Accesibilidad
+      tooltip.setAttribute("aria-hidden", "false");
+    }
+
+    function hideTooltip() {
+      const tooltip = document.getElementById("tooltip-card");
+      tooltip.classList.remove("active");
+      tooltip.setAttribute("aria-hidden", "true");
+      
+      setTimeout(() => {
+        if (!tooltip.classList.contains("active")) {
+          tooltip.style.display = "none";
+        }
+      }, 180);
+    }
+
+    /* ==========================================================================
+       15. CÁLCULO GENERAL DEL PROGRESO DE ESTUDIO (HEADER METRICS)
+       ========================================================================== */
+    function recalculateGlobalProgress() {
+      // Peso 1: Flashcards repasadas (máximo 80 conceptos)
+      const totalConcepts = 80;
+      let fcLearned = 0;
+      Object.keys(state.flashcardScores).forEach(key => {
+        if (state.flashcardScores[key] === true) {
+          fcLearned++;
+        }
+      });
+      
+      // Peso 2: Aciertos en simulacro (máximo registrado)
+      const maxPossibleScore = 20;
+      const hitScore = Math.min(state.quizCorrectHits, maxPossibleScore);
+      
+      // Puntuación combinada ponderada
+      const fcWeight = 0.6; // 60% peso memoria de tarjetas
+      const quizWeight = 0.4; // 40% peso examen simulado
+      
+      const fcProgress = fcLearned / totalConcepts;
+      const quizProgress = hitScore / maxPossibleScore;
+      
+      const combinedProgress = Math.round(((fcProgress * fcWeight) + (quizProgress * quizWeight)) * 100);
+      
+      // Escribir en interfaz
+      document.getElementById("progress-val").textContent = `${Math.min(combinedProgress, 100)}%`;
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cifrado Simétrico Buscable (SSE) | Criptografía Simétrica Avanzada</title>
+    <meta name="description" content="Simulador interactivo premium y análisis matemático de esquemas de Cifrado Simétrico Buscable (SSE) para almacenamiento confidencial y auditabilidad inmutable.">
+    <meta name="keywords" content="SSE, Cifrado Simétrico Buscable, Criptografía, AES-GCM, HMAC, Curtmola, Song, Leakage, Patrón de Acceso, Ciberseguridad">
+    <meta name="author" content="Maestría en Ciberseguridad">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <!-- Stylesheet Link -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="cyber-theme">
+    <!-- Animated Matrix-like Tech Background Grid -->
+    <div class="tech-grid"></div>
+    <div class="tech-glow-1"></div>
+    <div class="tech-glow-2"></div>
+
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar-nav">
+            <div class="brand">
+                <div class="brand-icon">
+                    <i data-lucide="shield-check" class="neon-purple-icon"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>SSE-CRYPT</h1>
+                    <span>TRABAJO FINAL</span>
+                </div>
+            </div>
+            
+            <nav class="nav-links">
+                <button class="nav-item active" data-tab="tab-dashboard" id="btn-tab-dashboard">
+                    <i data-lucide="layout-dashboard"></i>
+                    <span>Dashboard Principal</span>
+                </button>
+                <button class="nav-item" data-tab="tab-simulator" id="btn-tab-simulator">
+                    <i data-lucide="cpu"></i>
+                    <span>Lab Criptográfico</span>
+                </button>
+                <button class="nav-item" data-tab="tab-leakage" id="btn-tab-leakage">
+                    <i data-lucide="eye-off"></i>
+                    <span>Analizador de Fugas</span>
+                </button>
+                <button class="nav-item" data-tab="tab-math" id="btn-tab-math">
+                    <i data-lucide="binary"></i>
+                    <span>Análisis Criptográfico</span>
+                </button>
+                <button class="nav-item" data-tab="tab-document" id="btn-tab-document">
+                    <i data-lucide="scroll-text"></i>
+                    <span>Tesis & Documento</span>
+                </button>
+            </nav>
+            
+            <div class="crypto-status">
+                <div class="status-header">
+                    <span class="pulse-indicator green"></span>
+                    <span>Núcleo Criptográfico</span>
+                </div>
+                <p id="crypto-engine-info">Web Crypto API: Activo</p>
+                <div class="key-indicator">
+                    <span>Master Key: </span>
+                    <span id="master-key-state" class="key-hex">No Generada</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- SECTION 1: DASHBOARD -->
+            <section id="tab-dashboard" class="tab-pane active">
+                <div class="dashboard-header">
+                    <div class="header-pre">Tesis de Criptografía Simétrica Aplicada</div>
+                    <h2>Análisis de esquemas de Cifrado Simétrico Buscable (SSE) para el almacenamiento confidencial y auditabilidad inmutable</h2>
+                    <p class="subtitle">Propuesta metodológica para la preservación de la privacidad y atenuación de filtraciones en la nube a través del modelo de listas cifradas sublineales de Curtmola et al.</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card border-cyan">
+                        <div class="stat-icon bg-cyan">
+                            <i data-lucide="lock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Seguridad IND-CPA</h3>
+                            <p>Toda la confidencialidad de logs se apoya en cifrado probabilístico AES-GCM de 256 bits, imposibilitando el criptoanálisis de datos en reposo.</p>
+                        </div>
+                    </div>
+                    <div class="stat-card border-purple">
+                        <div class="stat-icon bg-purple">
+                            <i data-lucide="zap"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Búsqueda Sublineal O(t)</h3>
+                            <p>El índice invertido cifrado basado en Curtmola permite búsquedas inmediatas en función del número de coincidencias y no de la base de datos.</p>
+                        </div>
+                    </div>
+                    <div class="stat-card border-green">
+                        <div class="stat-icon bg-green">
+                            <i data-lucide="fingerprint"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Búsqueda Ciega (Zero-Knowledge)</h3>
+                            <p>El servidor evalúa tokens sin descifrar claves ni revelar qué palabras se están consultando.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-widgets">
+                    <div class="widget card glassmorphic large-widget">
+                        <div class="widget-header">
+                            <i data-lucide="book-open" class="cyan-icon"></i>
+                            <h3>El Dilema de la Criptografía Simétrica Tradicional</h3>
+                        </div>
+                        <div class="widget-body">
+                            <p>En los esquemas tradicionales de cifrado simétrico, los textos cifrados se comportan como <strong>cajas negras impenetrables</strong>. Si ciframos logs de auditoría en un SIEM en la nube con AES de manera probabilística, realizar búsquedas de indicadores de compromiso (IoC) requiere descargar toda la base de datos cifrada y descifrarla en un entorno local seguro. Esto genera una sobrecarga inviable.</p>
+                            <p><strong>Cifrado Simétrico Buscable (SSE)</strong> resuelve este compromiso. Al estructurar el índice de datos de manera cifrada e indexada localmente, el cliente delega la tarea de filtrado al servidor. Al usar claves simétricas compartidas y funciones pseudoaleatorias (PRFs), el servidor puede ejecutar un emparejamiento determinista "ciego" sobre etiquetas protegidas, devolviendo solo los registros coincidentes.</p>
+                            <div class="cta-actions">
+                                <button class="btn btn-primary" onclick="switchTab('tab-simulator')">
+                                    <span>Ir al Simulador SSE</span>
+                                    <i data-lucide="arrow-right"></i>
+                                </button>
+                                <button class="btn btn-secondary" onclick="switchTab('tab-document')">
+                                    <span>Leer Tesis Académica</span>
+                                    <i data-lucide="book"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget card glassmorphic small-widget">
+                        <div class="widget-header">
+                            <i data-lucide="alert-triangle" class="yellow-icon"></i>
+                            <h3>El Peligro del Leakage (Goteo)</h3>
+                        </div>
+                        <div class="widget-body">
+                            <p>Aun usando AES y HMAC matemáticamente seguros, los esquemas de SSE filtran dos patrones:</p>
+                            <ul class="leakage-list-small">
+                                <li>
+                                    <strong>Search Pattern:</strong> El servidor sabe si buscas la misma palabra repetidas veces.
+                                </li>
+                                <li>
+                                    <strong>Access Pattern:</strong> El servidor sabe qué documentos exactos coinciden con tus búsquedas.
+                                </li>
+                            </ul>
+                            <p>Esto permite a servidores curiosos deducir el contenido de tus logs mediante <strong>ataques de volumen y de inyección</strong>.</p>
+                            <button class="btn btn-outline-warning" onclick="switchTab('tab-leakage')">
+                                <span>Ver Lab de Leakage</span>
+                                <i data-lucide="shield-alert"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 2: SIMULATOR -->
+            <section id="tab-simulator" class="tab-pane">
+                <div class="tab-header">
+                    <h2>Laboratorio Práctico de Cifrado Simétrico Buscable</h2>
+                    <p>Experimenta en tiempo real con las fases criptográficas cliente-servidor de un esquema SSE-1 sublineal (Curtmola et al.) operando sobre logs tácticos de ciberseguridad.</p>
+                </div>
+
+                <!-- Simulation Stepper -->
+                <div class="simulation-stepper">
+                    <div class="step-nav">
+                        <button class="step-nav-btn active" data-step="step-setup" id="btn-step-setup">
+                            <span class="step-num">1</span>
+                            <span class="step-label">Cripto Setup & Claves</span>
+                        </button>
+                        <div class="step-connector"></div>
+                        <button class="step-nav-btn" data-step="step-index" id="btn-step-index">
+                            <span class="step-num">2</span>
+                            <span class="step-label">Indexación & Cifrado</span>
+                        </button>
+                        <div class="step-connector"></div>
+                        <button class="step-nav-btn" data-step="step-search" id="btn-step-search">
+                            <span class="step-num">3</span>
+                            <span class="step-label">Búsqueda Ciega (Servidor)</span>
+                        </button>
+                    </div>
+
+                    <div class="step-content-container">
+                        <!-- Step 1: Crypto Setup & Key Generation -->
+                        <div id="step-setup" class="step-pane active">
+                            <div class="step-grid">
+                                <div class="step-info-panel">
+                                    <h3>Fase Cliente: Inicialización y Derivación de Claves</h3>
+                                    <p>Antes de interactuar con el servidor ciego, el cliente debe generar su material de claves. A partir de una <strong>Clave Maestra</strong> (o passphrase) y un Salt, utilizaremos el algoritmo simétrico **PBKDF2-HMAC-SHA256** para derivar tres claves simétricas independientes y robustas:</p>
+                                    <ul>
+                                        <li><strong>K1 (Clave PRF de Direccionamiento):</strong> Genera etiquetas de palabras para posicionarlas en el servidor de forma pseudoaleatoria. $T_1(w) = \text{PRF}_{K1}(w)$.</li>
+                                        <li><strong>K2 (Clave PRF de Enmascaramiento):</strong> Cifra las claves locales de enmascaramiento de las listas enlazadas. $K_w = \text{PRF}_{K2}(w)$.</li>
+                                        <li><strong>K3 (Clave AES de Documentos):</strong> Cifra de manera probabilística los archivos y logs utilizando **AES-GCM de 256 bits** con un nonce aleatorio.</li>
+                                    </ul>
+                                </div>
+                                <div class="step-action-panel card glassmorphic">
+                                    <div class="form-group">
+                                        <label for="master-password">Contraseña Maestra (Cliente)</label>
+                                        <input type="text" id="master-password" value="CriptografiaSimetricaTrabajoFinal2026!#" class="cyber-input">
+                                    </div>
+                                    <button class="btn btn-cyan btn-full" id="btn-generate-keys">
+                                        <i data-lucide="key-round"></i>
+                                        <span>Derivar Claves Simétricas Simuladas</span>
+                                    </button>
+                                    
+                                    <div class="keys-display-area mt-4">
+                                        <h4>Claves Simétricas Derivadas (Hex):</h4>
+                                        <div class="key-hex-box">
+                                            <span class="key-name">K1 (Tags / PRF):</span>
+                                            <code id="key-k1-display">0000000000000000000000000000000000000000000000000000000000000000</code>
+                                        </div>
+                                        <div class="key-hex-box mt-2">
+                                            <span class="key-name">K2 (List Mask / PRF):</span>
+                                            <code id="key-k2-display">0000000000000000000000000000000000000000000000000000000000000000</code>
+                                        </div>
+                                        <div class="key-hex-box mt-2">
+                                            <span class="key-name">K3 (AES Docs):</span>
+                                            <code id="key-k3-display">0000000000000000000000000000000000000000000000000000000000000000</code>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="step-navigation-footer mt-4">
+                                        <button class="btn btn-primary" onclick="goToStep('step-index')" disabled id="btn-next-to-index">
+                                            <span>Siguiente: Indexar Logs</span>
+                                            <i data-lucide="arrow-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Indexation and Encrypted Index Generation -->
+                        <div id="step-index" class="step-pane">
+                            <div class="step-grid large-step-grid">
+                                <div class="logs-input-area">
+                                    <h3>Fase Cliente: Datos de Auditoría Táctica (Logs)</h3>
+                                    <p class="description">Estos son los registros sensibles en texto plano que el cliente desea resguardar confidencialmente en el servidor, manteniendo su capacidad de búsqueda.</p>
+                                    
+                                    <div class="logs-table-container">
+                                        <table class="cyber-table">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 80px;">Log ID</th>
+                                                    <th>Contenido del Registro (Texto Plano)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="logs-tbody">
+                                                <tr>
+                                                    <td><code>LOG_01</code></td>
+                                                    <td><input type="text" class="log-input-row" value="192.168.1.105 failed admin password login attempt" data-id="LOG_01"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>LOG_02</code></td>
+                                                    <td><input type="text" class="log-input-row" value="192.168.1.105 success admin login console SSH" data-id="LOG_02"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>LOG_03</code></td>
+                                                    <td><input type="text" class="log-input-row" value="10.0.0.4 database server root connection timeout" data-id="LOG_03"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>LOG_04</code></td>
+                                                    <td><input type="text" class="log-input-row" value="10.0.0.4 beaconing activity malware Trojan detect" data-id="LOG_04"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td><code>LOG_05</code></td>
+                                                    <td><input type="text" class="log-input-row" value="192.168.1.100 root failed login firewall deny" data-id="LOG_05"></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="logs-actions mt-3">
+                                        <button class="btn btn-outline" id="btn-add-log-row"><i data-lucide="plus"></i> Agregar Fila</button>
+                                        <button class="btn btn-purple" id="btn-build-index">
+                                            <i data-lucide="shield-check"></i>
+                                            <span>Construir e Indexar Cifrado (SSE-1)</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="index-output-area card glassmorphic">
+                                    <h3>Fase Servidor: Almacenamiento Ciego del Índice</h3>
+                                    <p class="description">El servidor recibe las listas enlazadas cifradas en una <strong>Tabla Hash desordenada</strong>. Cada dirección es pseudoaleatoria y los nodos enmascaran el ID y el enlace al siguiente nodo con la clave $K_w$.</p>
+                                    
+                                    <div class="server-storage-container">
+                                        <div class="server-storage-tabs">
+                                            <button class="storage-tab-btn active" data-storage="storage-index">Índice Cifrado ($I$)</button>
+                                            <button class="storage-tab-btn" data-storage="storage-docs">Logs Cifrados ($\mathbf{C}$)</button>
+                                        </div>
+                                        
+                                        <!-- Index Tab Content -->
+                                        <div id="storage-index" class="storage-tab-content active">
+                                            <div class="index-table-scroll">
+                                                <table class="cyber-table small-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Dirección Hash (Addr)</th>
+                                                            <th>Nodo Cifrado ($V_j = \text{Enc}_{K_w}(\text{ID} \mathbin{\Vert} \text{Siguiente})$)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="server-index-tbody">
+                                                        <tr>
+                                                            <td colspan="2" class="text-center text-muted">El servidor está vacío. Indexa tus datos.</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Documents Tab Content -->
+                                        <div id="storage-docs" class="storage-tab-content">
+                                            <div class="docs-table-scroll">
+                                                <table class="cyber-table small-table">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Log ID</th>
+                                                            <th>Contenido Cifrado (AES-256-GCM / IND-CPA)</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="server-docs-tbody">
+                                                        <tr>
+                                                            <td colspan="2" class="text-center text-muted">El servidor está vacío. Indexa tus datos.</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="step-navigation-footer mt-3">
+                                        <button class="btn btn-secondary" onclick="goToStep('step-setup')">
+                                            <i data-lucide="arrow-left"></i>
+                                            <span>Atrás</span>
+                                        </button>
+                                        <button class="btn btn-primary" onclick="goToStep('step-search')" disabled id="btn-next-to-search">
+                                            <span>Siguiente: Buscar a Ciegas</span>
+                                            <i data-lucide="arrow-right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Blind Match Search -->
+                        <div id="step-search" class="step-pane">
+                            <div class="step-grid">
+                                <div class="search-client-panel card glassmorphic">
+                                    <h3>Fase Cliente: Generación del Trapdoor</h3>
+                                    <p class="description">El cliente busca un IoC. Sin revelar la palabra al servidor, deriva la clave y la etiqueta de la consulta usando $K1$ y $K2$.</p>
+                                    
+                                    <div class="form-group">
+                                        <label for="search-query">Palabra Clave a Buscar (IoC)</label>
+                                        <div class="search-input-wrapper">
+                                            <input type="text" id="search-query" value="failed" placeholder="ej. failed, malware, admin, 10.0.0.4..." class="cyber-input">
+                                            <button class="btn btn-cyan" id="btn-search-trapdoor">
+                                                <i data-lucide="search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="trapdoor-display mt-3">
+                                        <h4>Trapdoor Generado ($T_w = (T_1, K_w)$):</h4>
+                                        <div class="key-hex-box compact">
+                                            <span class="key-name">T1 (Dirección inicial):</span>
+                                            <code id="trapdoor-t1">00000000000000000000...</code>
+                                        </div>
+                                        <div class="key-hex-box compact mt-2">
+                                            <span class="key-name">Kw (Llave de lista):</span>
+                                            <code id="trapdoor-kw">00000000000000000000...</code>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="search-results-display mt-3">
+                                        <h4>Logs Descifrados Localmente (Cliente):</h4>
+                                        <div class="decrypted-results-list" id="decrypted-results-container">
+                                            <div class="text-muted text-center py-3">Ninguna búsqueda realizada aún.</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="search-server-panel card glassmorphic border-purple">
+                                    <div class="server-badge">SERVIDOR EN LA NUBE CIEGO</div>
+                                    <h3>Fase Servidor: Recorrido y Emparejamiento Ciego</h3>
+                                    <p class="description">El servidor recibe $T_w$. Busca la etiqueta en su tabla hash y recorre la lista enlazada descifrando nodo a nodo con $K_w$ de forma ciega.</p>
+                                    
+                                    <div class="server-animation-box" id="server-anim-viewport">
+                                        <div class="anim-idle-state" id="anim-idle-message">
+                                            <i data-lucide="shield-alert" class="giant-purple-icon animate-pulse"></i>
+                                            <p>Esperando Trapdoor criptográfico del cliente para iniciar búsqueda ciega...</p>
+                                        </div>
+                                        <div class="anim-running-state hidden" id="anim-running-container">
+                                            <!-- Visualizing list traversal dynamically -->
+                                            <div class="anim-header-info">
+                                                <span>Direccionando tabla con $T_1$</span>
+                                                <span id="anim-current-addr" class="text-cyan">Addr: 0x7f83...</span>
+                                            </div>
+                                            <div class="animated-traversal-track" id="traversal-track">
+                                                <!-- Nodes will appear here dynamically -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="server-logs-found mt-3">
+                                        <h4>IDs recuperados del Almacenamiento:</h4>
+                                        <div class="ids-pill-box" id="found-ids-pills">
+                                            <span class="badge badge-muted">Ninguno</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 3: LEAKAGE -->
+            <section id="tab-leakage" class="tab-pane">
+                <div class="tab-header">
+                    <h2>Visualizador en Tiempo Real de Filtraciones (Leakage Analyzer)</h2>
+                    <p>Observe qué información es incapaz de ocultar SSE (Search Pattern y Access Pattern) frente a un servidor honesto pero curioso, y analice cómo actúan las mitigaciones criptográficas.</p>
+                </div>
+
+                <div class="leakage-grid">
+                    <div class="leakage-controls card glassmorphic">
+                        <h3>Configuración del Criptoanálisis</h3>
+                        <p class="description">Active mitigaciones en el lado del cliente y vuelva a realizar búsquedas en el simulador para observar cómo cambia el goteo de información.</p>
+                        
+                        <div class="mitigation-switches mt-4">
+                            <div class="switch-container">
+                                <div class="switch-info">
+                                    <h4>Alineación de Tamaño (Size Padding)</h4>
+                                    <p>Alinea el tamaño de todos los logs cifrados mediante relleno de bytes (PKCS#7) a una longitud fija para evitar inferir el contenido por longitud.</p>
+                                </div>
+                                <label class="cyber-switch">
+                                    <input type="checkbox" id="mitigation-size-padding">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="switch-connector"></div>
+
+                            <div class="switch-container">
+                                <div class="switch-info">
+                                    <h4>Padding de Volumen (Índice Cifrado)</h4>
+                                    <p>Añade identificadores de logs ficticios (Dummies) a las listas enlazadas cifradas para que todas las palabras parezcan tener la misma frecuencia de documentos.</p>
+                                </div>
+                                <label class="cyber-switch">
+                                    <input type="checkbox" id="mitigation-volume-padding">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="switch-connector"></div>
+
+                            <div class="switch-container">
+                                <div class="switch-info">
+                                    <h4>Consultas Dummy (Ruido)</h4>
+                                    <p>Envía periódicamente búsquedas ficticias aleatorias al servidor para aplanar por completo el Search Pattern e inutilizar ataques de frecuencia temporal.</p>
+                                </div>
+                                <label class="cyber-switch">
+                                    <input type="checkbox" id="mitigation-dummy-queries">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="exposure-meter-widget mt-4">
+                            <div class="meter-header">
+                                <span>Índice de Exposición del Criptosistema:</span>
+                                <span id="exposure-percentage" class="exposure-value high">95%</span>
+                            </div>
+                            <div class="meter-bar-wrapper">
+                                <div class="meter-bar-fill high" id="exposure-bar-fill" style="width: 95%;"></div>
+                            </div>
+                            <p class="meter-warning mt-2 text-warning" id="exposure-verdict">
+                                <i data-lucide="shield-alert"></i>
+                                <span>Riesgo Crítico: Un ataque de inyección o de reconstrucción por volumen puede deducir el 100% de las búsquedas en menos de 50 consultas.</span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="leakage-visualizer card glassmorphic border-purple">
+                        <h3>Visualización de Patrones de Fuga</h3>
+                        <p class="description">Lo que el Servidor "Honesto pero Curioso" ve en su consola de almacenamiento distribuido:</p>
+                        
+                        <div class="leakage-display-tabs">
+                            <button class="leakage-tab-btn active" data-leak="leak-search">Search Pattern (Historial de Trampas)</button>
+                            <button class="leakage-tab-btn" data-leak="leak-access">Access Pattern (Coincidencia de Documentos)</button>
+                        </div>
+
+                        <!-- Leak: Search Pattern -->
+                        <div id="leak-search" class="leak-tab-content active">
+                            <div class="timeline-visualizer">
+                                <div class="timeline-header">
+                                    <span>Línea Temporal de Consultas (Trapdoors recibidos):</span>
+                                    <button class="btn btn-xs btn-outline-danger" id="btn-clear-leak-history">Limpiar Historial</button>
+                                </div>
+                                <div class="timeline-track" id="timeline-query-track">
+                                    <!-- Dynamic query bubbles -->
+                                    <div class="text-center text-muted py-5">Esperando que realices búsquedas en la pestaña 'Lab Criptográfico'.</div>
+                                </div>
+                            </div>
+                            <div class="leak-card mt-3">
+                                <h4>Análisis Criptoanalítico del Search Pattern:</h4>
+                                <p>Al observar que el Trapdoor `0x4a1c...` ha sido consultado 3 veces, el servidor no sabe que la palabra es `"failed"`, pero sabe con certeza matemática absoluta que el analista ha buscado el mismo indicador en la consulta 1, 3 y 5. Esto revela la frecuencia de incidentes sospechosos.</p>
+                            </div>
+                        </div>
+
+                        <!-- Leak: Access Pattern -->
+                        <div id="leak-access" class="leak-tab-content">
+                            <div class="access-pattern-visualizer">
+                                <div class="access-pattern-header">
+                                    <span>Mapa de Intersección de Documentos Accedidos:</span>
+                                </div>
+                                
+                                <div class="access-graph-container" id="access-graph-canvas">
+                                    <!-- SVG or nodes rendering access leaks -->
+                                    <div class="text-center text-muted py-5">Esperando que realices búsquedas para mapear qué logs son revelados al servidor.</div>
+                                </div>
+                            </div>
+                            <div class="leak-card mt-3">
+                                <h4>Análisis Criptoanalítico del Access Pattern:</h4>
+                                <p>El servidor ve que la Consulta A accede a `LOG_01` y `LOG_02`, y la Consulta B accede a `LOG_02` y `LOG_05`. La intersección en `LOG_02` le permite al servidor vincular y clasificar semánticamente los archivos, abriendo el camino para ataques de reconstrucción del diccionario por análisis de distribución.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: CRYPTO MATH -->
+            <section id="tab-math" class="tab-pane">
+                <div class="tab-header">
+                    <h2>Análisis Matemático Formal de los Esquemas SSE</h2>
+                    <p>Comparación analítica del rigor criptográfico, la complejidad computacional y las garantías de confidencialidad en los principales esquemas simétricos buscables.</p>
+                </div>
+
+                <div class="math-card-grid">
+                    <div class="card glassmorphic">
+                        <h3>Song, Wagner y Perrig (2000)</h3>
+                        <div class="math-badge">Cifrado de Flujo Secuencial</div>
+                        <table class="math-specs">
+                            <tr>
+                                <td>Complejidad de Búsqueda:</td>
+                                <td class="text-cyan font-mono">$O(N \cdot L)$ (Lineal)</td>
+                            </tr>
+                            <tr>
+                                <td>Costo de Servidor:</td>
+                                <td class="text-warning">Extremadamente Alto (Cómputo por byte)</td>
+                            </tr>
+                            <tr>
+                                <td>Nivel de Filtración (Leakage):</td>
+                                <td class="text-danger">Crítico (Revela posiciones de palabras)</td>
+                            </tr>
+                            <tr>
+                                <td>Dinámico:</td>
+                                <td class="text-success">Sí (Permite añadir palabras localmente)</td>
+                            </tr>
+                        </table>
+                        <div class="math-formula-box">
+                            <strong>Ecuación de Comprobación:</strong>
+                            <code>C_i \oplus W_i = (L_i \mathbin{\Vert} R_i) \implies S_i = \text{PRF}_{k_i}(L_i) == R_i</code>
+                        </div>
+                        <p class="mt-3">El esquema fundacional. Requiere que el servidor descifre de forma parcial secuencialmente cada bloque usando claves efímeras derivadas, lo que destruye la escalabilidad para bases de datos del mundo real.</p>
+                    </div>
+
+                    <div class="card glassmorphic border-cyan">
+                        <h3>Curtmola, Garay, Ostrovsky y Yong (2006)</h3>
+                        <div class="math-badge">Índice Invertido Cifrado (SSE-1)</div>
+                        <table class="math-specs">
+                            <tr>
+                                <td>Complejidad de Búsqueda:</td>
+                                <td class="text-green font-mono">$O(t)$ (Sublineal Óptimo)</td>
+                            </tr>
+                            <tr>
+                                <td>Costo de Servidor:</td>
+                                <td class="text-green">Bajo (Solo lectura y saltos hash)</td>
+                            </tr>
+                            <tr>
+                                <td>Nivel de Filtración (Leakage):</td>
+                                <td class="text-warning">Moderado (Search & Access patterns)</td>
+                            </tr>
+                            <tr>
+                                <td>Dinámico:</td>
+                                <td class="text-danger">No (Añadir archivos requiere reconstruir)</td>
+                            </tr>
+                        </table>
+                        <div class="math-formula-box">
+                            <strong>Ecuación del Nodo de Lista:</strong>
+                            <code>V_j = \text{Enc}_{\text{PRF}_{K2}(w)}(\text{ID}_j \mathbin{\Vert} \text{Addr}_{j+1})</code>
+                        </div>
+                        <p class="mt-3">El estándar de oro para búsquedas estáticas eficientes. Los nodos se encuentran desordenados en el servidor en posiciones $Addr_j = \text{PRF}_{K1}(w \mathbin{\Vert} j)$, haciendo imposible rastrear la estructura sin el Trapdoor de búsqueda.</p>
+                    </div>
+
+                    <div class="card glassmorphic">
+                        <h3>Esquemas Dinámicos Modernos (Sophos/Diana)</h3>
+                        <div class="math-badge">Mapas Cifrados Dinámicos</div>
+                        <table class="math-specs">
+                            <tr>
+                                <td>Complejidad de Búsqueda:</td>
+                                <td class="text-green font-mono">$O(t)$ (Sublineal)</td>
+                            </tr>
+                            <tr>
+                                <td>Costo de Servidor:</td>
+                                <td class="text-cyan">Medio (Cómputo en actualización)</td>
+                            </tr>
+                            <tr>
+                                <td>Nivel de Filtración (Leakage):</td>
+                                <td class="text-success">Mínimo (Forward & Backward Private)</td>
+                            </tr>
+                            <tr>
+                                <td>Dinámico:</td>
+                                <td class="text-success">Sí (Modificación en tiempo real)</td>
+                            </tr>
+                        </table>
+                        <div class="math-formula-box">
+                            <strong>Clave Evolutiva de Actualización:</strong>
+                            <code>K_w^{(c+1)} = G(K_w^{(c)}) \implies \text{Forward Secure}</code>
+                        </div>
+                        <p class="mt-3">Añaden la capacidad de insertar y eliminar documentos de forma dinámica. Mitigan el leakage mediante claves evolutivas de un solo sentido (cadenas hash), impidiendo que el servidor asocie inserciones con búsquedas pasadas.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SECTION 5: WRITTEN THESIS DOCUMENT -->
+            <section id="tab-document" class="tab-pane">
+                <div class="thesis-viewer-card card glassmorphic">
+                    <div class="thesis-viewer-header">
+                        <div class="left">
+                            <i data-lucide="scroll-text" class="neon-purple-icon"></i>
+                            <h3>Visualizador del Documento de Investigación</h3>
+                        </div>
+                        <div class="right">
+                            <a href="SSE_Trabajo_Final.md" target="_blank" class="btn btn-sm btn-outline-cyan">
+                                <i data-lucide="external-link"></i>
+                                <span>Ver Archivo Fuente (.md)</span>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="thesis-table-of-contents">
+                        <h4>Tabla de Contenidos Interactiva</h4>
+                        <div class="toc-grid">
+                            <a href="#thesis-abstract">Resumen Ejecutivo</a>
+                            <a href="#thesis-intro">1. Introducción y Problema</a>
+                            <a href="#thesis-prelims">2. Preliminares Criptográficos</a>
+                            <a href="#thesis-evolution">3. Evolución de Esquemas</a>
+                            <a href="#thesis-leakage">4. Filtraciones y Criptoanálisis</a>
+                            <a href="#thesis-case">5. Modelado y Auditoría</a>
+                            <a href="#thesis-conclusion">6. Conclusiones</a>
+                        </div>
+                    </div>
+
+                    <div class="thesis-text-body" id="thesis-body-content">
+                        <!-- We will dynamically inject or render the academic paper here for premium reading feel, 
+                             beautifully styled with academic layout. -->
+                        <div class="academic-loading text-center py-5">
+                            <span class="spinner"></span>
+                            <p>Cargando cuerpo académico del trabajo final...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Script Links -->
+    <script src="documento.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
