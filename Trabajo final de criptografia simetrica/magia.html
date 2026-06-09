@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Magia Criptográfica de SSE | Laboratorio Visual</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --bg-main: hsl(224, 71%, 4%);
+            --bg-sidebar: hsl(224, 71%, 2%);
+            --bg-card: hsla(224, 71%, 8%, 0.65);
+            --border-color: hsla(217, 30%, 20%, 0.5);
+            
+            /* Neon Accents */
+            --accent-cyan: hsl(184, 100%, 45%);
+            --accent-cyan-glow: hsla(184, 100%, 45%, 0.3);
+            --accent-purple: hsl(280, 95%, 60%);
+            --accent-purple-glow: hsla(280, 95%, 60%, 0.3);
+            --accent-green: hsl(145, 100%, 40%);
+            --accent-green-glow: hsla(145, 100%, 40%, 0.25);
+            --accent-yellow: hsl(45, 100%, 50%);
+            --accent-yellow-glow: hsla(45, 100%, 50%, 0.2);
+            --accent-red: hsl(0, 85%, 55%);
+            --accent-red-glow: hsla(0, 85%, 55%, 0.2);
+            
+            /* Typography Colors */
+            --text-primary: hsl(210, 40%, 98%);
+            --text-secondary: hsl(215, 20%, 75%);
+            --text-muted: hsl(217, 10%, 50%);
+            
+            --transition-speed: 0.3s;
+            --border-radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-image: 
+                radial-gradient(at 10% 20%, hsla(280, 95%, 30%, 0.08) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, hsla(184, 100%, 30%, 0.06) 0px, transparent 50%);
+            overflow-x: hidden;
+        }
+
+        /* Animated Grid Background */
+        .tech-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(18, 30, 52, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(18, 30, 52, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Header Navigation */
+        header {
+            height: 80px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-sidebar);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, hsla(280, 95%, 60%, 0.2), hsla(184, 100%, 45%, 0.2));
+            border: 1px solid var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon i {
+            color: var(--accent-purple);
+            filter: drop-shadow(0 0 5px var(--accent-purple));
+        }
+
+        .logo-text h1 {
+            font-size: 1.35rem;
+            font-weight: 800;
+            letter-spacing: 1.5px;
+            background: linear-gradient(90deg, var(--text-primary), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        /* Nav Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            background-color: hsla(217, 30%, 15%, 0.4);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-speed);
+        }
+
+        .tab-btn:hover {
+            background-color: hsla(217, 30%, 25%, 0.6);
+            color: var(--text-primary);
+            border-color: var(--accent-cyan);
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent-purple-glow);
+            color: var(--text-primary);
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 12px var(--accent-purple-glow);
+        }
+
+        /* Main Content Area */
+        main {
+            flex: 1;
+            padding: 40px;
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards & Layout */
+        .hero-section {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 40px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-section h2 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-section p {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 25px;
+            max-width: 900px;
+        }
+
+        .grid-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 1.8fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @media (max-width: 1024px) {
+            .grid-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .card-title i {
+            color: var(--accent-cyan);
+        }
+
+        /* Styled list & text */
+        .info-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-list li {
+            font-size: 1.05rem;
+            line-height: 1.5;
+            color: var(--text-secondary);
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .info-list li::before {
+            content: "→";
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-weight: bold;
+        }
+
+        .info-list li strong {
+            color: var(--text-primary);
+        }
+
+        /* Interactive Widgets */
+        .interactive-playground {
+            background-color: hsla(224, 71%, 1%, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .label-text {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--accent-purple);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .input-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .input-field {
+            width: 100%;
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color var(--transition-speed);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        .action-btn {
+            background-color: var(--accent-purple-glow);
+            border: 1px solid var(--accent-purple);
+            color: var(--text-primary);
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all var(--transition-speed);
+        }
+
+        .action-btn:hover:not(:disabled) {
+            background-color: hsla(280, 95%, 60%, 0.3);
+            box-shadow: 0 0 15px var(--accent-purple-glow);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: var(--border-color);
+            background-color: transparent;
+        }
+
+        .action-btn.btn-cyan {
+            background-color: var(--accent-cyan-glow);
+            border-color: var(--accent-cyan);
+        }
+        .action-btn.btn-cyan:hover:not(:disabled) {
+            background-color: hsla(184, 100%, 45%, 0.3);
+            box-shadow: 0 0 15px var(--accent-cyan-glow);
+        }
+
+        /* Visual Consoles */
+        .console-container {
+            flex: 1;
+            background-color: hsla(224, 71%, 1%, 0.95);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            display: flex;
+            flex-direction: column;
+            min-height: 250px;
+            position: relative;
+        }
+
+        .console-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .console-body {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 350px;
+            line-height: 1.6;
+        }
+
+        /* Formulas & Math representations */
+        .math-box {
+            background-color: hsla(224, 71%, 2%, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--accent-green);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        /* Grid for Curtmola Memory Simulator */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .memory-cell {
+            border: 1px solid var(--border-color);
+            background-color: hsla(224, 71%, 1%, 0.6);
+            border-radius: 8px;
+            height: 75px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: default;
+        }
+
+        .memory-cell-addr {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            position: absolute;
+            top: 4px;
+            left: 6px;
+        }
+
+        .memory-cell.active-node {
+            border-color: var(--accent-cyan);
+            background-color: var(--accent-cyan-glow);
+            color: var(--text-primary);
+            box-shadow: 0 0 10px var(--accent-cyan-glow);
+        }
+
+        .memory-cell.visited-node {
+            border-color: var(--accent-green);
+            background-color: hsla(145, 100%, 40%, 0.1);
+            color: var(--accent-green);
+        }
+
+        .memory-cell.garbage-node {
+            opacity: 0.4;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border: 1px solid transparent;
+        }
+
+        .badge-cyan { background-color: var(--accent-cyan-glow); color: var(--accent-cyan); border-color: var(--accent-cyan); }
+        .badge-purple { background-color: var(--accent-purple-glow); color: var(--accent-purple); border-color: var(--accent-purple); }
+        .badge-green { background-color: hsla(145, 100%, 40%, 0.1); color: var(--accent-green); border-color: var(--accent-green); }
+        .badge-yellow { background-color: hsla(45, 100%, 50%, 0.1); color: var(--accent-yellow); border-color: var(--accent-yellow); }
+        .badge-red { background-color: hsla(0, 85%, 55%, 0.1); color: var(--accent-red); border-color: var(--accent-red); }
+
+        /* Analogy Card Callouts */
+        .analogy-callout {
+            background-color: hsla(45, 100%, 50%, 0.03);
+            border-left: 4px solid var(--accent-yellow);
+            padding: 15px 20px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 10px;
+        }
+
+        .analogy-callout-title {
+            font-weight: 700;
+            color: var(--accent-yellow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .analogy-callout p {
+            font-size: 0.95rem !important;
+            color: var(--text-secondary) !important;
+            line-height: 1.5 !important;
+            margin-bottom: 0 !important;
+        }
+
+        /* Graph styles */
+        .chart-container {
+            border: 1px solid var(--border-color);
+            background-color: hsla(224, 71%, 1%, 0.5);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* SVG Arrow connectors styling */
+        svg.connector-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .arrow-path {
+            stroke: var(--accent-purple);
+            stroke-width: 2.5;
+            fill: none;
+            stroke-dasharray: 8;
+            animation: dash 1s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -16;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-grid"></div>
+
+    <!-- Top Navigation Header -->
+    <header>
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i data-lucide="zap"></i>
+            </div>
+            <div class="logo-text">
+                <h1>EL CORAZÓN DE SSE</h1>
+                <span>Laboratorio Interactivo de Criptografía</span>
+            </div>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-intro')">
+                <i data-lucide="info"></i>
+                <span>Introducción</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('tab-song')">
+                <i data-lucide="shuffle"></i>
+                <span>Song et al. O(N)</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('tab-curtmola')">
+                <i data-lucide="activity"></i>
+                <span>Curtmola et al. O(t)</span>
+            </button>
+            <button class="tab-btn" onclick="switchTab('tab-math')">
+                <i data-lucide="key"></i>
+                <span>Lab de Bits</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main>
+
+        <!-- TAB 1: INTRODUCCIÓN -->
+        <div id="tab-intro" class="tab-content active">
+            <div class="hero-section">
+                <h2>¿Cómo buscar en datos que no puedes leer?</h2>
+                <p>
+                    El Cifrado Simétrico Buscable (<strong>SSE</strong>) es la tecnología que resuelve un dilema fundamental en la nube: 
+                    ¿cómo subcontratar el almacenamiento de nuestros logs de auditoría y syslogs a un servidor externo (potencialmente vulnerable o curioso) 
+                    y conservar la capacidad de realizar búsquedas eficientes sin revelar el contenido de lo que buscamos ni el de los archivos?
+                </p>
+                <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                    <span class="badge badge-purple" style="font-size: 0.9rem; padding: 6px 12px;"><i data-lucide="shield"></i> Confidencialidad Absoluta</span>
+                    <span class="badge badge-cyan" style="font-size: 0.9rem; padding: 6px 12px;"><i data-lucide="search"></i> Búsqueda en Texto Cifrado</span>
+                    <span class="badge badge-green" style="font-size: 0.9rem; padding: 6px 12px;"><i data-lucide="activity"></i> Rendimiento en Milisegundos</span>
+                </div>
+            </div>
+
+            <div class="grid-layout" style="grid-template-columns: 1fr 1fr; gap: 30px;">
+                <!-- Concept Card: The Dilemma -->
+                <div class="card">
+                    <div class="card-title">
+                        <i data-lucide="alert-triangle" style="color: var(--accent-yellow);"></i>
+                        <span>El Conflicto: Seguridad vs. Utilidad</span>
+                    </div>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        Para proteger los datos, usamos algoritmos como AES. El estándar exige que el cifrado sea <strong>probabilístico</strong>: la palabra "error" cifrada dos veces genera bytes totalmente diferentes.
+                    </p>
+                    <div class="math-block" style="color: var(--accent-yellow);">
+                        AES-GCM("failed", IV1) → 0x8f2a71bc...<br>
+                        AES-GCM("failed", IV2) → 0x3e90dd1f...
+                    </div>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        Esto rompe cualquier índice de búsqueda convencional. Para buscar, el cliente se ve obligado a descargar toda la base de datos cifrada y descifrarla en su máquina local. <strong>Esto no escala.</strong>
+                    </p>
+                </div>
+
+                <!-- Concept Card: The Two Approaches -->
+                <div class="card">
+                    <div class="card-title">
+                        <i data-lucide="columns"></i>
+                        <span>Dos Épocas, Dos Paradigmas</span>
+                    </div>
+                    <p style="color: var(--text-secondary); line-height: 1.6;">
+                        En esta aplicación web interactiva, exploraremos y compararemos los dos grandes hitos de la investigación de SSE:
+                    </p>
+                    <ul class="info-list">
+                        <li>
+                            <strong>Song, Wagner y Perrig (2000):</strong> El esquema fundador. Cifra palabra por palabra y las escanea secuencialmente. 
+                            <span class="badge badge-red" style="font-size: 0.7rem; padding: 2px 6px;">Búsqueda O(N) lineal</span>
+                        </li>
+                        <li>
+                            <strong>Curtmola, Garay, Ostrovsky y Yong (2006):</strong> La revolución sublineal. Utiliza índices invertidos cifrados en listas enlazadas dispersas en memoria.
+                            <span class="badge badge-green" style="font-size: 0.7rem; padding: 2px 6px;">Búsqueda O(t) óptima</span>
+                        </li>
+                    </ul>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.5;">
+                        Haz clic en las pestañas superiores para ingresar a los laboratorios de simulación visuales y experimentar cómo funciona la matemática de cada uno.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 2: SONG ET AL. (SECUENCIAL) -->
+        <div id="tab-song" class="tab-content">
+            <div class="hero-section" style="padding: 30px; margin-bottom: 20px;">
+                <span class="badge badge-yellow" style="margin-bottom: 8px;">Año 2000 - Esquema Seminal</span>
+                <h2>Song, Wagner & Perrig: El Escaneo Secuencial</h2>
+                <p style="font-size: 1.05rem; margin-bottom: 0;">
+                    Este esquema revolucionó la criptografía al demostrar que se podía buscar sobre texto cifrado sin descifrarlo. 
+                    Sin embargo, su limitación técnica es que el servidor debe examinar cada palabra de los documentos, una por una, secuencialmente.
+                </p>
+            </div>
+
+            <div class="grid-layout">
+                <!-- Configurator -->
+                <div class="card">
+                    <div class="card-title">
+                        <i data-lucide="sliders"></i>
+                        <span>Configurar Escaneo</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="input-label" for="song-docs">Logs de auditoría del cliente (una palabra por bloque):</label>
+                        <textarea id="song-docs" class="input-field" rows="5" style="font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; resize: none;">failed
+success
+timeout
+failed
+alert
+blocked</textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label" for="song-keyword">Palabra clave a buscar:</label>
+                        <input type="text" id="song-keyword" class="input-field" value="failed" style="font-family: 'JetBrains Mono', monospace;">
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label" for="song-speed">Velocidad del Escaneo:</label>
+                        <input type="range" id="song-speed" min="200" max="2000" value="1000" style="width: 100%; cursor: pointer;">
+                        <span style="font-size: 0.8rem; color: var(--text-muted); text-align: right;">1 segundo por palabra</span>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button class="action-btn btn-cyan" id="btn-song-start" onclick="startSongScan()">
+                            <i data-lucide="play"></i> Iniciar Escaneo O(N)
+                        </button>
+                        <button class="action-btn" id="btn-song-stop" onclick="stopSongScan()" disabled style="border-color: var(--accent-red); color: var(--accent-red); background-color: hsla(0, 85%, 55%, 0.05);">
+                            <i data-lucide="square"></i> Detener
+                        </button>
+                    </div>
+
+                    <div class="analogy-callout">
+                        <div class="analogy-callout-title">
+                            <i data-lucide="help-circle"></i>
+                            <span>La Analogía del Candado</span>
+                        </div>
+                        <p>
+                            Imagina una estantería con cajas selladas. El servidor no sabe qué palabra hay en cada caja. 
+                            Para buscar, el cliente le da una "llave de prueba" (Trapdoor). 
+                            El servidor camina caja por caja y prueba la llave. Si el candado se abre, ¡hubo coincidencia! 
+                            Pero el servidor tiene que caminar a lo largo de <strong>toda</strong> la estantería.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Simulation Visualizer -->
+                <div class="card" style="justify-content: stretch;">
+                    <div class="card-title" style="justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="cpu"></i>
+                            <span>Visualizador de Memoria del Servidor Cloud</span>
+                        </div>
+                        <span class="badge badge-yellow" id="song-stat-badge">Detenido</span>
+                    </div>
+
+                    <div class="math-box" style="font-size: 0.85rem;">
+                        <strong>Matemática del Bloque:</strong> C_i = W_i &oplus; (L_i || F_k(L_i))
+                    </div>
+
+                    <!-- Visual Blocks of words -->
+                    <div id="song-blocks-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 10px 0;">
+                        <!-- Generated dynamically -->
+                    </div>
+
+                    <!-- Execution log console -->
+                    <div class="console-container">
+                        <div class="console-header">
+                            <span>Consola de Verificación Criptográfica del Servidor</span>
+                            <span id="song-console-steps">Paso 0/0</span>
+                        </div>
+                        <div class="console-body" id="song-console-text">
+                            Esperando inicio de simulación...
+                        </div>
+                    </div>
+
+                    <!-- Stats Row -->
+                    <div style="display: flex; justify-content: space-between; background: hsla(224, 71%, 1%, 0.6); padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.9rem;">
+                        <div>Complejidad: <strong style="color: var(--accent-red);">O(N) Lineal</strong></div>
+                        <div id="song-stat-matches">Matches: 0</div>
+                        <div id="song-stat-ratio">Eficacia CPU: 0%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 3: CURTMOLA ET AL. (LISTAS ENLAZADAS) -->
+        <div id="tab-curtmola" class="tab-content">
+            <div class="hero-section" style="padding: 30px; margin-bottom: 20px;">
+                <span class="badge badge-green" style="margin-bottom: 8px;">Año 2006 - El Hito Moderno</span>
+                <h2>Curtmola et al.: Listas Enlazadas Cifradas y Hops</h2>
+                <p style="font-size: 1.05rem; margin-bottom: 0;">
+                    Curtmola introdujo la idea de un índice invertido estructurado. En vez de escanear todas las palabras, 
+                    el cliente cifra los nodos y los oculta en celdas de memoria aleatorias. 
+                    El servidor realiza saltos (hops) directos guiados a ciegas, logrando la sublinealidad óptima.
+                </p>
+            </div>
+
+            <div class="grid-layout">
+                <!-- Control Panel -->
+                <div class="card">
+                    <div class="card-title">
+                        <i data-lucide="sliders"></i>
+                        <span>Generar Consulta</span>
+                    </div>
+
+                    <div class="interactive-playground">
+                        <span class="label-text">Índice Invertido Local (Cliente)</span>
+                        <div style="font-size: 0.88rem; line-height: 1.5; color: var(--text-secondary);">
+                            El cliente sabe qué documentos contienen qué palabras (esto se encripta y se sube):
+                            <div style="background: var(--bg-sidebar); border: 1px solid var(--border-color); padding: 8px; border-radius: 4px; margin-top: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--accent-cyan);">
+                                "failed" &rarr; [Doc 1] &rarr; [Doc 4]<br>
+                                "success" &rarr; [Doc 2]<br>
+                                "timeout" &rarr; [Doc 3]<br>
+                                "admin" &rarr; [Doc 5] &rarr; [Doc 6]
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label class="input-label" for="curtmola-keyword">Palabra a Consultar:</label>
+                        <select id="curtmola-keyword" class="input-field" style="background-color: var(--bg-sidebar); font-family: 'Outfit'; font-weight: 600;">
+                            <option value="failed">failed (Documentos 1 y 4)</option>
+                            <option value="success">success (Documento 2)</option>
+                            <option value="timeout">timeout (Documento 3)</option>
+                            <option value="admin">admin (Documentos 5 y 6)</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; gap: 10px;">
+                        <button class="action-btn btn-cyan" id="btn-curtmola-start" onclick="startCurtmolaSearch()">
+                            <i data-lucide="zap"></i> Buscar a Ciegas O(t)
+                        </button>
+                    </div>
+
+                    <div class="analogy-callout" style="border-left-color: var(--accent-green); background-color: hsla(145, 100%, 40%, 0.02);">
+                        <div class="analogy-callout-title" style="color: var(--accent-green);">
+                            <i data-lucide="help-circle"></i>
+                            <span>La Analogía de la Búsqueda del Tesoro</span>
+                        </div>
+                        <p>
+                            Imagina una estantería gigante. El cliente no hace buscar en todas las cajas. 
+                            Le da al servidor un mapa cerrado que dice: <em>"Ve directamente a la caja 12"</em> (Trapdoor). 
+                            El servidor abre la caja 12 y encuentra el documento y una nota cifrada que dice: <em>"Ahora salta a la caja 42"</em>. 
+                            El servidor salta a la caja 42 y encuentra el siguiente documento. 
+                            El servidor <strong>jamás tocó</strong> las otras cajas de la estantería.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Simulation Visualizer -->
+                <div class="card" style="justify-content: stretch; position: relative;">
+                    <div class="card-title" style="justify-content: space-between;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <i data-lucide="database"></i>
+                            <span>Grid de Memoria y Direccionamiento Hash del Servidor</span>
+                        </div>
+                        <span class="badge badge-green" id="curtmola-stat-badge">Listo</span>
+                    </div>
+
+                    <div class="math-box" style="font-size: 0.82rem;">
+                        <strong>Fórmula del Nodo Cifrado:</strong> Node_j = Enc(K_w, DocID || NextAddr) en dirección PRF(K1, w||j)
+                    </div>
+
+                    <!-- RAM cells representation -->
+                    <div style="position: relative;">
+                        <div class="memory-grid" id="curtmola-grid">
+                            <!-- Generated dynamically -->
+                        </div>
+                        <svg class="connector-line" id="curtmola-svg-canvas">
+                            <defs>
+                                <marker id="arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                    <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--accent-purple)"/>
+                                </marker>
+                            </defs>
+                            <!-- Arrow paths will be rendered dynamically -->
+                        </svg>
+                    </div>
+
+                    <!-- Output log console -->
+                    <div class="console-container" style="min-height: 180px;">
+                        <div class="console-header">
+                            <span>Consola de Decodificación y Navegación Ciega</span>
+                            <span id="curtmola-console-step">Accesos: 0</span>
+                        </div>
+                        <div class="console-body" id="curtmola-console-text" style="max-height: 200px;">
+                            Esperando consulta del analista...
+                        </div>
+                    </div>
+
+                    <!-- Metrics -->
+                    <div style="display: flex; justify-content: space-between; background: hsla(224, 71%, 1%, 0.6); padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); font-size: 0.9rem;">
+                        <div>Complejidad: <strong style="color: var(--accent-green);">O(t) Sublineal</strong></div>
+                        <div id="curtmola-stat-read">Celdas leídas: 0 / 16</div>
+                        <div id="curtmola-stat-efficiency">Eficiencia de Búsqueda: 100%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB 4: LABORATORIO DE BITS Y XOR -->
+        <div id="tab-math" class="tab-content">
+            <div class="hero-section" style="padding: 30px; margin-bottom: 20px;">
+                <span class="badge badge-purple" style="margin-bottom: 8px;">Área Educativa</span>
+                <h2>Laboratorio de Criptografía de Bajo Nivel</h2>
+                <p style="font-size: 1.05rem; margin-bottom: 0;">
+                    Comprende cómo los bits se transforman para proteger la privacidad. SSE utiliza dos engranajes básicos: 
+                    la reversibilidad del XOR lógico y las Funciones Pseudoaleatorias (PRFs). Manipúlalos tú mismo a continuación.
+                </p>
+            </div>
+
+            <div class="grid-layout" style="grid-template-columns: 1fr 1fr; gap: 30px;">
+                
+                <!-- XOR Calculator -->
+                <div class="card">
+                    <div class="card-title">
+                        <i data-lucide="key"></i>
+                        <span>1. El Superpoder del XOR (&oplus;)</span>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px;">
+                        La operación lógica XOR (O Exclusiva) es la base del cifrado simétrico ultrarrápido. 
+                        Tiene la propiedad de ser reversible: si aplicas el XOR con la clave dos veces, recuperas el original.
+                    </p>
+
+                    <div class="interactive-playground">
+                        <div class="input-group">
+                            <label class="input-label" for="xor-plain">Texto Plano (Mensaje A - 1 caracter):</label>
+                            <input type="text" id="xor-plain" class="input-field" maxlength="1" value="A" oninput="calculateXOR()" style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; text-align: center;">
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label" for="xor-key">Clave Secreta (Clave B - 1 caracter):</label>
+                            <input type="text" id="xor-key" class="input-field" maxlength="1" value="K" oninput="calculateXOR()" style="font-family: 'JetBrains Mono', monospace; font-size: 1.2rem; text-align: center;">
+                        </div>
+                    </div>
+
+                    <!-- Bitwise breakdown visualization -->
+                    <div style="background: hsla(224, 71%, 1%, 0.6); padding: 15px; border-radius: 6px; border: 1px solid var(--border-color); font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; line-height: 1.8;">
+                        <div>Texto (A): <span style="color: var(--accent-cyan);" id="xor-vis-plain-char">"A"</span> &rarr; Binario: <span style="color: var(--accent-cyan); font-weight: bold;" id="xor-vis-plain-bin">01000001</span></div>
+                        <div>Clave (B): <span style="color: var(--accent-purple);" id="xor-vis-key-char">"K"</span> &rarr; Binario: <span style="color: var(--accent-purple); font-weight: bold;" id="xor-vis-key-bin">01001011</span></div>
+                        <div style="border-top: 1px dashed var(--border-color); margin-top: 6px; padding-top: 6px;">
+                            <strong>Operación XOR: A &oplus; B</strong>
+                        </div>
+                        <div style="font-size: 1rem;">
+                            Cifrado (C): <span style="color: var(--accent-yellow); font-weight: bold;" id="xor-vis-cipher-bin">00001010</span> &rarr; Hex: <span style="color: var(--accent-yellow);" id="xor-vis-cipher-hex">0x0a</span>
+                        </div>
+                        <div style="border-top: 1px dashed var(--border-color); margin-top: 6px; padding-top: 6px;">
+                            <strong>Reversibilidad: C &oplus; B</strong>
+                        </div>
+                        <div>
+                            Descifrado: <span style="color: var(--accent-green); font-weight: bold;" id="xor-vis-dec-bin">01000001</span> &rarr; Caracter: <span style="color: var(--accent-green); font-weight: bold;" id="xor-vis-dec-char">"A"</span>
+                        </div>
+                    </div>
+
+                    <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">
+                        * Observa cómo cada bit del cifrado C se calcula comparando los bits correspondientes de A y B: si los bits son diferentes da 1, si son iguales da 0. Al aplicar XOR de nuevo con la clave B, los bits regresan exactamente a su estado original.
+                    </p>
+                </div>
+
+                <!-- PRF Simulator -->
+                <div class="card">
+                    <div class="card-title">
+                        <i data-lucide="shuffle"></i>
+                        <span>2. ¿Qué es una Función Pseudoaleatoria (PRF)?</span>
+                    </div>
+                    <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.5; margin-bottom: 10px;">
+                        Una PRF es una función matemática que toma una clave secreta y una entrada (como una palabra), y produce una salida que parece 100% aleatoria (ruido), pero que es **estrictamente reproducible** para quien posea la misma clave.
+                    </p>
+
+                    <div class="interactive-playground">
+                        <div class="input-group">
+                            <label class="input-label" for="prf-input">Palabra clave (Input):</label>
+                            <input type="text" id="prf-input" class="input-field" value="failed" oninput="calculatePRF()" style="font-family: 'JetBrains Mono', monospace;">
+                        </div>
+
+                        <div class="input-group">
+                            <label class="input-label" for="prf-key">Clave secreta K:</label>
+                            <input type="text" id="prf-key" class="input-field" value="secreto_soc" oninput="calculatePRF()" style="font-family: 'JetBrains Mono', monospace;">
+                        </div>
+                    </div>
+
+                    <!-- Hash & Address generator simulation -->
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div style="background: hsla(224, 71%, 1%, 0.6); padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.6;">
+                            <span class="label-text" style="font-size: 0.75rem; color: var(--accent-cyan);">Dirección Física (Indexación)</span>
+                            <div style="margin-top: 4px;">Addr = PRF(K, Palabra) &rarr; <strong style="color: var(--accent-cyan);" id="prf-vis-addr">0x7f83</strong></div>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">* Se usa para ubicar físicamente el nodo cifrado en el servidor.</span>
+                        </div>
+
+                        <div style="background: hsla(224, 71%, 1%, 0.6); padding: 12px; border-radius: 6px; border: 1px solid var(--border-color); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.6;">
+                            <span class="label-text" style="font-size: 0.75rem; color: var(--accent-purple);">Clave de Máscara local</span>
+                            <div style="margin-top: 4px;">K_w = HMAC-SHA256(K, Palabra) &rarr; <strong style="color: var(--accent-purple);" id="prf-vis-kw">0x3f9e8a...</strong></div>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">* Se usa para cifrar el ID de documento en ese nodo.</span>
+                        </div>
+                    </div>
+
+                    <p style="color: var(--text-muted); font-size: 0.85rem; line-height: 1.4;">
+                        El servidor en la nube ve la dirección `0x7f83` y el token cifrado, pero es matemáticamente incapaz de deducir que provienen de la palabra "failed" sin la clave secreta `secreto_soc`.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- TAB 5: SVG Grafica de Curva de Complejidad -->
+            <div class="card" style="margin-top: 30px;">
+                <div class="card-title">
+                    <i data-lucide="activity"></i>
+                    <span>Demostración de Crecimiento: Tiempo de Búsqueda vs. Tamaño de Base de Datos</span>
+                </div>
+                <div class="grid-layout" style="grid-template-columns: 1fr 2fr; gap: 30px;">
+                    <div style="display: flex; flex-direction: column; gap: 15px;">
+                        <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.6;">
+                            Desplaza los controles para cambiar los parámetros del volumen de datos y observa el comportamiento de los costes en el gráfico de curvas de complejidad.
+                        </p>
+                        
+                        <div class="interactive-playground">
+                            <div class="input-group">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <label class="input-label" for="chart-db-size">Tamaño BD (N logs):</label>
+                                    <span style="color: var(--accent-cyan); font-weight: bold;" id="chart-db-size-val">5,000</span>
+                                </div>
+                                <input type="range" id="chart-db-size" min="100" max="10000" step="100" value="5000" oninput="updateChartPlot()" style="width: 100%; cursor: pointer;">
+                            </div>
+                            
+                            <div class="input-group">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <label class="input-label" for="chart-match-count">Logs coincidentes (t):</label>
+                                    <span style="color: var(--accent-green); font-weight: bold;" id="chart-match-count-val">5</span>
+                                </div>
+                                <input type="range" id="chart-match-count" min="1" max="100" step="1" value="5" oninput="updateChartPlot()" style="width: 100%; cursor: pointer;">
+                            </div>
+                        </div>
+
+                        <div style="font-size: 0.9rem; line-height: 1.5; color: var(--text-secondary);">
+                            <span class="badge badge-red" style="font-size: 0.75rem; margin-bottom: 4px;">Song et al. O(N)</span>
+                            <br>El coste computacional sube directamente en proporción al tamaño total de logs del servidor ($N$).
+                            <br><br>
+                            <span class="badge badge-green" style="font-size: 0.75rem; margin-bottom: 4px;">Curtmola et al. O(t)</span>
+                            <br>El coste de búsqueda se mantiene constante y bajo, dependiendo únicamente de las coincidencias reales ($t$), sin importar cuán gigante sea el almacenamiento en la nube.
+                        </div>
+                    </div>
+
+                    <div class="chart-container">
+                        <!-- SVG Line chart plot -->
+                        <svg viewBox="0 0 500 300" style="width: 100%; height: 280px; background: transparent;" id="complexity-svg">
+                            <!-- Grid Lines -->
+                            <line x1="40" y1="260" x2="480" y2="260" stroke="var(--border-color)" stroke-width="1.5" />
+                            <line x1="40" y1="20" x2="40" y2="260" stroke="var(--border-color)" stroke-width="1.5" />
+                            
+                            <!-- X Axis Labels -->
+                            <text x="40" y="278" fill="var(--text-muted)" font-size="10" text-anchor="middle">100</text>
+                            <text x="260" y="278" fill="var(--text-muted)" font-size="10" text-anchor="middle">5,000</text>
+                            <text x="480" y="278" fill="var(--text-muted)" font-size="10" text-anchor="middle">10,000</text>
+                            <text x="260" y="294" fill="var(--text-secondary)" font-size="11" text-anchor="middle" font-weight="600">Tamaño de la Base de Datos (N logs)</text>
+                            
+                            <!-- Y Axis Labels -->
+                            <text x="32" y="264" fill="var(--text-muted)" font-size="10" text-anchor="end">0</text>
+                            <text x="32" y="140" fill="var(--text-muted)" font-size="10" text-anchor="end">Media</text>
+                            <text x="32" y="26" fill="var(--text-muted)" font-size="10" text-anchor="end">Alta</text>
+                            <text x="16" y="140" fill="var(--text-secondary)" font-size="11" text-anchor="middle" font-weight="600" transform="rotate(-90 16 140)">Costo / Tiempo de Búsqueda</text>
+                            
+                            <!-- Complexity curves (rendered dynamically) -->
+                            <path id="path-song" d="" fill="none" stroke="var(--accent-red)" stroke-width="3" stroke-linecap="round" />
+                            <path id="path-curtmola" d="" fill="none" stroke="var(--accent-green)" stroke-width="3" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Tab system logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            document.getElementById(tabId).classList.add('active');
+            
+            // Highlight tab button
+            const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => {
+                return btn.getAttribute('onclick').includes(tabId);
+            });
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+            }
+
+            // Trigger initialization/drawing if needed on tab active
+            if (tabId === 'tab-song') {
+                renderSongBlocks();
+            } else if (tabId === 'tab-curtmola') {
+                renderCurtmolaGrid();
+            }
+        }
+
+        // Initialize Lucide Icons
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderSongBlocks();
+            renderCurtmolaGrid();
+            calculateXOR();
+            calculatePRF();
+            updateChartPlot();
+        });
+
+        // --- SIMULATION 1: SONG ET AL. ---
+        let songInterval = null;
+        let songRunning = false;
+        let songCurrentIdx = 0;
+        let songWords = [];
+        let songMatches = 0;
+
+        function renderSongBlocks() {
+            const container = document.getElementById('song-blocks-grid');
+            const docsText = document.getElementById('song-docs').value.trim();
+            songWords = docsText.split(/\s+/).filter(w => w.length > 0);
+            
+            container.innerHTML = '';
+            songWords.forEach((word, idx) => {
+                const cell = document.createElement('div');
+                cell.className = 'memory-cell';
+                cell.id = `song-block-${idx}`;
+                
+                // Derive a mock ciphertext
+                let cipherHex = '0x';
+                for (let i = 0; i < 4; i++) {
+                    cipherHex += Math.floor(Math.random()*256).toString(16).padStart(2, '0');
+                }
+                
+                cell.innerHTML = `
+                    <span class="memory-cell-addr">Bloque ${idx + 1}</span>
+                    <span style="font-weight: bold; color: var(--accent-purple);" id="song-block-val-${idx}">${cipherHex}</span>
+                `;
+                container.appendChild(cell);
+            });
+        }
+
+        function startSongScan() {
+            if (songRunning) return;
+            
+            // Build fresh word list
+            renderSongBlocks();
+            if (songWords.length === 0) return;
+
+            songRunning = true;
+            songCurrentIdx = 0;
+            songMatches = 0;
+
+            document.getElementById('btn-song-start').disabled = true;
+            document.getElementById('btn-song-stop').disabled = false;
+            document.getElementById('song-stat-badge').innerText = "Corriendo...";
+            document.getElementById('song-stat-badge').className = "badge badge-yellow";
+
+            const speed = parseInt(document.getElementById('song-speed').value);
+            const keyword = document.getElementById('song-keyword').value.trim().toLowerCase();
+
+            const consoleText = document.getElementById('song-console-text');
+            consoleText.innerHTML = `Iniciando escaneo secuencial en servidor remoto... <br>Palabra clave a evaluar: "<span style="color: var(--accent-cyan); font-weight: bold;">${keyword}</span>"<br><br>`;
+
+            function scanStep() {
+                // Reset previous block highlight
+                if (songCurrentIdx > 0) {
+                    const prevBlock = document.getElementById(`song-block-${songCurrentIdx - 1}`);
+                    if (prevBlock) {
+                        prevBlock.classList.remove('active-node');
+                        const isMatch = songWords[songCurrentIdx - 1].toLowerCase() === keyword;
+                        if (isMatch) {
+                            prevBlock.classList.add('visited-node');
+                        } else {
+                            prevBlock.classList.add('garbage-node');
+                        }
+                    }
+                }
+
+                if (songCurrentIdx < songWords.length) {
+                    const currentWord = songWords[songCurrentIdx];
+                    const isMatch = currentWord.toLowerCase() === keyword;
+                    const block = document.getElementById(`song-block-${songCurrentIdx}`);
+                    
+                    if (block) {
+                        block.classList.add('active-node');
+                    }
+
+                    document.getElementById('song-console-steps').innerText = `Bloque ${songCurrentIdx + 1}/${songWords.length}`;
+                    
+                    // Display bitwise trace log details
+                    let logMsg = "";
+                    let seedL = '0x' + Math.floor(Math.random()*65536).toString(16).padStart(4, '0');
+                    let prfCheck = '0x' + Math.floor(Math.random()*65536).toString(16).padStart(4, '0');
+                    
+                    if (isMatch) {
+                        songMatches++;
+                        logMsg = `<span style="color: var(--accent-green); font-weight: bold;">[COMPROBACIÓN CORRECTA]</span><br>` +
+                                 `Evaluando bloque ${songCurrentIdx + 1}...<br>` +
+                                 `-> Extraída Semilla L_${songCurrentIdx} = ${seedL}<br>` +
+                                 `-> Comprobación S_${songCurrentIdx} = F_k(L) match exitoso!<br>` +
+                                 `-> Revelado Texto Plano: "<strong style="color: var(--accent-green);">${currentWord}</strong>" &rarr; <span style="color: var(--accent-green); font-weight: bold;">¡COINCIDENCIA ENCONTRADA!</span><br><br>`;
+                    } else {
+                        logMsg = `<span style="color: var(--text-muted);">[COMPROBACIÓN FALLIDA]</span><br>` +
+                                 `Evaluando bloque ${songCurrentIdx + 1}...<br>` +
+                                 `-> Extraída Semilla L_${songCurrentIdx} = ${seedL}<br>` +
+                                 `-> Comprobación S_${songCurrentIdx} = F_k(L) no coincide.<br>` +
+                                 `-> Revelado: "${currentWord}" (No coincide)<br><br>`;
+                    }
+                    consoleText.innerHTML += logMsg;
+                    consoleText.scrollTop = consoleText.scrollHeight;
+
+                    // Update metrics
+                    document.getElementById('song-stat-matches').innerText = `Matches: ${songMatches}`;
+                    const ratio = Math.round((songMatches / (songCurrentIdx + 1)) * 100);
+                    document.getElementById('song-stat-ratio').innerText = `Eficacia CPU: ${ratio}%`;
+
+                    songCurrentIdx++;
+                } else {
+                    // Completed
+                    clearInterval(songInterval);
+                    songRunning = false;
+                    document.getElementById('btn-song-start').disabled = false;
+                    document.getElementById('btn-song-stop').disabled = true;
+                    document.getElementById('song-stat-badge').innerText = "Completado O(N)";
+                    document.getElementById('song-stat-badge').className = "badge badge-red";
+                    consoleText.innerHTML += `<strong style="color: var(--accent-red);">Escaneo secuencial completado.</strong> Se analizaron los <strong>${songWords.length}</strong> bloques de la base de datos.<br>` +
+                                             `Complejidad final de búsqueda: <strong style="color: var(--accent-yellow);">O(N) lineal</strong>.`;
+                    consoleText.scrollTop = consoleText.scrollHeight;
+                }
+            }
+
+            // Trigger steps
+            songInterval = setInterval(scanStep, speed);
+        }
+
+        function stopSongScan() {
+            clearInterval(songInterval);
+            songRunning = false;
+            document.getElementById('btn-song-start').disabled = false;
+            document.getElementById('btn-song-stop').disabled = true;
+            document.getElementById('song-stat-badge').innerText = "Interrumpido";
+            document.getElementById('song-stat-badge').className = "badge badge-yellow";
+            document.getElementById('song-console-text').innerHTML += `<span style="color: var(--accent-red); font-weight: bold;">Simulación detenida por el analista.</span>`;
+        }
+
+        // --- SIMULATION 2: CURTMOLA ET AL. ---
+        let curtmolaNodes = {
+            'failed': [
+                { id: 'Doc 1', addr: '0x7f83', next: '0x1a9c' },
+                { id: 'Doc 4', addr: '0x1a9c', next: 'NULL' }
+            ],
+            'success': [
+                { id: 'Doc 2', addr: '0x9c4f', next: 'NULL' }
+            ],
+            'timeout': [
+                { id: 'Doc 3', addr: '0x4b2d', next: 'NULL' }
+            ],
+            'admin': [
+                { id: 'Doc 5', addr: '0x8d9a', next: '0x3f5c' },
+                { id: 'Doc 6', addr: '0x3f5c', next: 'NULL' }
+            ]
+        };
+
+        // Static layout positions for memory cells (in memory grid indices)
+        let cellAddresses = [
+            '0x2a1f', '0x7f83', '0x9c4f', '0x1a9c',
+            '0x4b2d', '0x8d9a', '0x3f5c', '0xe8a1',
+            '0x6b7c', '0x10fa', '0x992b', '0x44cd',
+            '0xbd3a', '0x7e8f', '0x12c4', '0xab89'
+        ];
+
+        function renderCurtmolaGrid() {
+            const container = document.getElementById('curtmola-grid');
+            container.innerHTML = '';
+            
+            // Clear connectors SVG line canvas
+            document.getElementById('curtmola-svg-canvas').innerHTML = '';
+
+            cellAddresses.forEach((addr, idx) => {
+                const cell = document.createElement('div');
+                cell.className = 'memory-cell';
+                cell.id = `curtmola-cell-${addr}`;
+                
+                // Set initial mock encrypted content
+                let garbageBytes = '0x';
+                for(let i=0; i<4; i++) {
+                    garbageBytes += Math.floor(Math.random()*256).toString(16).padStart(2, '0');
+                }
+
+                cell.innerHTML = `
+                    <span class="memory-cell-addr">${addr}</span>
+                    <span id="curtmola-val-${addr}" style="font-weight: bold; font-size: 0.8em; color: var(--text-muted);">${garbageBytes}</span>
+                `;
+                container.appendChild(cell);
+            });
+        }
+
+        async function startCurtmolaSearch() {
+            // Reset state
+            renderCurtmolaGrid();
+            
+            const keyword = document.getElementById('curtmola-keyword').value;
+            const chain = curtmolaNodes[keyword];
+            if (!chain) return;
+
+            document.getElementById('btn-curtmola-start').disabled = true;
+            document.getElementById('curtmola-stat-badge').innerText = "Buscando...";
+            document.getElementById('curtmola-stat-badge').className = "badge badge-cyan";
+
+            const consoleText = document.getElementById('curtmola-console-text');
+            consoleText.innerHTML = `Cliente genera trampa dual para palabra "<strong style="color: var(--accent-cyan);">${keyword}</strong>":<br>` +
+                                    `-> Trapdoor inicial T1 = <strong style="color: var(--accent-cyan);">${chain[0].addr}</strong><br>` +
+                                    `-> Clave del enlace K_w = HMAC(K_master, "${keyword}")<br>` +
+                                    `-> Enviando Trapdoor al servidor Cloud...<br><br>`;
+
+            let accessCount = 0;
+
+            for (let i = 0; i < chain.length; i++) {
+                const node = chain[i];
+                accessCount++;
+                document.getElementById('curtmola-console-step').innerText = `Accesos: ${accessCount}`;
+
+                // Highlight cell in grid
+                const cell = document.getElementById(`curtmola-cell-${node.addr}`);
+                if (cell) {
+                    cell.classList.remove('garbage-node');
+                    cell.classList.add('active-node');
+                }
+
+                // Change payload text inside cell
+                const valSpan = document.getElementById(`curtmola-val-${node.addr}`);
+                if (valSpan) {
+                    valSpan.innerHTML = `<span style="color: var(--accent-green); font-weight: bold;">[${node.id}]</span>`;
+                }
+
+                // Console log output
+                consoleText.innerHTML += `<span style="color: var(--accent-green); font-weight: bold;">[ACCESO A DIRECCIÓN HASH ${node.addr}]</span><br>` +
+                                         `-> Descifrando celda con K_w...<br>` +
+                                         `-> Coincidencia: Documento devuelto: <strong style="color: var(--accent-green);">${node.id}</strong><br>` +
+                                         `-> Siguiente dirección física: <strong style="color: var(--accent-purple);">${node.next}</strong><br><br>`;
+                consoleText.scrollTop = consoleText.scrollHeight;
+
+                // Update metric counters
+                document.getElementById('curtmola-stat-read').innerText = `Celdas leídas: ${accessCount} / 16`;
+                
+                // Draw connecting arrow if there is a next cell
+                if (node.next !== 'NULL') {
+                    await sleep(1000);
+                    drawArrow(node.addr, node.next);
+                    
+                    // Mark previous cell as visited
+                    if (cell) {
+                        cell.classList.remove('active-node');
+                        cell.classList.add('visited-node');
+                    }
+                }
+                
+                await sleep(1500);
+            }
+
+            // Finish search
+            if (chain.length > 0) {
+                const lastCell = document.getElementById(`curtmola-cell-${chain[chain.length - 1].addr}`);
+                if (lastCell) {
+                    lastCell.classList.remove('active-node');
+                    lastCell.classList.add('visited-node');
+                }
+            }
+
+            // Dim unused cells as garbage visualization
+            cellAddresses.forEach(addr => {
+                const unusedCell = document.getElementById(`curtmola-cell-${addr}`);
+                if (unusedCell && !chain.some(n => n.addr === addr)) {
+                    unusedCell.classList.add('garbage-node');
+                }
+            });
+
+            consoleText.innerHTML += `<strong style="color: var(--accent-green);">Búsqueda óptima terminada.</strong><br>` +
+                                     `El servidor Cloud localizó los documentos con solo <strong>${chain.length} accesos directos</strong>.<br>` +
+                                     `Complejidad de búsqueda: <strong style="color: var(--accent-green);">O(t) sublineal</strong>. Ahorro de lecturas: <strong>${Math.round((1 - (chain.length / 16)) * 100)}%</strong>.`;
+            consoleText.scrollTop = consoleText.scrollHeight;
+
+            document.getElementById('curtmola-stat-badge').innerText = "Listo";
+            document.getElementById('curtmola-stat-badge').className = "badge badge-green";
+            document.getElementById('btn-curtmola-start').disabled = false;
+        }
+
+        // Draw dynamic SVG arrow connections between memory cell coordinates
+        function drawArrow(fromAddr, toAddr) {
+            const fromEl = document.getElementById(`curtmola-cell-${fromAddr}`);
+            const toEl = document.getElementById(`curtmola-cell-${toAddr}`);
+            const svgCanvas = document.getElementById('curtmola-svg-canvas');
+            
+            if (!fromEl || !toEl || !svgCanvas) return;
+
+            const fromRect = fromEl.getBoundingClientRect();
+            const toRect = toEl.getBoundingClientRect();
+            const canvasRect = svgCanvas.getBoundingClientRect();
+
+            // Calculate centers relative to SVG canvas
+            const x1 = fromRect.left - canvasRect.left + fromRect.width / 2;
+            const y1 = fromRect.top - canvasRect.top + fromRect.height / 2;
+            const x2 = toRect.left - canvasRect.left + toRect.width / 2;
+            const y2 = toRect.top - canvasRect.top + toRect.height / 2;
+
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', `M ${x1} ${y1} L ${x2} ${y2}`);
+            path.setAttribute('class', 'arrow-path');
+            path.setAttribute('marker-end', 'url(#arrow)');
+            
+            svgCanvas.appendChild(path);
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // --- TAB 4: LAB MATEMÁTICO ---
+        function calculateXOR() {
+            const charA = document.getElementById('xor-plain').value || " ";
+            const charB = document.getElementById('xor-key').value || " ";
+
+            // Get binary strings
+            const binA = charA.charCodeAt(0).toString(2).padStart(8, '0');
+            const binB = charB.charCodeAt(0).toString(2).padStart(8, '0');
+
+            // Apply XOR operation bit by bit
+            let binC = "";
+            for (let i = 0; i < 8; i++) {
+                binC += (binA[i] === binB[i]) ? '0' : '1';
+            }
+
+            const hexC = '0x' + parseInt(binC, 2).toString(16).padStart(2, '0');
+            const charC = String.fromCharCode(parseInt(binC, 2));
+
+            // Re-apply XOR (C &oplus; B)
+            let binDec = "";
+            for (let i = 0; i < 8; i++) {
+                binDec += (binC[i] === binB[i]) ? '0' : '1';
+            }
+            const charDec = String.fromCharCode(parseInt(binDec, 2));
+
+            // Render updates
+            document.getElementById('xor-vis-plain-char').innerText = `"${charA}"`;
+            document.getElementById('xor-vis-plain-bin').innerText = binA;
+            document.getElementById('xor-vis-key-char').innerText = `"${charB}"`;
+            document.getElementById('xor-vis-key-bin').innerText = binB;
+            document.getElementById('xor-vis-cipher-bin').innerText = binC;
+            document.getElementById('xor-vis-cipher-hex').innerText = hexC;
+            document.getElementById('xor-vis-dec-bin').innerText = binDec;
+            document.getElementById('xor-vis-dec-char').innerText = `"${charDec}"`;
+        }
+
+        // Conceptual PRF address generation simulation
+        function calculatePRF() {
+            const word = document.getElementById('prf-input').value.trim();
+            const key = document.getElementById('prf-key').value.trim();
+
+            if (!word || !key) return;
+
+            // Generate deterministic hash code
+            let hash1 = 5381;
+            let hash2 = 89;
+            for (let i = 0; i < word.length; i++) {
+                hash1 = ((hash1 << 5) + hash1) + word.charCodeAt(i) + key.charCodeAt(i % key.length);
+                hash2 = ((hash2 << 7) - hash2) + word.charCodeAt(i) ^ key.charCodeAt(i % key.length);
+            }
+
+            // Convert to nice hex tokens
+            const hexAddr = '0x' + Math.abs(hash1).toString(16).padStart(4, '0').substring(0, 4);
+            const hexKw = '0x' + Math.abs(hash2).toString(16).padStart(8, '0').substring(0, 8);
+
+            document.getElementById('prf-vis-addr').innerText = hexAddr;
+            document.getElementById('prf-vis-kw').innerText = hexKw;
+        }
+
+        // --- TAB 5: COMPONENT CURVES CHART ---
+        function updateChartPlot() {
+            const dbSize = parseInt(document.getElementById('chart-db-size').value);
+            const matches = parseInt(document.getElementById('chart-match-count').value);
+
+            // Update sliders indicator values
+            document.getElementById('chart-db-size-val').innerText = dbSize.toLocaleString();
+            document.getElementById('chart-match-count-val').innerText = matches;
+
+            const svg = document.getElementById('complexity-svg');
+            const pathSong = document.getElementById('path-song');
+            const pathCurtmola = document.getElementById('path-curtmola');
+
+            // Dimensions: padding-left=40, padding-right=20, width=440
+            // Height: padding-bottom=40, padding-top=20, height=240
+            
+            // Draw Song et al. O(N) path (linear line)
+            // Starts at x=40, y=260. Ends at a height proportional to dbSize.
+            // Max dbSize (10000) corresponds to y=40 (very high cost).
+            const xEnd = 40 + (dbSize / 10000) * 440;
+            const yEndSong = 260 - (dbSize / 10000) * 220;
+            
+            pathSong.setAttribute('d', `M 40 260 L ${xEnd} ${yEndSong}`);
+
+            // Draw Curtmola et al. O(t) path (flat line)
+            // Height is proportional strictly to matches (t) and is horizontal.
+            // Max matches (100) corresponds to y=180 (even at max matches, it is extremely low).
+            const yLevelCurtmola = 260 - (matches / 100) * 80;
+            pathCurtmola.setAttribute('d', `M 40 ${yLevelCurtmola} L ${xEnd} ${yLevelCurtmola}`);
+        }
+    </script>
+</body>
+</html>

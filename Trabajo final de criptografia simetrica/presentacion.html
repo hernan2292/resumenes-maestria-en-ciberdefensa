@@ -1,0 +1,2765 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentación: Cifrado Simétrico Buscable (SSE) | Criptografía Simétrica Avanzada</title>
+    <meta name="description" content="Presentación interactiva de 15 minutos sobre Cifrado Simétrico Buscable (SSE) con notas del orador, temporizador integrado y simulaciones conceptuales.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons via CDN -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <style>
+        :root {
+            --bg-main: hsl(224, 71%, 4%);
+            --bg-sidebar: hsl(224, 71%, 2%);
+            --bg-card: hsla(224, 71%, 8%, 0.65);
+            --border-color: hsla(217, 30%, 20%, 0.5);
+            
+            /* Neon Accents */
+            --accent-cyan: hsl(184, 100%, 45%);
+            --accent-cyan-glow: hsla(184, 100%, 45%, 0.3);
+            --accent-purple: hsl(280, 95%, 60%);
+            --accent-purple-glow: hsla(280, 95%, 60%, 0.3);
+            --accent-green: hsl(145, 100%, 40%);
+            --accent-green-glow: hsla(145, 100%, 40%, 0.25);
+            --accent-yellow: hsl(45, 100%, 50%);
+            --accent-yellow-glow: hsla(45, 100%, 50%, 0.2);
+            --accent-red: hsl(0, 85%, 55%);
+            
+            /* Typography Colors */
+            --text-primary: hsl(210, 40%, 98%);
+            --text-secondary: hsl(215, 20%, 75%);
+            --text-muted: hsl(217, 10%, 50%);
+            
+            --transition-speed: 0.3s;
+            --border-radius: 12px;
+            --font-scale: 1.2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background-image: 
+                radial-gradient(at 10% 20%, hsla(280, 95%, 30%, 0.08) 0px, transparent 50%),
+                radial-gradient(at 90% 80%, hsla(184, 100%, 30%, 0.06) 0px, transparent 50%);
+        }
+
+        /* Animated Grid Background */
+        .tech-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(18, 30, 52, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(18, 30, 52, 0.07) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Top Header Navigation Bar */
+        header {
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-sidebar);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 10;
+            position: relative;
+            transition: transform var(--transition-speed) ease, opacity var(--transition-speed) ease;
+        }
+
+        /* Trigger zone to reveal hidden header on hover when in Solo Proyector mode */
+        .top-trigger-zone {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 15px;
+            z-index: 999;
+        }
+
+        /* Hiding header styles in Slides Mode (Solo Proyector) */
+        body.mode-slides .top-trigger-zone {
+            display: block;
+        }
+
+        body.mode-slides header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            transform: translateY(-70px);
+            opacity: 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        body.mode-slides .top-trigger-zone:hover + header,
+        body.mode-slides header:hover {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, hsla(280, 95%, 60%, 0.2), hsla(184, 100%, 45%, 0.2));
+            border: 1px solid var(--accent-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-icon i {
+            color: var(--accent-purple);
+            filter: drop-shadow(0 0 5px var(--accent-purple));
+        }
+
+        .logo-text h1 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, var(--text-primary), var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-text span {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Timer Widget */
+        .timer-widget {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: hsla(224, 71%, 6%, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 6px 16px;
+        }
+
+        .timer-time {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent-cyan);
+            letter-spacing: 1px;
+        }
+
+        .timer-time.warning {
+            color: var(--accent-yellow);
+            animation: pulse-glow 1.5s infinite;
+        }
+
+        .timer-time.critical {
+            color: var(--accent-red);
+            animation: pulse-glow 0.8s infinite;
+        }
+
+        .timer-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color var(--transition-speed);
+        }
+
+        .timer-btn:hover {
+            color: var(--text-primary);
+        }
+
+        /* Mode Buttons */
+        .btn-mode {
+            background-color: hsla(217, 30%, 15%, 0.6);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-speed);
+        }
+
+        .btn-mode:hover {
+            background-color: hsla(217, 30%, 25%, 0.8);
+            color: var(--text-primary);
+            border-color: var(--accent-cyan);
+        }
+
+        .btn-mode.active {
+            background-color: var(--accent-purple-glow);
+            color: var(--text-primary);
+            border-color: var(--accent-purple);
+            box-shadow: 0 0 10px var(--accent-purple-glow);
+        }
+
+        /* Main Display Layout */
+        .app-body {
+            display: flex;
+            flex: 1;
+            height: calc(100vh - 70px);
+            position: relative;
+            z-index: 1;
+        }
+
+        body.mode-slides .app-body {
+            height: 100vh;
+        }
+
+        /* Slide Viewer (Audience view) */
+        .slide-viewer {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+            transition: width var(--transition-speed) ease;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 960px;
+            height: 100%;
+            max-height: 600px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            opacity: 0;
+            transform: translateX(100px);
+            pointer-events: none;
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.5s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            backdrop-filter: blur(15px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+            z-index: 5;
+        }
+
+        .slide.prev {
+            transform: translateX(-100px);
+        }
+
+        /* Slide Inner Layouts */
+        .slide-header {
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .slide-title-pre {
+            font-size: calc(0.8rem * var(--font-scale, 1.2));
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent-purple);
+            text-shadow: 0 0 8px var(--accent-purple-glow);
+            margin-bottom: 4px;
+        }
+
+        .slide-header h2 {
+            font-size: calc(2.1rem * var(--font-scale, 1.2));
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--text-primary) 50%, var(--accent-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .slide-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: calc(0.95rem * var(--font-scale, 1.2));
+            color: var(--text-muted);
+            background-color: var(--bg-sidebar);
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+        }
+
+        .slide-content {
+            flex: 1;
+            display: flex;
+            gap: 30px;
+            align-items: center;
+            overflow-y: auto;
+            padding: 10px 0;
+        }
+
+        .slide-full-width {
+            width: 100%;
+            height: 100%;
+        }
+
+        .slide-col {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .slide-col.visual-col {
+            background-color: hsla(224, 71%, 2%, 0.5);
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 250px;
+            position: relative;
+        }
+
+        /* General Typography inside slides */
+        .slide p {
+            font-size: calc(1.2rem * var(--font-scale, 1.2));
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+
+        .slide ul {
+            margin-left: 20px;
+            margin-bottom: 16px;
+        }
+
+        .slide li {
+            font-size: calc(1.15rem * var(--font-scale, 1.2));
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .slide li strong {
+            color: var(--accent-cyan);
+        }
+
+        .highlight-box {
+            background-color: hsla(280, 95%, 60%, 0.05);
+            border-left: 3px solid var(--accent-purple);
+            padding: 12px 16px;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+
+        .highlight-box p {
+            margin-bottom: 0;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+        }
+
+        /* Formulas */
+        .math-block {
+            background-color: hsla(224, 71%, 2%, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: calc(0.95rem * var(--font-scale, 1.2));
+            color: var(--accent-green);
+            margin: 10px 0 16px 0;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        /* Presenter Notes Panel (Split view side) */
+        .presenter-panel {
+            width: 440px;
+            border-left: 1px solid var(--border-color);
+            background-color: var(--bg-sidebar);
+            display: none;
+            flex-direction: column;
+            z-index: 10;
+            position: relative;
+            transition: width var(--transition-speed) ease;
+        }
+
+        .presenter-panel.active {
+            display: flex;
+        }
+
+        .notes-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: hsla(224, 71%, 1%, 0.5);
+        }
+
+        .notes-header h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .notes-meta {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            background-color: hsla(45, 100%, 50%, 0.1);
+            color: var(--accent-yellow);
+            border-radius: 4px;
+            border: 1px solid hsla(45, 100%, 50%, 0.2);
+        }
+
+        .notes-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .note-section {
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .note-section-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border-bottom: 1px solid hsla(217, 30%, 20%, 0.8);
+            padding-bottom: 4px;
+            margin-top: 10px;
+        }
+
+        .note-section-title i {
+            width: 14px;
+            height: 14px;
+        }
+
+        .speech-guide {
+            background-color: hsla(224, 71%, 6%, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 14px 16px;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .speech-guide p {
+            margin-bottom: 12px;
+        }
+
+        .speech-guide p:last-child {
+            margin-bottom: 0;
+        }
+
+        .speech-guide strong {
+            color: var(--text-primary);
+        }
+
+        /* Clickable Glossary Terms in speech guide */
+        .glossary-term {
+            border-bottom: 1px dotted var(--accent-cyan);
+            color: var(--accent-cyan);
+            cursor: help;
+            font-weight: 600;
+            transition: all var(--transition-speed);
+            padding: 0 1px;
+        }
+
+        .glossary-term:hover {
+            color: var(--text-primary);
+            background-color: var(--accent-cyan-glow);
+            text-shadow: 0 0 5px var(--accent-cyan-glow);
+        }
+
+        .bullet-notes {
+            list-style-type: none;
+            margin-left: 0;
+        }
+
+        .bullet-notes li {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            position: relative;
+            padding-left: 16px;
+            margin-bottom: 8px;
+        }
+
+        .bullet-notes li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--accent-purple);
+            font-weight: bold;
+        }
+
+        .warning-note {
+            background-color: hsla(0, 85%, 55%, 0.08);
+            border: 1px dashed hsla(0, 85%, 55%, 0.3);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .warning-note i {
+            color: var(--accent-red);
+        }
+
+        /* Interactive Glossary Drawer (In notes panel bottom) */
+        .glossary-drawer {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background-color: hsla(224, 71%, 2%, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px;
+            margin-top: auto;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .glossary-drawer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 6px;
+        }
+
+        .glossary-drawer-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .glossary-drawer-close {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .glossary-drawer-close:hover {
+            color: var(--text-primary);
+        }
+
+        .glossary-drawer-body {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            line-height: 1.55;
+            min-height: 70px;
+        }
+
+        /* Slide Footer (Navigation Controls) */
+        .navigation-footer {
+            height: 70px;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-sidebar);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 10;
+            position: relative;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-nav {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: hsla(217, 30%, 15%, 0.6);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-speed);
+        }
+
+        .btn-nav:hover {
+            color: var(--text-primary);
+            border-color: var(--accent-cyan);
+            background-color: hsla(217, 30%, 25%, 0.8);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: var(--border-color) !important;
+            background-color: transparent !important;
+        }
+
+        .progress-bar-container {
+            flex-grow: 1;
+            margin: 0 40px;
+            height: 6px;
+            background-color: hsla(217, 30%, 15%, 0.8);
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 11%;
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-cyan));
+            border-radius: 3px;
+            transition: width var(--transition-speed) ease;
+        }
+
+        .slide-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .dot.active {
+            background-color: var(--accent-cyan);
+            box-shadow: 0 0 6px var(--accent-cyan-glow);
+            width: 20px;
+            border-radius: 4px;
+        }
+
+        /* --- INTERACTIVE SIMULATIONS WITHIN SLIDES --- */
+        
+        /* Slide 2: AES vs SSE */
+        .aes-sse-sim {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .sim-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sim-tab-btn {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            background-color: hsla(217, 30%, 15%, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-family: inherit;
+            transition: all var(--transition-speed);
+        }
+
+        .sim-tab-btn.active {
+            background-color: var(--accent-cyan-glow);
+            border-color: var(--accent-cyan);
+            color: var(--text-primary);
+        }
+
+        .sim-viewport {
+            flex: 1;
+            background-color: hsla(224, 71%, 2%, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: calc(0.85rem * var(--font-scale, 1.2));
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 160px;
+        }
+
+        .sim-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .sim-btn {
+            background-color: hsla(280, 95%, 60%, 0.15);
+            border: 1px solid var(--accent-purple);
+            color: var(--accent-purple);
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all var(--transition-speed);
+        }
+
+        .sim-btn:hover {
+            background-color: hsla(280, 95%, 60%, 0.25);
+            box-shadow: 0 0 8px var(--accent-purple-glow);
+        }
+
+        .sim-input-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .sim-input {
+            flex: 1;
+            background-color: var(--bg-sidebar);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 6px 10px;
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: calc(0.85rem * var(--font-scale, 1.2));
+        }
+
+        .sim-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+        }
+
+        /* Slide 3: PRF Calculator */
+        .prf-calc {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .prf-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .prf-val {
+            font-family: 'JetBrains Mono', monospace;
+            background-color: hsla(145, 100%, 40%, 0.08);
+            border: 1px dashed hsla(145, 100%, 40%, 0.2);
+            color: var(--accent-green);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: calc(0.88rem * var(--font-scale, 1.2));
+            word-break: break-all;
+            flex: 1;
+        }
+
+        /* Slide 5: Song Sequential Scan */
+        .scan-sim-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .db-files {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            overflow-y: auto;
+            max-height: 180px;
+        }
+
+        .db-file-row {
+            padding: 6px 10px;
+            background-color: hsla(224, 71%, 1%, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: calc(0.8rem * var(--font-scale, 1.2));
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: relative;
+            transition: all var(--transition-speed);
+        }
+
+        .db-file-row.scanning {
+            border-color: var(--accent-yellow);
+            background-color: hsla(45, 100%, 50%, 0.08);
+        }
+
+        .db-file-row.scanning::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--accent-yellow);
+            box-shadow: 0 0 6px var(--accent-yellow-glow);
+        }
+
+        .db-file-row.matched {
+            border-color: var(--accent-green);
+            background-color: hsla(145, 100%, 40%, 0.08);
+            color: var(--text-primary);
+        }
+
+        .db-file-row.matched::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--accent-green);
+            box-shadow: 0 0 6px var(--accent-green-glow);
+        }
+
+        /* Slide 6: Curtmola Linked List Jump */
+        .jump-sim-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .linked-list-canvas {
+            flex: 1;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            background-color: hsla(224, 71%, 1%, 0.6);
+            position: relative;
+            overflow: hidden;
+            min-height: 170px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 10px;
+        }
+
+        .hash-node {
+            width: calc(90px * var(--font-scale, 1.2));
+            height: calc(70px * var(--font-scale, 1.2));
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-sidebar);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: calc(0.75rem * var(--font-scale, 1.2));
+            font-family: 'JetBrains Mono', monospace;
+            padding: 4px;
+            position: relative;
+            z-index: 2;
+            transition: all var(--transition-speed);
+        }
+
+        .hash-node.active-node {
+            border-color: var(--accent-cyan);
+            background-color: var(--accent-cyan-glow);
+            box-shadow: 0 0 10px var(--accent-cyan-glow);
+        }
+
+        .hash-node.visited-node {
+            border-color: var(--accent-green);
+            background-color: hsla(145, 100%, 40%, 0.1);
+        }
+
+        .node-pointer {
+            font-size: calc(0.65rem * var(--font-scale, 1.2));
+            color: var(--accent-purple);
+            margin-top: 4px;
+        }
+
+        /* Slide 7: Leakage Graph */
+        .leakage-diagram {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .leakage-flow {
+            flex: 1;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background-color: hsla(224, 71%, 1%, 0.6);
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: calc(0.78rem * var(--font-scale, 1.2));
+            min-height: 160px;
+        }
+
+        .leakage-col {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 45%;
+        }
+
+        .leak-pill {
+            padding: 6px;
+            background-color: hsla(224, 71%, 6%, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            text-align: center;
+            position: relative;
+            transition: all var(--transition-speed);
+        }
+
+        .leak-pill.leaked {
+            border-color: var(--accent-yellow);
+            color: var(--accent-yellow);
+            box-shadow: 0 0 8px var(--accent-yellow-glow);
+        }
+
+        /* Miscellaneous utilities */
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-cyan { background-color: var(--accent-cyan-glow); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); }
+        .badge-purple { background-color: var(--accent-purple-glow); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+        .badge-green { background-color: hsla(145, 100%, 40%, 0.1); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .badge-yellow { background-color: hsla(45, 100%, 50%, 0.15); color: var(--accent-yellow); border: 1px solid var(--accent-yellow); }
+
+        .text-green { color: var(--accent-green) !important; }
+        .text-cyan { color: var(--accent-cyan) !important; }
+        .text-purple { color: var(--accent-purple) !important; }
+        .text-yellow { color: var(--accent-yellow) !important; }
+        .text-red { color: var(--accent-red) !important; }
+
+        .mt-1 { margin-top: 4px; }
+        .mt-2 { margin-top: 8px; }
+        .mt-3 { margin-top: 12px; }
+        .mt-4 { margin-top: 16px; }
+
+        @keyframes pulse-glow {
+            0% { opacity: 0.8; }
+            50% { opacity: 1; filter: drop-shadow(0 0 5px currentColor); }
+            100% { opacity: 0.8; }
+        }
+
+        @media (max-width: 1024px) {
+            .presenter-panel {
+                width: 340px;
+            }
+            .slide-header h2 {
+                font-size: 1.4rem;
+            }
+            .slide p {
+                font-size: 0.9rem;
+            }
+            .slide li {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Full Screen Presentation mode overrides */
+        body.mode-slides .slide-viewer {
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        body.mode-slides .slide-container {
+            width: 100vw;
+            height: 100vh;
+            max-width: 100vw;
+            max-height: 100vh;
+        }
+
+        body.mode-slides .slide {
+            width: 100vw;
+            height: 100vh;
+            max-width: 100vw;
+            max-height: 100vh;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 40px 60px;
+        }
+
+        body.mode-slides .slide-number {
+            display: none !important;
+        }
+
+        body.mode-slides .navigation-footer {
+            display: none !important;
+        }
+
+        body.mode-slides .slide p {
+            font-size: calc(1.5rem * var(--font-scale, 1.2));
+            line-height: 1.6;
+        }
+
+        body.mode-slides .slide li {
+            font-size: calc(1.4rem * var(--font-scale, 1.2));
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        body.mode-slides .slide-header h2 {
+            font-size: calc(3rem * var(--font-scale, 1.2));
+        }
+
+        body.mode-slides .slide-title-pre {
+            font-size: calc(1.1rem * var(--font-scale, 1.2));
+        }
+    </style>
+</head>
+<body class="mode-both" id="el-body">
+    <!-- Hover trigger zone for the sliding header in Solo Proyector mode -->
+    <div class="top-trigger-zone"></div>
+    
+    <div class="tech-grid"></div>
+
+    <!-- Header Navigation -->
+    <header id="el-header">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i data-lucide="presentation"></i>
+            </div>
+            <div class="logo-text">
+                <h1>SSE-PRESENTATION</h1>
+                <span>Guía del Expositor Integrada</span>
+            </div>
+        </div>
+
+        <div class="top-controls">
+            <!-- Timer Widget -->
+            <div class="timer-widget">
+                <button class="timer-btn" id="btn-timer-toggle" title="Iniciar/Pausar Temporizador">
+                    <i data-lucide="play" id="timer-toggle-icon"></i>
+                </button>
+                <span class="timer-time" id="timer-display">15:00</span>
+                <button class="timer-btn" id="btn-timer-reset" title="Reiniciar Temporizador">
+                    <i data-lucide="rotate-ccw"></i>
+                </button>
+            </div>
+
+            <!-- Font Size Widget -->
+            <div class="timer-widget" style="gap: 8px;">
+                <button class="timer-btn" onclick="adjustFontSize(-0.1)" title="Reducir Letra (A-)">
+                    <i data-lucide="zoom-out" style="width: 16px; height: 16px;"></i>
+                </button>
+                <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; font-weight: 700; color: var(--accent-cyan); min-width: 45px; text-align: center;" id="font-scale-display">120%</span>
+                <button class="timer-btn" onclick="adjustFontSize(0.1)" title="Aumentar Letra (A+)">
+                    <i data-lucide="zoom-in" style="width: 16px; height: 16px;"></i>
+                </button>
+            </div>
+
+            <!-- Mode Selector -->
+            <button class="btn-mode active" id="btn-mode-both" onclick="setMode('both')">
+                <i data-lucide="columns"></i>
+                <span>Vista Dividida</span>
+            </button>
+            <button class="btn-mode" id="btn-mode-slides" onclick="setMode('slides')">
+                <i data-lucide="monitor"></i>
+                <span>Solo Proyector</span>
+            </button>
+            <button class="btn-mode" id="btn-mode-notes" onclick="setMode('notes')">
+                <i data-lucide="book-open"></i>
+                <span>Solo Notas</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="app-body">
+        
+        <!-- SLIDE VIEWER (AUDIENCE VIEW) -->
+        <div class="slide-viewer" id="el-slide-viewer">
+            <div class="slide-container">
+                
+                <!-- SLIDE 1: PORTADA -->
+                <div class="slide active" data-slide="1">
+                    <div class="slide-header">
+                        <div>
+                            <span class="slide-title-pre">Criptografía 2026</span>
+                            <h2>Cifrado Simétrico Buscable (SSE)</h2>
+                        </div>
+                        <span class="slide-number">Diapo 1/9</span>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-col">
+                            <h3 style="font-size: calc(1.7rem * var(--font-scale, 1.2)); font-weight: 600; margin-bottom: 12px; color: var(--accent-cyan);">
+                                Confidencialidad de Almacenamiento y Auditabilidad Inmutable en Entornos Distribuidos
+                            </h3>
+                            <p>Análisis de la coexistencia entre la seguridad de la información y la utilidad de búsqueda en la nube mediante técnicas criptográficas avanzadas.</p>
+                            
+                            <div class="highlight-box mt-3">
+                                <p><strong>Foco de la Presentación:</strong> Cómo evolucionan las primitivas simétricas convencionales hacia construcciones que permiten la computación "ciega" en servidores externos.</p>
+                            </div>
+                        </div>
+                        <div class="slide-col visual-col" style="flex: 1.1;">
+                            <div style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+                                <div style="text-align: center;">
+                                    <span class="badge badge-purple" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); padding: 6px 12px;">Simulación de Pipeline de Búsqueda</span>
+                                </div>
+                                
+                                <!-- Diagram Container -->
+                                <div style="display: flex; flex-direction: column; gap: 15px; background: hsla(224, 71%, 2%, 0.6); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); min-height: 200px; justify-content: center; position: relative;">
+                                    
+                                    <!-- Pipeline Row -->
+                                    <div style="display: flex; justify-content: space-between; align-items: center; position: relative;">
+                                        <!-- Client Node -->
+                                        <div id="sim1-client" style="border: 2px solid var(--accent-cyan); padding: 12px; border-radius: 8px; background: hsla(184, 100%, 45%, 0.05); text-align: center; width: 30%; transition: all 0.3s ease;">
+                                            <i data-lucide="shield" style="width: 28px; height: 28px; color: var(--accent-cyan); margin: 0 auto 6px auto;"></i>
+                                            <div style="font-size: calc(0.95rem * var(--font-scale, 1.2)); font-weight: bold;">Cliente</div>
+                                            <div id="sim1-client-state" style="font-size: calc(0.8rem * var(--font-scale, 1.2)); color: var(--text-secondary); margin-top: 4px; font-family: monospace;">Listo</div>
+                                        </div>
+                                        
+                                        <!-- Channel Node -->
+                                        <div style="width: 30%; text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative;">
+                                            <span style="font-size: calc(0.8rem * var(--font-scale, 1.2)); color: var(--accent-yellow); font-family: monospace; font-weight: bold; margin-bottom: 5px;" id="sim1-flow-label">Canal TLS</span>
+                                            <div style="position: relative; width: 100%; height: 10px; background: var(--border-color); border-radius: 5px; overflow: hidden;">
+                                                <div id="sim1-packet" style="position: absolute; left: 0; top: 0; width: 15px; height: 100%; background: var(--accent-yellow); border-radius: 5px; transform: translateX(-20px); transition: transform 0.8s ease-in-out;"></div>
+                                            </div>
+                                            <div id="sim1-transit-status" style="font-size: calc(0.75rem * var(--font-scale, 1.2)); color: var(--text-muted); font-family: monospace; margin-top: 4px;">Inactivo</div>
+                                        </div>
+                                        
+                                        <!-- Server Node -->
+                                        <div id="sim1-server" style="border: 2px solid var(--accent-purple); padding: 12px; border-radius: 8px; background: hsla(280, 95%, 60%, 0.05); text-align: center; width: 30%; transition: all 0.3s ease;">
+                                            <i data-lucide="database" style="width: 28px; height: 28px; color: var(--accent-purple); margin: 0 auto 6px auto;"></i>
+                                            <div style="font-size: calc(0.95rem * var(--font-scale, 1.2)); font-weight: bold;">Servidor (Cloud)</div>
+                                            <div id="sim1-server-state" style="font-size: calc(0.8rem * var(--font-scale, 1.2)); color: var(--text-secondary); margin-top: 4px; font-family: monospace;">Vacío</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Explain Text -->
+                                    <div id="sim1-explain" style="font-family: 'JetBrains Mono', monospace; font-size: calc(0.95rem * var(--font-scale, 1.2)); background: hsla(224, 71%, 1%, 0.8); padding: 15px; border-radius: 8px; border: 1px dashed var(--border-color); text-align: left; min-height: 90px; line-height: 1.5;">
+                                        Haz clic en "1. Setup de Llaves" para inicializar el pipeline.
+                                    </div>
+                                </div>
+                                
+                                <!-- Control Stepper -->
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="sim-btn" onclick="runSim1Step(1)" id="btn-sim1-1" style="flex: 1; font-size: calc(0.9rem * var(--font-scale, 1.2)); justify-content: center; padding: 10px 5px;">1. Setup de Llaves</button>
+                                    <button class="sim-btn" onclick="runSim1Step(2)" id="btn-sim1-2" style="flex: 1; font-size: calc(0.9rem * var(--font-scale, 1.2)); justify-content: center; padding: 10px 5px;" disabled>2. Cifrar & Subir</button>
+                                    <button class="sim-btn" onclick="runSim1Step(3)" id="btn-sim1-3" style="flex: 1; font-size: calc(0.9rem * var(--font-scale, 1.2)); justify-content: center; padding: 10px 5px;" disabled>3. Buscar a Ciegas</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+                        <span></span>
+                        <span>Junio de 2026</span>
+                    </div>
+                </div>
+
+                <!-- SLIDE 2: EL DILEMA SIMÉTRICO -->
+                <div class="slide" data-slide="2">
+                    <div class="slide-header">
+                        <div>
+                            <span class="slide-title-pre">El Problema de Diseño</span>
+                            <h2>Confidencialidad vs. Capacidad de Búsqueda</h2>
+                        </div>
+                        <span class="slide-number">Diapo 2/9</span>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-col">
+                            <p>En la criptografía simétrica clásica, la seguridad exige indistinguibilidad:</p>
+                            <ul>
+                                <li><strong>Cifrado Probabilístico (IND-CPA):</strong> Un mismo texto plano genera textos cifrados distintos cada vez (usando un IV/nonce único en AES-GCM o AES-CBC).</li>
+                                <li><strong>Destrucción de la Estructura:</strong> El texto cifrado actúa como una caja negra probabilística. El servidor no puede indexar ni filtrar.</li>
+                                <li><strong>Incompatibilidad Operativa:</strong> Buscar una palabra clave obliga al cliente a descargar todos los datos cifrados y descifrarlos localmente.</li>
+                                <li><strong>Cifrado Determinista (Falla de Diseño):</strong> Mismo texto plano siempre genera mismo texto cifrado. Altamente vulnerable a ataques de análisis de frecuencia.</li>
+                            </ul>
+                        </div>
+                        <div class="slide-col visual-col" style="flex: 1.1;">
+                            <div class="aes-sse-sim" style="width: 100%; display: flex; flex-direction: column; gap: 15px;">
+                                <div class="sim-tabs" style="display: flex; gap: 8px;">
+                                    <button class="sim-tab-btn active" id="btn-sim-aes" onclick="setSim2Mode('aes')" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); padding: 10px; flex: 1;">AES-GCM (Clásico)</button>
+                                    <button class="sim-tab-btn" id="btn-sim-sse" onclick="setSim2Mode('sse')" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); padding: 10px; flex: 1;">Índice Cifrado SSE</button>
+                                </div>
+                                <div class="sim-input-box" style="display: flex; gap: 10px;">
+                                    <span style="font-size: calc(0.95rem * var(--font-scale, 1.2)); align-self: center; font-weight: bold; color: var(--text-primary);">Palabra:</span>
+                                    <input type="text" id="sim2-input" class="sim-input" value="failed" placeholder="Ej: failed, password, login..." style="font-size: calc(1rem * var(--font-scale, 1.2)); padding: 10px;" oninput="runSim2Live()">
+                                </div>
+                                <div class="sim-viewport" id="sim2-viewport" style="min-height: 220px; padding: 15px; line-height: 1.5; background: hsla(224, 71%, 2%, 0.7); border: 1px solid var(--border-color); border-radius: 8px; font-family: 'JetBrains Mono', monospace; font-size: calc(0.95rem * var(--font-scale, 1.2)); overflow-y: auto;">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                                <div class="sim-actions">
+                                    <button class="sim-btn" onclick="runSim2Action()" id="btn-sim2-run" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); width: 100%; justify-content: center; padding: 10px;">
+                                        <i data-lucide="play" style="width: 18px; height: 18px; margin-right: 6px;"></i> <span id="btn-sim2-text">Generar Cifrado AES-GCM</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">
+                        <span>Tensión clásica: A mayor indistinguibilidad matemática, menor capacidad de cómputo delegado.</span>
+                    </div>
+                </div>
+
+                <!-- SLIDE 3: LOS PILARES SIMÉTRICOS -->
+                <div class="slide" data-slide="3">
+                    <div class="slide-header">
+                        <div>
+                            <span class="slide-title-pre">Preliminares Académicos</span>
+                            <h2>El Núcleo Criptográfico Simétrico</h2>
+                        </div>
+                        <span class="slide-number">Diapo 3/9</span>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-col">
+                            <p>Las construcciones eficaces de SSE se asientan exclusivamente sobre primitivas simétricas convencionales:</p>
+                            <ul>
+                                <li><strong>Funciones Pseudoaleatorias (PRFs):</strong> Familias de funciones que mapean claves y entradas a salidas deterministas pero indistinguibles de ruido aleatorio para agentes externos.
+                                    <div class="math-block">F: {0,1}<sup>&lambda;</sup> &times; {0,1}<sup>m</sup> &rarr; {0,1}<sup>n</sup></div>
+                                </li>
+                                <li><strong>Instanciación Clave: HMAC-SHA256</strong>
+                                    <div class="math-block" style="font-size: 0.78rem;">HMAC<sub>K</sub>(w) = H((K &oplus; opad) || H((K &oplus; ipad) || w))</div>
+                                </li>
+                                <li><strong>Esquema de Cifrado Probabilístico (SKE):</strong> Para resguardar los archivos, se utiliza AES-256 en modo GCM, garantizando confidencialidad **IND-CPA** e integridad (AEAD).</li>
+                            </ul>
+                        </div>
+                        <div class="slide-col visual-col" style="flex: 1.1;">
+                            <div class="prf-calc" style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
+                                <div style="text-align: center;">
+                                    <span class="badge badge-purple" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); padding: 6px 12px;">Árbol de Derivación PRF (HMAC)</span>
+                                </div>
+                                
+                                <p style="font-size: calc(1rem * var(--font-scale, 1.2)); margin: 4px 0; color: var(--text-secondary);">Ingresa una palabra clave para calcular en tiempo real:</p>
+                                <div class="sim-input-box" style="margin: 0;">
+                                    <input type="text" id="sim3-query" class="sim-input" value="malware" placeholder="Escribe aquí..." oninput="runSim3PRF()" style="font-size: calc(1rem * var(--font-scale, 1.2)); padding: 10px; width: 100%;">
+                                </div>
+                                
+                                <!-- Visual Key Derivation Tree -->
+                                <div style="display: flex; flex-direction: column; gap: 10px; font-family: 'JetBrains Mono', monospace; font-size: calc(0.85rem * var(--font-scale, 1.2)); background: hsla(224, 71%, 2%, 0.7); border: 1px solid var(--border-color); padding: 15px; border-radius: 8px; line-height: 1.4;">
+                                    <!-- Level 0 -->
+                                    <div style="text-align: center; color: var(--accent-yellow); font-weight: bold; border: 1px solid var(--border-color); padding: 6px; border-radius: 4px; background: hsla(45, 100%, 50%, 0.05);">
+                                        Clave Maestra Privada (K) = 0x5f2d7c9a
+                                    </div>
+                                    <div style="text-align: center; color: var(--text-muted); font-size: 1.1em; margin: -5px 0;">&swarr; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &searr;</div>
+                                    <!-- Level 1 -->
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <div style="border: 1px solid var(--accent-cyan-glow); padding: 6px; border-radius: 4px; background: hsla(184, 100%, 45%, 0.05); width: 48%; text-align: center;">
+                                            <span style="color: var(--accent-cyan); font-weight: bold;">K1 (Ubicación)</span><br>
+                                            HMAC(K, "dir")
+                                        </div>
+                                        <div style="border: 1px solid var(--accent-purple-glow); padding: 6px; border-radius: 4px; background: hsla(280, 95%, 60%, 0.05); width: 48%; text-align: center;">
+                                            <span style="color: var(--accent-purple); font-weight: bold;">K2 (Enmascarar)</span><br>
+                                            HMAC(K, "enc")
+                                        </div>
+                                    </div>
+                                    <div style="display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.9em; padding: 0 10%;">
+                                        <span>&darr; HMAC(K1, w)</span>
+                                        <span>&darr; HMAC(K2, w)</span>
+                                    </div>
+                                    <!-- Level 2 -->
+                                    <div style="display: flex; justify-content: space-between; gap: 8px;">
+                                        <div style="border: 2px solid var(--accent-cyan); padding: 8px; border-radius: 6px; background: hsla(184, 100%, 45%, 0.1); width: 50%; text-align: center;">
+                                            <div style="color: var(--accent-cyan); font-weight: bold; font-size: 0.9em;">Tag T1 (Dirección Hash)</div>
+                                            <div id="sim3-tag" style="font-size: 1rem; word-break: break-all; color: var(--text-primary); font-weight: bold; margin-top: 4px;">0x8a92f41b</div>
+                                        </div>
+                                        <div style="border: 2px solid var(--accent-purple); padding: 8px; border-radius: 6px; background: hsla(280, 95%, 60%, 0.1); width: 50%; text-align: center;">
+                                            <div style="color: var(--accent-purple); font-weight: bold; font-size: 0.9em;">Máscara Kw (Cifrar)</div>
+                                            <div id="sim3-kw" style="font-size: 1rem; word-break: break-all; color: var(--text-primary); font-weight: bold; margin-top: 4px;">0x3c7e9a2b</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div style="font-size: calc(0.9rem * var(--font-scale, 1.2)); color: var(--text-secondary); border-top: 1px dashed var(--border-color); padding-top: 8px; line-height: 1.4;">
+                                    <strong style="color: var(--accent-cyan);">Seguridad:</strong> Al no poseer K, el servidor externo solo ve el tag <strong>Tag T1</strong> y no puede deducir la palabra original.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">
+                        <span>La predictibilidad controlada por el cliente es lo que permite el emparejamiento ciego en el servidor.</span>
+                    </div>
+                </div>
+
+                <!-- SLIDE 4: ARQUITECTURA SSE -->
+                <div class="slide" data-slide="4">
+                    <div class="slide-header">
+                        <div>
+                            <span class="slide-title-pre">Ciclo de Vida de los Datos</span>
+                            <h2>Los Cuatro Algoritmos de SSE</h2>
+                        </div>
+                        <span class="slide-number">Diapo 4/9</span>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-col" style="flex: 1.2;">
+                            <p>Un esquema SSE opera bajo un modelo de <strong>Servidor Semi-Honesto (Honest-but-Curious)</strong> mediante cuatro etapas:</p>
+                            <ol>
+                                <li style="margin-bottom: 8px;"><strong>Setup(1<sup>&lambda;</sup>):</strong> El cliente genera localmente su conjunto de claves simétricas secretas (K<sub>1</sub>, K<sub>2</sub>, K<sub>3</sub>).</li>
+                                <li style="margin-bottom: 8px;"><strong>BuildIndex(K, D):</strong> El cliente extrae las palabras, genera un índice invertido estructurado y lo cifra junto con los archivos. Sube el índice cifrado (I) y los archivos cifrados (C) al servidor. Borra los planos.</li>
+                                <li style="margin-bottom: 8px;"><strong>Trapdoor(K, w):</strong> Para buscar, el cliente genera un token simétrico determinista T<sub>w</sub> para la palabra w, sin revelar su valor plano.</li>
+                                <li style="margin-bottom: 8px;"><strong>Search(I, T<sub>w</sub>):</strong> El servidor usa el Trapdoor para evaluar el índice a ciegas y retorna el conjunto de identificadores coincidentes.</li>
+                            </ol>
+                        </div>
+                        <div class="slide-col visual-col" style="flex: 1.1;">
+                            <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+                                <div style="text-align: center;">
+                                    <span class="badge badge-purple" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); padding: 6px 12px;">Visualizador de Algoritmos</span>
+                                </div>
+                                
+                                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;">
+                                    <button class="sim-tab-btn active" id="btn-alg-setup" onclick="setAlgStep(1)" style="padding: 8px 4px; font-size: calc(0.85rem * var(--font-scale, 1.2));">1. Setup</button>
+                                    <button class="sim-tab-btn" id="btn-alg-index" onclick="setAlgStep(2)" style="padding: 8px 4px; font-size: calc(0.85rem * var(--font-scale, 1.2));">2. Index</button>
+                                    <button class="sim-tab-btn" id="btn-alg-trapdoor" onclick="setAlgStep(3)" style="padding: 8px 4px; font-size: calc(0.85rem * var(--font-scale, 1.2));">3. Trapdoor</button>
+                                    <button class="sim-tab-btn" id="btn-alg-search" onclick="setAlgStep(4)" style="padding: 8px 4px; font-size: calc(0.85rem * var(--font-scale, 1.2));">4. Search</button>
+                                </div>
+                                
+                                <div id="alg-viewport" style="border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; background-color: hsla(224, 71%, 2%, 0.8); min-height: 220px; line-height: 1.5; font-family: 'JetBrains Mono', monospace; font-size: calc(0.9rem * var(--font-scale, 1.2)); overflow-y: auto;">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">
+                        <span>El servidor jamás aprende el contenido de los archivos ni el significado semántico de las consultas.</span>
+                    </div>
+                </div>
+
+                <!-- SLIDE 5: EL ORIGEN: SONG ET AL. (2000) -->
+                <div class="slide" data-slide="5">
+                    <div class="slide-header">
+                        <div>
+                            <span class="slide-title-pre">Evolución Histórica</span>
+                            <h2>Esquema Secuencial de Song, Wagner y Perrig</h2>
+                        </div>
+                        <span class="slide-number">Diapo 5/9</span>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-col">
+                            <p>El nacimiento del cifrado buscable se basó en cifradores de flujo simétricos y PRFs:</p>
+                            <ul>
+                                <li><strong>Construcción:</strong> Cada palabra W<sub>i</sub> se cifra individualmente. Se genera un valor pseudoaleatorio X<sub>i</sub> = (L<sub>i</sub>, R<sub>i</sub>) y una constante de comprobación S<sub>i</sub> = F<sub>k<sub>i</sub></sub>(L<sub>i</sub>). El ciphertext final es C<sub>i</sub> = W<sub>i</sub> &oplus; (L<sub>i</sub> || S<sub>i</sub>).</li>
+                                <li><strong>Búsqueda Secuencial Lineal:</strong> Para buscar, el cliente debe enviar partes de las claves de derivación. El servidor debe escanear linealmente cada palabra de la base de datos completa.</li>
+                                <li><strong>Desventaja Principal:</strong> Complejidad de búsqueda lineal <strong>O(N &times; L)</strong> en el servidor, inviable para Big Data, y revelación de la ubicación exacta de palabras.</li>
+                            </ul>
+                        </div>
+                        <div class="slide-col visual-col" style="flex: 1.1;">
+                            <div class="scan-sim-container" style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span class="badge badge-yellow" id="badge-scan-status" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); padding: 6px 12px;">Escaneo Lineal O(N)</span>
+                                    <span id="scan-complexity-counter" style="font-family: 'JetBrains Mono', monospace; font-size: calc(0.95rem * var(--font-scale, 1.2)); color: var(--accent-yellow); font-weight: bold;">Pasos: 0</span>
+                                </div>
+                                
+                                <div style="display: flex; gap: 10px;">
+                                    <input type="text" id="sim5-keyword" class="sim-input" value="failed" style="font-size: calc(1rem * var(--font-scale, 1.2)); padding: 8px;" placeholder="Palabra a buscar...">
+                                    <button class="sim-btn" onclick="runSim5Scan()" id="btn-sim5-run" style="font-size: calc(0.9rem * var(--font-scale, 1.2)); padding: 8px 16px; margin: 0; display: flex; align-items: center; gap: 5px;">
+                                        <i data-lucide="search" style="width: 16px; height: 16px;"></i> Buscar
+                                    </button>
+                                </div>
+ 
+                                <div class="db-files" id="sim5-db" style="max-height: 150px; min-height: 120px; display: flex; flex-direction: column; gap: 6px;">
+                                    <div class="db-file-row" id="sim5-r1" style="font-size: calc(0.9rem * var(--font-scale, 1.2)); padding: 8px;">Doc 1: W<sub>1</sub>("failed") &oplus; (L<sub>1</sub> || S<sub>1</sub>)</div>
+                                    <div class="db-file-row" id="sim5-r2" style="font-size: calc(0.9rem * var(--font-scale, 1.2)); padding: 8px;">Doc 2: W<sub>2</sub>("success") &oplus; (L<sub>2</sub> || S<sub>2</sub>)</div>
+                                    <div class="db-file-row" id="sim5-r3" style="font-size: calc(0.9rem * var(--font-scale, 1.2)); padding: 8px;">Doc 3: W<sub>3</sub>("timeout") &oplus; (L<sub>3</sub> || S<sub>3</sub>)</div>
+                                    <div class="db-file-row" id="sim5-r4" style="font-size: calc(0.9rem * var(--font-scale, 1.2)); padding: 8px;">Doc 4: W<sub>4</sub>("failed") &oplus; (L<sub>4</sub> || S<sub>4</sub>)</div>
+                                </div>
+                                <div id="sim5-log" style="font-family: 'JetBrains Mono', monospace; font-size: calc(0.9rem * var(--font-scale, 1.2)); background-color: hsla(224, 71%, 2%, 0.8); border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; color: var(--text-secondary); min-height: 75px; line-height: 1.45;">
+                                    Listo para simular la búsqueda secuencial del esquema fundacional.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">
+                        <span>Song et al. sentó la base matemática, pero carecía de la eficiencia necesaria para la industria real.</span>
+                    </div>
+                </div>
+
+                <!-- SLIDE 6: LA REVOLUCIÓN SUBLINEAL -->
+                <div class="slide" data-slide="6">
+                    <div class="slide-header">
+                        <div>
+                            <span class="slide-title-pre">El Estándar de Oro (Curtmola et al., 2006)</span>
+                            <h2>La Búsqueda Sublineal mediante Índices Invertidos</h2>
+                        </div>
+                        <span class="slide-number">Diapo 6/9</span>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-col">
+                            <p>Curtmola, Garay, Ostrovsky y Yong introdujeron la estructura de **Índice Invertido Cifrado (SSE-1)**, logrando búsquedas en tiempo óptimo **O(t)**:</p>
+                            <ul>
+                                <li><strong>Listas Enlazadas Cifradas:</strong> Cada palabra clave posee una lista enlazada donde cada nodo almacena cifrado el ID del documento y la dirección de memoria del siguiente nodo:
+                                    <div class="math-block" style="font-size: 0.75rem; padding: 8px;">V<sub>j</sub> = Enc<sub>K<sub>w</sub></sub>(id<sub>j</sub> || Addr<sub>j+1</sub>)</div>
+                                </li>
+                                <li><strong>Direccionamiento Ciego:</strong> Los nodos se almacenan de forma desordenada en una tabla hash en direcciones pseudoaleatorias Addr<sub>j</sub> = PRF<sub>K<sub>1</sub></sub>(w || j).</li>
+                                <li><strong>Trapdoor Dual:</strong> El cliente envía T<sub>w</sub> = (T<sub>1</sub>(w), K<sub>w</sub>). El servidor localiza el primer nodo en T<sub>1</sub>, descifra con K<sub>w</sub> y salta a la dirección del siguiente nodo secuencialmente.</li>
+                            </ul>
+                        </div>
+                        <div class="slide-col visual-col" style="flex: 1.1;">
+                            <div class="jump-sim-container" style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <span class="badge badge-green" id="badge-jump-status" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); padding: 6px 12px;">Búsqueda Sublineal O(t)</span>
+                                    <span id="jump-complexity-counter" style="font-family: 'JetBrains Mono', monospace; font-size: calc(0.95rem * var(--font-scale, 1.2)); color: var(--accent-green); font-weight: bold;">Accesos a Memoria: 0</span>
+                                </div>
+                                
+                                <!-- Memory Layout Grid -->
+                                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;" id="sim6-grid">
+                                    <div class="hash-node" id="sim6-m0" style="width: 100%; height: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <span style="font-size: 0.85em; color: var(--text-muted);">0x2a1f</span>
+                                        <span style="font-size: 0.9em; font-weight: bold; color: var(--text-muted);">[Basura]</span>
+                                    </div>
+                                    <div class="hash-node" id="sim6-m1" style="width: 100%; height: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <span style="font-size: 0.85em; color: var(--accent-cyan); font-weight: bold;">0x7f83</span>
+                                        <span style="font-size: 0.9em; font-weight: bold; color: var(--accent-green);">Doc 1</span>
+                                    </div>
+                                    <div class="hash-node" id="sim6-m2" style="width: 100%; height: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <span style="font-size: 0.85em; color: var(--text-muted);">0x9c4f</span>
+                                        <span style="font-size: 0.9em; font-weight: bold; color: var(--text-muted);">[Basura]</span>
+                                    </div>
+                                    <div class="hash-node" id="sim6-m3" style="width: 100%; height: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <span style="font-size: 0.85em; color: var(--accent-cyan); font-weight: bold;">0x1a9c</span>
+                                        <span style="font-size: 0.9em; font-weight: bold; color: var(--accent-green);">Doc 4</span>
+                                    </div>
+                                    <div class="hash-node" id="sim6-m4" style="width: 100%; height: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <span style="font-size: 0.85em; color: var(--text-muted);">0x4b2d</span>
+                                        <span style="font-size: 0.9em; font-weight: bold; color: var(--text-muted);">[Basura]</span>
+                                    </div>
+                                    <div class="hash-node" id="sim6-m5" style="width: 100%; height: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <span style="font-size: 0.85em; color: var(--text-muted);">0x8d9a</span>
+                                        <span style="font-size: 0.9em; font-weight: bold; color: var(--text-muted);">[Basura]</span>
+                                    </div>
+                                    <div class="hash-node" id="sim6-m6" style="width: 100%; height: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <span style="font-size: 0.85em; color: var(--text-muted);">0x3f5c</span>
+                                        <span style="font-size: 0.9em; font-weight: bold; color: var(--text-muted);">[Basura]</span>
+                                    </div>
+                                    <div class="hash-node" id="sim6-m7" style="width: 100%; height: 60px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                                        <span style="font-size: 0.85em; color: var(--text-muted);">0xe8a1</span>
+                                        <span style="font-size: 0.9em; font-weight: bold; color: var(--text-muted);">[Basura]</span>
+                                    </div>
+                                </div>
+ 
+                                <div id="sim6-log" style="font-family: 'JetBrains Mono', monospace; font-size: calc(0.9rem * var(--font-scale, 1.2)); background-color: hsla(224, 71%, 2%, 0.8); border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; color: var(--text-secondary); min-height: 70px; line-height: 1.45;">
+                                    Listo para buscar con Saltos Ciegos usando la estructura del índice indexado.
+                                </div>
+                                <button class="sim-btn" onclick="runSim6Jump()" id="btn-sim6-run" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); width: 100%; justify-content: center; padding: 10px;">
+                                    <i data-lucide="zap" style="width: 18px; height: 18px; margin-right: 6px;"></i> Buscar en O(t)
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">
+                        <span>El coste de búsqueda es proporcional al número de resultados y no al tamaño del servidor.</span>
+                    </div>
+                </div>
+
+                <!-- SLIDE 7: EL COSTO: FILTRACIÓN (LEAKAGE) -->
+                <div class="slide" data-slide="7">
+                    <div class="slide-header">
+                        <div>
+                            <span class="slide-title-pre">Criptoanálisis de Datos Cifrados</span>
+                            <h2>El Peligro del Leakage (Goteo Criptográfico)</h2>
+                        </div>
+                        <span class="slide-number">Diapo 7/9</span>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-col">
+                            <p>Para lograr búsquedas sublineales sin descifrar, los esquemas de SSE toleran goteos de datos estructurados:</p>
+                            <ul>
+                                <li><strong>Search Pattern (Patrón de Búsqueda):</strong> Revela si el cliente busca la misma palabra clave. El servidor aprende si T<sub>w,i</sub> == T<sub>w,j</sub>.</li>
+                                <li><strong>Access Pattern (Patrón de Acceso):</strong> Revela qué documentos exactos coinciden con las consultas. El servidor aprende la lista de IDs devueltos.</li>
+                                <li><strong>Ataques Criptoanalíticos:</strong>
+                                    <ul>
+                                        <li><strong>Inyección de Archivos (Zhang et al.):</strong> El servidor inyecta correos o logs diseñados de forma binaria. Al ver qué archivos se acceden, recupera el 100% de los Trapdoors.</li>
+                                        <li><strong>Ataques de Volumen:</strong> Si el servidor tiene información estadística auxiliar, cruza las frecuencias de palabras reales con los tamaños de resultados devueltos.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="slide-col visual-col" style="flex: 1.1;">
+                            <div class="leakage-diagram" style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
+                                <div style="text-align: center;">
+                                    <span class="badge badge-yellow" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); padding: 6px 12px;">Monitor de Fugas del Servidor (Leakage)</span>
+                                </div>
+                                
+                                <div style="display: flex; gap: 8px; margin-top: 5px;">
+                                    <span style="font-size: calc(0.9rem * var(--font-scale, 1.2)); align-self: center; font-weight: bold;">Ejecutar Consulta:</span>
+                                    <button class="sim-btn" onclick="runSim7Query('IP')" style="margin: 0; padding: 6px 10px; font-size: calc(0.85rem * var(--font-scale, 1.2)); flex: 1;">"IP"</button>
+                                    <button class="sim-btn" onclick="runSim7Query('Port')" style="margin: 0; padding: 6px 10px; font-size: calc(0.85rem * var(--font-scale, 1.2)); flex: 1;">"Port"</button>
+                                    <button class="sim-btn" onclick="runSim7Query('Login')" style="margin: 0; padding: 6px 10px; font-size: calc(0.85rem * var(--font-scale, 1.2)); flex: 1;">"Login"</button>
+                                </div>
+ 
+                                <div class="leakage-flow" style="min-height: 120px; padding: 12px; line-height: 1.4; display: flex; flex-direction: column; gap: 8px;">
+                                    <div style="font-weight: bold; color: var(--accent-yellow); font-size: calc(0.95rem * var(--font-scale, 1.2)); border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">Información Colectada por el Cloud:</div>
+                                    <div id="sim7-history" style="color: var(--text-secondary); max-height: 90px; overflow-y: auto; font-size: calc(0.85rem * var(--font-scale, 1.2)); font-family: 'JetBrains Mono', monospace; display: flex; flex-direction: column; gap: 4px;">
+                                        [Ninguna consulta realizada aún]
+                                    </div>
+                                </div>
+                                <div id="sim7-log" style="font-family: 'JetBrains Mono', monospace; font-size: calc(0.9rem * var(--font-scale, 1.2)); background-color: hsla(224, 71%, 2%, 0.8); border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; color: var(--text-secondary); min-height: 75px; line-height: 1.45;">
+                                    Presiona sobre las palabras clave de arriba para revelar qué información intercepta el servidor remoto de forma pasiva.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+                        <span>Criptografía</span>
+                        <span>SSE-CRYPT 2026</span>
+                    </div>
+                </div>
+
+                <!-- SLIDE 8: MITIGACIONES SIMÉTRICAS -->
+                <div class="slide" data-slide="8">
+                    <div class="slide-header">
+                        <div>
+                            <span class="slide-title-pre">Técnicas de Robustecimiento</span>
+                            <h2>Mitigación de Fugas en el Dominio Simétrico</h2>
+                        </div>
+                        <span class="slide-number">Diapo 8/9</span>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-col">
+                            <p>El cliente puede neutralizar de forma autónoma el análisis de fugas en el servidor mediante técnicas de enmascaramiento:</p>
+                            <ul>
+                                <li><strong>Padding de Documentos y Volumen:</strong> Cifrar archivos a tamaño fijo (ej. PKCS#7) y añadir IDs de documentos ficticios (Dummies) a las listas enlazadas para que todas las palabras parezcan tener igual cantidad de resultados.</li>
+                                <li><strong>Consultas Dummy (Ruido):</strong> Generar búsquedas periódicas ficticias de forma automatizada por el cliente para aplanar la frecuencia del Search Pattern.</li>
+                                <li><strong>ORAM (Oblivious RAM):</strong> Barajar y recifrar la memoria del servidor continuamente tras cada acceso para eliminar el Access Pattern (aumenta el coste de red).</li>
+                                <li><strong>Forward & Backward Privacy:</strong> Asegurar que nuevas inserciones de archivos no se correlacionen con búsquedas pasadas usando claves simétricas evolutivas.</li>
+                            </ul>
+                        </div>
+                        <div class="slide-col visual-col" style="flex: 1.1;">
+                            <div style="width: 100%; display: flex; flex-direction: column; gap: 12px;">
+                                <div style="text-align: center;">
+                                    <span class="badge badge-green" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); padding: 6px 12px;">Centro de Control de Mitigaciones</span>
+                                </div>
+                                
+                                <div style="display: flex; flex-direction: column; gap: 8px;" id="sim8-switchboard">
+                                    <!-- Toggle 1 -->
+                                    <div style="display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; background: hsla(145, 100%, 40%, 0.05);">
+                                        <div>
+                                            <div style="font-weight: bold; color: var(--accent-green); font-size: calc(0.95rem * var(--font-scale, 1.2));">1. Padding (Relleno Fijo)</div>
+                                            <div style="font-size: calc(0.8rem * var(--font-scale, 1.2)); color: var(--text-secondary);">Enmascara volumen ocultando el tamaño exacto</div>
+                                        </div>
+                                        <input type="checkbox" id="sim8-toggle-padding" onchange="runSim8Toggle()" style="width: 20px; height: 20px; cursor: pointer;">
+                                    </div>
+                                    <!-- Toggle 2 -->
+                                    <div style="display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; background: hsla(184, 100%, 45%, 0.05);">
+                                        <div>
+                                            <div style="font-weight: bold; color: var(--accent-cyan); font-size: calc(0.95rem * var(--font-scale, 1.2));">2. Consultas Dummy (Ruido)</div>
+                                            <div style="font-size: calc(0.8rem * var(--font-scale, 1.2)); color: var(--text-secondary);">Añade búsquedas falsas para diluir la frecuencia</div>
+                                        </div>
+                                        <input type="checkbox" id="sim8-toggle-dummy" onchange="runSim8Toggle()" style="width: 20px; height: 20px; cursor: pointer;">
+                                    </div>
+                                    <!-- Toggle 3 -->
+                                    <div style="display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; background: hsla(280, 95%, 60%, 0.05);">
+                                        <div>
+                                            <div style="font-weight: bold; color: var(--accent-purple); font-size: calc(0.8rem * var(--font-scale, 1.2));">3. ORAM (Memoria Barajada)</div>
+                                            <div style="font-size: calc(0.8rem * var(--font-scale, 1.2)); color: var(--text-secondary);">Baraja y re-cifra bloques para ocultar el acceso</div>
+                                        </div>
+                                        <input type="checkbox" id="sim8-toggle-oram" onchange="runSim8Toggle()" style="width: 20px; height: 20px; cursor: pointer;">
+                                    </div>
+                                </div>
+                                <div id="sim8-log" style="font-family: 'JetBrains Mono', monospace; font-size: calc(0.9rem * var(--font-scale, 1.2)); background-color: hsla(224, 71%, 2%, 0.8); border: 1px solid var(--border-color); padding: 12px; border-radius: 6px; color: var(--text-secondary); min-height: 75px; line-height: 1.45;">
+                                    Activa las mitigaciones para observar cómo el cliente reduce la fuga de metadatos ante el host remoto.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted);">
+                        <span>El cliente es soberano sobre la privacidad de sus datos introduciendo ruido controlado.</span>
+                    </div>
+                </div>
+
+                <!-- SLIDE 9: CONCLUSIONES -->
+                <div class="slide" data-slide="9">
+                    <div class="slide-header">
+                        <div>
+                            <span class="slide-title-pre">Cierre de la Exposición</span>
+                            <h2>Conclusiones y Caso de Uso en Ciberdefensa</h2>
+                        </div>
+                        <span class="slide-number">Diapo 9/9</span>
+                    </div>
+                    <div class="slide-content">
+                        <div class="slide-col">
+                            <p>El Cifrado Simétrico Buscable (SSE) es un puente práctico entre la confidencialidad absoluta de los datos y el procesamiento eficiente en la nube:</p>
+                            <ul>
+                                <li><strong>Eficiencia Práctica:</strong> Evita la altísima sobrecarga computacional de tecnologías en desarrollo como el cifrado homomórfico completo (FHE).</li>
+                                <li><strong>Caso SOC en Entornos Zero Trust:</strong> Permite almacenar logs y syslogs confidenciales en almacenamiento distribuido de terceros de forma inmutable.</li>
+                                <li><strong>Preservación de la Privacidad del Analista:</strong> El analista del SOC realiza búsquedas de indicadores de compromiso (IoC) sin revelar a los nodos distribuidores qué amenaza está investigando.</li>
+                                <li><strong>El Desafío Actual:</strong> La mitigación activa del leakage por parte del cliente es vital para evitar el perfilado pasivo del servidor.</li>
+                            </ul>
+                        </div>
+                        <div class="slide-col visual-col" style="flex: 1.1;">
+                            <div style="text-align: center; padding: 5px; width: 100%; display: flex; flex-direction: column; gap: 12px;">
+                                <span class="badge badge-cyan" style="font-size: calc(0.95rem * var(--font-scale, 1.2)); padding: 6px 12px;">Consola de Roles del Ecosistema</span>
+                                
+                                <div style="display: flex; gap: 6px;">
+                                    <button class="sim-tab-btn active" id="btn-soc-analyst" onclick="setSocRole(1)" style="padding: 8px 4px; font-size: calc(0.85rem * var(--font-scale, 1.2)); flex: 1;">Analista SOC</button>
+                                    <button class="sim-tab-btn" id="btn-soc-cloud" onclick="setSocRole(2)" style="padding: 8px 4px; font-size: calc(0.85rem * var(--font-scale, 1.2)); flex: 1;">Nube (Cloud)</button>
+                                    <button class="sim-tab-btn" id="btn-soc-attacker" onclick="setSocRole(3)" style="padding: 8px 4px; font-size: calc(0.85rem * var(--font-scale, 1.2)); flex: 1;">Atacante</button>
+                                </div>
+                                
+                                <div id="soc-viewport" style="border: 1px solid var(--border-color); border-radius: 8px; padding: 15px; background-color: hsla(224, 71%, 2%, 0.8); min-height: 190px; line-height: 1.5; font-family: 'JetBrains Mono', monospace; font-size: calc(0.9rem * var(--font-scale, 1.2)); text-align: left; overflow-y: auto;">
+                                    <!-- Rendered dynamically -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); display: flex; justify-content: space-between;">
+                        <span>Criptografía</span>
+                        <span>SSE-CRYPT 2026</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- PRESENTER PANEL (RIGHT SIDE) -->
+        <div class="presenter-panel active" id="el-presenter-panel">
+            <div class="notes-header">
+                <h3><i data-lucide="user-check"></i> Guía del Expositor</h3>
+                <span class="notes-meta" id="slide-timing-badge">Tiempo Sugerido: 1:30 min</span>
+            </div>
+            <div class="notes-content">
+                
+                <!-- Notes 1 -->
+                <div class="note-section" data-notes="1">
+                    <div class="note-section-title"><i data-lucide="mic"></i> Discurso Paso a Paso</div>
+                    <div class="speech-guide">
+                        <p><strong>Lo que debes decir exactamente:</strong></p>
+                        <p>"Estimados miembros del tribunal, buenos días. Bienvenidos a la defensa de mi trabajo final titulado <em>'Análisis de esquemas de Cifrado Simétrico Buscable (SSE) para el almacenamiento confidencial y auditabilidad inmutable en entornos distribuidos'</em>.</p>
+                        <p>Hoy en día, las organizaciones delegan masivamente sus datos a infraestructuras en la nube o bases de datos distribuidas. Sin embargo, bajo un esquema moderno de ciberseguridad <span class="glossary-term" data-term="zero-trust">Zero Trust</span>, no podemos confiar plenamente en estos proveedores de almacenamiento externos. Los clasificamos como adversarios honestos pero curiosos.</p>
+                        <p>El objetivo central de este análisis es explorar cómo la criptografía simétrica avanzada nos permite almacenar de forma 100% confidencial logs de auditoría e indicadores de compromiso, sin perder la capacidad operativa de realizar búsquedas directas sobre el texto cifrado. Comencemos analizando el problema de base."</p>
+                    </div>
+                    <div class="note-section-title"><i data-lucide="check-square"></i> Conceptos a Resaltar</div>
+                    <ul class="bullet-notes">
+                        <li>Definición clara del problema: compatibilidad entre confidencialidad e indexación de búsqueda.</li>
+                        <li>Justificación del modelo descentralizado y el enfoque exclusivo en criptografía simétrica por rendimiento.</li>
+                    </ul>
+                </div>
+
+                <!-- Notes 2 -->
+                <div class="note-section" data-notes="2" style="display:none;">
+                    <div class="note-section-title"><i data-lucide="mic"></i> Discurso Paso a Paso</div>
+                    <div class="speech-guide">
+                        <p><strong>Lo que debes decir exactamente:</strong></p>
+                        <p>"Para entender la necesidad de SSE, debemos revisar el conflicto fundamental de la criptografía simétrica clásica. Si tomamos un algoritmo estándar como AES-GCM en un esquema <span class="glossary-term" data-term="ske">SKE</span>, la seguridad exige que el cifrado sea probabilístico. Esto significa que si ciframos la misma IP maliciosa o el término 'failed' dos veces, obtendremos dos textos cifrados completamente distintos. Esto se conoce formalmente como seguridad <span class="glossary-term" data-term="ind-cpa">IND-CPA</span>."</p>
+                        <p>"Esta indistinguibilidad destruye cualquier estructura u orden, convirtiendo los datos en una caja negra impenetrable. Para que un servidor haga una búsqueda tradicional, nos vemos forzados a descargar toda la base de datos cifrada, consumiendo ancho de banda, y descifrarla localmente. Esto no escala.</p>
+                        <p>Por otro lado, si usáramos cifrado determinista ingenuo para habilitar la búsqueda directa, perderíamos la seguridad semántica, ya que el servidor deduciría los contenidos por análisis de frecuencia de palabras. SSE surge para resolver este dilema de diseño de forma óptima."</p>
+                    </div>
+                    <div class="note-section-title"><i data-lucide="alert-triangle"></i> Guía Visual</div>
+                    <div class="warning-note">
+                        <i data-lucide="alert-circle"></i>
+                        <span>Haz clic en los botones de simulación en la diapositiva para mostrarle al tribunal cómo bajo AES clásico los textos cifrados cambian dinámicamente con cada generación del IV, imposibilitando la indexación, mientras que SSE genera una etiqueta estructurada localmente.</span>
+                    </div>
+                </div>
+
+                <!-- Notes 3 -->
+                <div class="note-section" data-notes="3" style="display:none;">
+                    <div class="note-section-title"><i data-lucide="mic"></i> Discurso Paso a Paso</div>
+                    <div class="speech-guide">
+                        <p><strong>Lo que debes decir exactamente:</strong></p>
+                        <p>"El núcleo matemático de SSE no requiere de primitivas exóticas ni costosas como el cifrado homomórfico completo. Se construye íntegramente sobre las bases de la criptografía simétrica clásica. Las dos columnas vertebrales son las funciones pseudoaleatorias y los esquemas simétricos tradicionales."</p>
+                        <p>"Una <span class="glossary-term" data-term="prf">PRF</span> es una función determinista que, utilizando una clave simétrica secreta, produce salidas indistinguibles de una cadena aleatoria para cualquier atacante. En las construcciones reales, instanciamos esta primitiva usando <span class="glossary-term" data-term="hmac">HMAC-SHA256</span>, aplicando constantes XOR con opad e ipad.</p>
+                        <p>Para los archivos propiamente dichos, seguimos usando un cifrador probabilístico de clave simétrica como AES-256 en modo GCM. La clave de todo el sistema es la predictibilidad controlada: solo el cliente, al poseer la clave secreta, puede predecir y calcular las etiquetas de las palabras para buscar, mientras que para el servidor en la nube estas etiquetas son indistinguibles de ruido blanco."</p>
+                    </div>
+                    <div class="note-section-title"><i data-lucide="edit-3"></i> Interacción</div>
+                    <ul class="bullet-notes">
+                        <li>Prueba a escribir en el simulador de PRF en pantalla. Escribe 'admin' y muestra cómo cambia el Tag (T1) de direccionamiento y la llave local de máscara (Kw).</li>
+                        <li>Explica brevemente que el Tag local se usa como dirección física, y Kw se usa para enmascarar los metadatos de esa palabra específica.</li>
+                    </ul>
+                </div>
+
+                <!-- Notes 4 -->
+                <div class="note-section" data-notes="4" style="display:none;">
+                    <div class="note-section-title"><i data-lucide="mic"></i> Discurso Paso a Paso</div>
+                    <div class="speech-guide">
+                        <p><strong>Lo que debes decir exactamente:</strong></p>
+                        <p>"Un esquema formal de Cifrado Simétrico Buscable se define a través de un protocolo interactivo cliente-servidor de cuatro algoritmos básicos."</p>
+                        <p>"Primero, en la fase de <code>Setup</code>, el cliente inicializa sus claves secretas en su entorno local y seguro. En segundo lugar, el algoritmo <code>BuildIndex</code> toma el conjunto de documentos en plano, extrae el vocabulario, genera un índice de búsqueda y cifra tanto el índice como los archivos. Toda esta información estructurada se envía al servidor externo, y el cliente destruye los textos planos locales.</p>
+                        <p>Tercero, cuando queremos consultar un log, el algoritmo <code>Trapdoor</code> computa localmente el token de búsqueda. Finalmente, el servidor ejecuta el algoritmo <code>Search</code> de forma ciega, comparando el token con el índice y retornando los identificadores de documentos correspondientes, sin que el servidor aprenda el significado de la palabra buscada ni el contenido del archivo en plano."</p>
+                    </div>
+                </div>
+
+                <!-- Notes 5 -->
+                <div class="note-section" data-notes="5" style="display:none;">
+                    <div class="note-section-title"><i data-lucide="mic"></i> Discurso Paso a Paso</div>
+                    <div class="speech-guide">
+                        <p><strong>Lo que debes decir exactamente:</strong></p>
+                        <p>"Para comprender el estado del arte de SSE, debemos analizar su evolución histórica. El primer esquema formal fue propuesto por Song, Wagner y Perrig en el año 2000."</p>
+                        <p>"Este esquema seminal cifra cada palabra de un archivo de manera independiente usando un cifrador de flujo y una PRF. Para buscar una palabra, el cliente genera un <span class="glossary-term" data-term="trapdoor">Trapdoor</span> que incluye la palabra descifrada y claves de derivación de nivel inferior. El servidor entonces debe escanear secuencialmente, palabra por palabra, cada fragmento de todos los documentos en su almacenamiento."</p>
+                        <p>"Este enfoque demostró la factibilidad de la búsqueda a ciegas, pero sufría de graves deficiencias de diseño: el tiempo de búsqueda es lineal con respecto al tamaño total de la base de datos, lo que hace inviable su uso a escala real. Además, el servidor aprende la ubicación exacta donde las palabras coinciden dentro de los archivos cifrados, lo que representa una fuga de información excesiva."</p>
+                    </div>
+                    <div class="note-section-title"><i data-lucide="alert-triangle"></i> Acción en vivo</div>
+                    <div class="warning-note">
+                        <i data-lucide="alert-circle"></i>
+                        <span>Haz clic en 'Iniciar Búsqueda Lineal' para mostrar al tribunal visualmente la ineficiencia del escaneo secuencial en el servidor.</span>
+                    </div>
+                </div>
+
+                <!-- Notes 6 -->
+                <div class="note-section" data-notes="6" style="display:none;">
+                    <div class="note-section-title"><i data-lucide="mic"></i> Discurso Paso a Paso</div>
+                    <div class="speech-guide">
+                        <p><strong>Lo que debes decir exactamente:</strong></p>
+                        <p>"La verdadera revolución práctica de SSE ocurrió en 2006 con el esquema propuesto por Curtmola, Garay, Ostrovsky y Yong. Ellos cambiaron radicalmente el diseño pasando de un escaneo secuencial a una estructura de índice invertido cifrado basada en listas enlazadas en una tabla hash desordenada."</p>
+                        <p>"En esta construcción, a cada palabra del diccionario se le asocia una lista enlazada de identificadores de los documentos que la contienen. El cliente cifra de manera independiente cada nodo de la lista usando una clave temporal derivada de la palabra, ocultando el ID del documento y la dirección física del siguiente nodo de la cadena en el servidor. La dirección de almacenamiento físico de cada nodo en el servidor es pseudoaleatoria."</p>
+                        <p>"Cuando el analista busca, envía un Trapdoor dual compuesto por la dirección del primer nodo y la clave temporal del enlace. El servidor puede saltar directamente a la dirección inicial, descifrar a ciegas el primer nodo para obtener el ID de log y la dirección del segundo nodo, y continuar la navegación. La complejidad de la búsqueda pasa a ser estrictamente sublineal, tardando un tiempo proporcional únicamente al número de coincidencias reales, sin importar el tamaño total de la base de datos."</p>
+                    </div>
+                    <div class="note-section-title"><i data-lucide="zap"></i> Simulación en vivo</div>
+                    <div class="warning-note">
+                        <i data-lucide="alert-circle"></i>
+                        <span>Presiona el botón de 'Buscar a Ciegas O(t)' y muestra al tribunal cómo el servidor salta inmediatamente entre bloques físicos de memoria mediante las direcciones hash descifradas a ciegas, logrando la sublinealidad óptima.</span>
+                    </div>
+                </div>
+
+                <!-- Notes 7 -->
+                <div class="note-section" data-notes="7" style="display:none;">
+                    <div class="note-section-title"><i data-lucide="mic"></i> Discurso Paso a Paso</div>
+                    <div class="speech-guide">
+                        <p><strong>Lo que debes decir exactamente:</strong></p>
+                        <p>"A pesar de la elegancia matemática y la velocidad del esquema de Curtmola, debemos abordar un aspecto crítico en ciberdefensa: el goteo de información o leakage."</p>
+                        <p>"Para lograr una complejidad de búsqueda sublineal, los esquemas prácticos de SSE toleran filtrar al servidor dos metadatos esenciales: el <span class="glossary-term" data-term="search-pattern">Search Pattern</span>, que revela si dos consultas corresponden a la misma palabra, y el <span class="glossary-term" data-term="access-pattern">Access Pattern</span>, que revela qué archivos específicos son devueltos."</p>
+                        <p>"Aunque toda la criptografía simétrica (AES, HMAC) sea impenetrable, el análisis lógico de estas fugas permite ataques criptoanalíticos avanzados. Por ejemplo, en un ataque activo de inyección de archivos, un atacante inyecta correos o logs estructurados en el cliente. Al observar qué archivos se acceden posteriormente en búsquedas reales, el atacante puede recuperar el 100% de las consultas. De igual forma, ataques pasivos de volumen pueden reconstruir el diccionario comparando el número de resultados devueltos con estadísticas de frecuencia externas del dominio de datos."</p>
+                    </div>
+                    <div class="note-section-title"><i data-lucide="alert-triangle"></i> Advertencia Científica</div>
+                    <div class="warning-note">
+                        <i data-lucide="alert-circle"></i>
+                        <span>Muestra la simulación de fugas. Enfatiza que el adversario honesto pero curioso no ve el texto plano, pero las líneas de correlación de accesos revelan patrones semánticos valiosos.</span>
+                    </div>
+                </div>
+
+                <!-- Notes 8 -->
+                <div class="note-section" data-notes="8" style="display:none;">
+                    <div class="note-section-title"><i data-lucide="mic"></i> Discurso Paso a Paso</div>
+                    <div class="speech-guide">
+                        <p><strong>Lo que debes decir exactamente:</strong></p>
+                        <p>"Afortunadamente, la investigación en el dominio simétrico ha desarrollado contramedidas robustas ejecutables del lado del cliente para mitigar estas filtraciones de forma autónoma."</p>
+                        <p>"Para mitigar los ataques de volumen, el cliente puede aplicar padding o relleno simétrico, tanto en los documentos como en el índice, agregando identificadores de documentos ficticios o dummies. Esto aplana la distribución estadística de frecuencias del índice, haciendo que todas las palabras parezcan tener el mismo volumen ante ojos del servidor."</p>
+                        <p>"Para camuflar el patrón de búsqueda, el cliente puede generar consultas falsas automatizadas. Si necesitamos seguridad extrema frente al patrón de acceso, podemos integrar una capa de <span class="glossary-term" data-term="oram">ORAM</span>, la cual baraja y recifra los bloques con cada lectura, eliminando la correlación del servidor a cambio de una penalización de red. Finalmente, en entornos dinámicos es fundamental exigir la propiedad de <span class="glossary-term" data-term="forward-privacy">Forward Privacy</span>, asegurando que nuevas inserciones de logs no se correlacionen con búsquedas previas."</p>
+                    </div>
+                </div>
+
+                <!-- Notes 9 -->
+                <div class="note-section" data-notes="9" style="display:none;">
+                    <div class="note-section-title"><i data-lucide="mic"></i> Discurso Paso a Paso</div>
+                    <div class="speech-guide">
+                        <p><strong>Lo que debes decir exactamente:</strong></p>
+                        <p>"Para concluir, el Cifrado Simétrico Buscable representa una de las primitivas más prácticas y eficientes para implementar arquitecturas de seguridad inmutables y Zero Trust en la nube."</p>
+                        <p>"El esquema de listas enlazadas de Curtmola resolvió la ineficiencia lineal de los esquemas fundacionales, estableciendo un estándar de rendimiento viable para la industria de la ciberseguridad. En infraestructuras de monitoreo y SOC distribuidos, SSE permite almacenar telemetría y syslogs confidenciales en almacenamiento compartido descentralizado (como Blockchain), asegurando que un administrador de red o un atacante jamás pueda saber qué amenazas o indicadores de compromiso está investigando el analista de incidentes."</p>
+                        <p>"La soberanía de los datos reside en las claves del cliente. La mitigación estructurada de fugas es un requisito indispensable para un despliegue seguro en producción. Muchas gracias por su atención y quedo a disposición del tribunal para responder a sus preguntas."</p>
+                    </div>
+                    <div class="note-section-title"><i data-lucide="check-square"></i> Recordatorio de Cierre</div>
+                    <ul class="bullet-notes">
+                        <li>Mantén una postura firme y mira a los ojos del tribunal.</li>
+                        <li>Haz énfasis en que SSE es utilizable hoy (milisegundos) frente a FHE (segundos o minutos por búsqueda).</li>
+                    </ul>
+                </div>
+
+                <!-- Dynamic Glossary Container -->
+                <div class="glossary-drawer" id="el-glossary-drawer">
+                    <div class="glossary-drawer-header">
+                        <span class="glossary-drawer-title"><i data-lucide="info"></i> Glosario de Términos</span>
+                        <button class="glossary-drawer-close" onclick="closeGlossary()" title="Cerrar Glosario">&times;</button>
+                    </div>
+                    <div class="glossary-drawer-body" id="el-glossary-body">
+                        Haga clic en cualquier término subrayado en azul en las notas para ver su definición detallada y analogía aquí.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Slide Navigation Footer -->
+    <div class="navigation-footer">
+        <div class="slide-dots" id="el-slide-dots">
+            <!-- Dynamic dots created by JS -->
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="el-progress-bar-fill"></div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-nav" id="btn-prev" onclick="changeSlide(-1)" disabled title="Anterior (Flecha Izquierda / Backspace)">
+                <i data-lucide="chevron-left"></i>
+            </button>
+            <button class="btn-nav" id="btn-next" onclick="changeSlide(1)" title="Siguiente (Flecha Derecha / Espacio)">
+                <i data-lucide="chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Font size scaling state
+        let fontScale = parseFloat(localStorage.getItem('fontScale')) || 1.2;
+        
+        function updateFontScale() {
+            document.documentElement.style.setProperty('--font-scale', fontScale);
+            const display = document.getElementById('font-scale-display');
+            if (display) {
+                display.innerText = `${Math.round(fontScale * 100)}%`;
+            }
+            localStorage.setItem('fontScale', fontScale);
+        }
+
+        function adjustFontSize(delta) {
+            fontScale = Math.max(0.8, Math.min(2.0, parseFloat((fontScale + delta).toFixed(1))));
+            updateFontScale();
+        }
+
+        // Slides state
+        let currentSlide = 1;
+        const totalSlides = 9;
+        
+        // Timer State
+        let timerSeconds = 15 * 60; // 15 minutes
+        let timerInterval = null;
+        let isTimerRunning = false;
+
+        // Slide timing allocations (in seconds)
+        const slideTimings = {
+            1: 90,  // 1:30
+            2: 120, // 2:00
+            3: 120, // 2:00
+            4: 90,  // 1:30
+            5: 120, // 2:00
+            6: 120, // 2:00
+            7: 120, // 2:00
+            8: 90,  // 1:30
+            9: 60   // 1:00
+        };
+
+        // Glossary Database
+        const glossary = {
+            "ind-cpa": {
+                title: "IND-CPA (Indistinguibilidad bajo Ataque de Texto Plano Elegido)",
+                simple: "Imagínate meter dos cartas distintas en dos sobres idénticos. Un atacante no puede adivinar qué sobre contiene qué carta, incluso si él mismo escribió las cartas.",
+                technical: "Estándar de seguridad que garantiza que un adversario con recursos acotados no puede distinguir cuál de dos mensajes fue cifrado, con una probabilidad mayor que lanzar una moneda al aire (1/2). Exige que el cifrado sea probabilístico (cambia con cada nonce/IV).",
+                importance: "En SSE, cifra los logs de auditoría en reposo para que el servidor en la nube no pueda deducir patrones basándose en la apariencia física de los bytes cifrados."
+            },
+            "prf": {
+                title: "PRF (Pseudo-Random Function - Función Pseudoaleatoria)",
+                simple: "Una máquina que toma una clave y una palabra clave, y genera un número que parece 100% aleatorio. Pero si usas la misma clave y palabra clave, el resultado siempre es idéntico.",
+                technical: "Familia de funciones eficientemente computables que son indistinguibles de una función aleatoria pura para un atacante eficiente. Es decir, simulan la aleatoriedad perfecta de forma determinista.",
+                importance: "Permite al cliente generar la misma etiqueta hash para buscar, mientras que para el servidor en la nube la etiqueta parece ruido pseudoaleatorio indescifrable."
+            },
+            "ske": {
+                title: "SKE (Symmetric Key Encryption - Cifrado de Clave Simétrica)",
+                simple: "El cifrado tradicional. Quien cifra el secreto y quien lo abre usan exactamente la misma llave secreta privada.",
+                technical: "Conjunto de algoritmos (Gen, Enc, Dec). Gen genera una clave simétrica K. Enc cifra un mensaje con K. Dec descifra con K. Ejemplos de uso común: AES-GCM, AES-CTR, ChaCha20.",
+                importance: "Protege los logs tácticos y syslogs individuales subidos al servidor remoto, impidiendo que el host no confiable lea el contenido de los archivos."
+            },
+            "hmac": {
+                title: "HMAC (Hash-based Message Authentication Code)",
+                simple: "Una firma simétrica de seguridad. Toma un mensaje y una clave secreta para generar un sello digital. Si el mensaje cambia, el sello se rompe de inmediato.",
+                technical: "Construcción específica de códigos de autenticación que combina una función hash criptográfica (como SHA-256) con una clave simétrica secreta, aplicando operaciones XOR internas y externas para blindarse contra ataques de extensión de longitud.",
+                importance: "En la práctica de SSE, se utiliza como la instanciación eficiente y de alta velocidad de las funciones pseudoaleatorias (PRFs)."
+            },
+            "trapdoor": {
+                title: "Trapdoor (Trampa Criptográfica)",
+                simple: "Un ticket de búsqueda temporal. El cliente lo calcula localmente y se lo da al servidor. Le sirve al servidor para buscar coincidencias sin saber el término real consultado.",
+                technical: "Token simétrico derivado del término de búsqueda 'w' y la clave de direccionamiento. Le da al servidor el punto de entrada y las claves de máscara para recorrer las listas cifradas de forma ciega.",
+                importance: "Protege la privacidad de las consultas del analista. El servidor realiza el filtrado pero no sabe qué palabra motivó la consulta."
+            },
+            "search-pattern": {
+                title: "Search Pattern (Patrón de Búsqueda)",
+                simple: "El servidor nota que estás consultando la misma palabra varias veces porque los tickets de búsqueda que envías son idénticos.",
+                technical: "Fuga que revela si dos consultas históricas corresponden al mismo término de búsqueda. Se formaliza como una matriz indicadora de repetición de tokens.",
+                importance: "Es una fuga inherente a SSE que el servidor curioso puede explotar para hacer análisis estadístico sobre cuándo se repiten ciertos eventos o incidentes."
+            },
+            "access-pattern": {
+                title: "Access Pattern (Patrón de Acceso)",
+                simple: "El servidor observa qué documentos exactos abres tras hacer una búsqueda, y puede agruparlos lógicamente.",
+                technical: "El conjunto de identificadores físicos de los documentos que coinciden y son devueltos por el servidor para cada consulta de búsqueda.",
+                importance: "Es la filtración más crítica en SSE, ya que permite ataques activos como la inyección de archivos para romper por completo el anonimato de las consultas."
+            },
+            "oram": {
+                title: "ORAM (Oblivious RAM - RAM Obliviosa)",
+                simple: "Un sistema que reordena y baraja continuamente las carpetas en la estantería cada vez que lees una, impidiendo que un observador sepa qué carpeta consultaste.",
+                technical: "Protocolo que oculta los patrones de acceso a la memoria física de un servidor remoto leyendo, escribiendo y reordenando dinámicamente bloques de datos en cada acceso.",
+                importance: "Elimina por completo el Access Pattern en SSE, pero introduce una penalización logarítmica severa en el ancho de banda de red y tiempo de CPU."
+            },
+            "forward-privacy": {
+                title: "Forward Privacy (Privacidad hacia Adelante)",
+                simple: "Si añades un archivo de log nuevo mañana, el servidor no puede saber si contiene palabras clave que buscaste hoy.",
+                technical: "Garantía en esquemas dinámicos de SSE que asegura que las operaciones de inserción de nuevos documentos no revelan asociaciones con búsquedas hechas en el pasado.",
+                importance: "Protege el sistema contra ataques activos de inyección de archivos en tiempo real bloqueando la correlación histórica de palabras."
+            },
+            "zero-trust": {
+                title: "Zero Trust (Confianza Cero)",
+                simple: "Un modelo de seguridad donde no confías en nada de forma automática, ni siquiera en tus propios servidores contratados en la nube.",
+                technical: "Marco de diseño de ciberseguridad basado en la premisa de que las amenazas existen en todas partes. Exige verificación continua, mínimos privilegios y cifrado total de extremo a extremo.",
+                importance: "Es la justificación teórica de SSE: queremos aprovechar el poder de la computación en la nube pero asumiendo que el servidor puede ser inspeccionado por atacantes."
+            }
+        };
+
+        // Initialize Page
+        document.addEventListener('DOMContentLoaded', () => {
+            updateFontScale();
+            lucide.createIcons();
+            buildDots();
+            updateSlideView();
+            initKeyboardControls();
+            initTimer();
+            initGlossaryListeners();
+            setSocRole(1);
+            setAlgStep(1);
+            runSim2Live();
+        });
+
+        // Set Presentation Mode
+        function setMode(mode) {
+            const body = document.getElementById('el-body');
+            const viewer = document.getElementById('el-slide-viewer');
+            const panel = document.getElementById('el-presenter-panel');
+            
+            document.querySelectorAll('.btn-mode').forEach(btn => btn.classList.remove('active'));
+            body.className = `mode-${mode}`;
+
+            if (mode === 'both') {
+                document.getElementById('btn-mode-both').classList.add('active');
+                viewer.style.display = 'flex';
+                panel.style.display = 'flex';
+                panel.style.width = '440px';
+            } else if (mode === 'slides') {
+                document.getElementById('btn-mode-slides').classList.add('active');
+                viewer.style.display = 'flex';
+                panel.style.display = 'none';
+            } else if (mode === 'notes') {
+                document.getElementById('btn-mode-notes').classList.add('active');
+                viewer.style.display = 'none';
+                panel.style.display = 'flex';
+                panel.style.width = '100%';
+            }
+        }
+
+        // Clickable Glossary Listeners
+        function initGlossaryListeners() {
+            document.querySelectorAll('.glossary-term').forEach(termSpan => {
+                termSpan.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const termId = termSpan.getAttribute('data-term');
+                    showTermDefinition(termId);
+                });
+            });
+        }
+
+        function showTermDefinition(termId) {
+            const termData = glossary[termId];
+            if (!termData) return;
+
+            const bodyContainer = document.getElementById('el-glossary-body');
+            bodyContainer.innerHTML = `
+                <div style="font-weight: 700; color: var(--text-primary); margin-bottom: 6px;">${termData.title}</div>
+                <div style="margin-bottom: 6px; font-style: italic; color: var(--accent-yellow);"><strong style="color: var(--accent-yellow);">Analogía:</strong> ${termData.simple}</div>
+                <div style="margin-bottom: 6px;"><strong style="color: var(--accent-cyan);">Definición Técnica:</strong> ${termData.technical}</div>
+                <div><strong style="color: var(--accent-purple);">Rol en SSE:</strong> ${termData.importance}</div>
+            `;
+            
+            const drawer = document.getElementById('el-glossary-drawer');
+            drawer.style.borderColor = 'var(--accent-cyan)';
+            drawer.style.boxShadow = '0 0 15px var(--accent-cyan-glow)';
+            
+            setTimeout(() => {
+                drawer.style.borderColor = 'var(--border-color)';
+                drawer.style.boxShadow = '0 -4px 20px rgba(0, 0, 0, 0.4)';
+            }, 1000);
+        }
+
+        function closeGlossary() {
+            document.getElementById('el-glossary-body').innerHTML = `
+                Haga clic en cualquier término subrayado en azul en las notas para ver su definición detallada y analogía aquí.
+            `;
+        }
+
+        // Build navigation dots
+        function buildDots() {
+            const container = document.getElementById('el-slide-dots');
+            container.innerHTML = '';
+            for (let i = 1; i <= totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.className = `dot ${i === 1 ? 'active' : ''}`;
+                dot.onclick = () => jumpToSlide(i);
+                container.appendChild(dot);
+            }
+        }
+
+        // Jump to slide
+        function jumpToSlide(num) {
+            if (num < 1 || num > totalSlides) return;
+            currentSlide = num;
+            updateSlideView();
+        }
+
+        // Prev/Next slide
+        function changeSlide(direction) {
+            const target = currentSlide + direction;
+            if (target >= 1 && target <= totalSlides) {
+                currentSlide = target;
+                updateSlideView();
+            }
+        }
+
+        // Update view state for active slide and notes
+        function updateSlideView() {
+            // Update slides visibility classes
+            document.querySelectorAll('.slide').forEach(slide => {
+                const sNum = parseInt(slide.getAttribute('data-slide'));
+                slide.classList.remove('active', 'prev');
+                if (sNum === currentSlide) {
+                    slide.classList.add('active');
+                } else if (sNum < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            // Update dots
+            document.querySelectorAll('.dot').forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (index + 1 === currentSlide) {
+                    dot.classList.add('active');
+                }
+            });
+
+            // Update Progress Bar
+            const progress = (currentSlide / totalSlides) * 100;
+            document.getElementById('el-progress-bar-fill').style.width = `${progress}%`;
+
+            // Update Presenter Notes
+            document.querySelectorAll('.notes-content .note-section').forEach(note => {
+                const noteNum = parseInt(note.getAttribute('data-notes'));
+                note.style.display = noteNum === currentSlide ? 'block' : 'none';
+            });
+
+            // Update suggested time badge
+            const suggestedTiming = slideTimings[currentSlide];
+            const minStr = Math.floor(suggestedTiming / 60);
+            const secStr = (suggestedTiming % 60).toString().padStart(2, '0');
+            document.getElementById('slide-timing-badge').innerText = `Tiempo Sugerido: ${minStr}:${secStr} min`;
+
+            // Update button disabled state
+            document.getElementById('btn-prev').disabled = currentSlide === 1;
+            document.getElementById('btn-next').disabled = currentSlide === totalSlides;
+            
+            // Close open glossary definitions on slide change
+            closeGlossary();
+        }
+
+        // Keyboard Controls mapping
+        function initKeyboardControls() {
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === ' ') {
+                    e.preventDefault();
+                    changeSlide(1);
+                } else if (e.key === 'ArrowLeft' || e.key === 'Backspace') {
+                    if (document.activeElement.tagName !== 'INPUT') {
+                        e.preventDefault();
+                        changeSlide(-1);
+                    }
+                } else if (e.key === 'Escape') {
+                    // Toggle modes
+                    const body = document.getElementById('el-body');
+                    const isNotesVisible = body.classList.contains('mode-both') || body.classList.contains('mode-notes');
+                    setMode(isNotesVisible ? 'slides' : 'both');
+                }
+            });
+        }
+
+        // Timer Logic
+        function initTimer() {
+            const display = document.getElementById('timer-display');
+            const toggleBtn = document.getElementById('btn-timer-toggle');
+            const toggleIcon = document.getElementById('timer-toggle-icon');
+            const resetBtn = document.getElementById('btn-timer-reset');
+
+            function updateDisplay() {
+                const minutes = Math.floor(timerSeconds / 60);
+                const seconds = timerSeconds % 60;
+                display.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                // Color warnings
+                display.classList.remove('warning', 'critical');
+                if (timerSeconds <= 60) {
+                    display.classList.add('critical');
+                } else if (timerSeconds <= 180) {
+                    display.classList.add('warning');
+                }
+            }
+
+            toggleBtn.addEventListener('click', () => {
+                if (isTimerRunning) {
+                    // Pause
+                    clearInterval(timerInterval);
+                    isTimerRunning = false;
+                    toggleIcon.setAttribute('data-lucide', 'play');
+                } else {
+                    // Start
+                    timerInterval = setInterval(() => {
+                        if (timerSeconds > 0) {
+                            timerSeconds--;
+                            updateDisplay();
+                        } else {
+                            clearInterval(timerInterval);
+                            isTimerRunning = false;
+                            toggleIcon.setAttribute('data-lucide', 'play');
+                        }
+                    }, 1000);
+                    isTimerRunning = true;
+                    toggleIcon.setAttribute('data-lucide', 'pause');
+                }
+                lucide.createIcons();
+            });
+
+            resetBtn.addEventListener('click', () => {
+                clearInterval(timerInterval);
+                isTimerRunning = false;
+                timerSeconds = 15 * 60;
+                toggleIcon.setAttribute('data-lucide', 'play');
+                updateDisplay();
+                lucide.createIcons();
+            });
+
+            updateDisplay();
+        }
+
+        // --- INTERACTIVE SIMULATION LOGIC ---
+
+        // Slide 1: Client-Channel-Server Pipeline
+        let sim1State = 0;
+        function runSim1Step(step) {
+            const client = document.getElementById('sim1-client');
+            const server = document.getElementById('sim1-server');
+            const packet = document.getElementById('sim1-packet');
+            const clientState = document.getElementById('sim1-client-state');
+            const serverState = document.getElementById('sim1-server-state');
+            const transitStatus = document.getElementById('sim1-transit-status');
+            const flowLabel = document.getElementById('sim1-flow-label');
+            const explain = document.getElementById('sim1-explain');
+            const btn1 = document.getElementById('btn-sim1-1');
+            const btn2 = document.getElementById('btn-sim1-2');
+            const btn3 = document.getElementById('btn-sim1-3');
+
+            // Reset transitions
+            client.style.transform = "scale(1)";
+            server.style.transform = "scale(1)";
+            packet.style.transform = "translateX(-20px)";
+            packet.style.background = "var(--accent-yellow)";
+
+            if (step === 1) {
+                // Setup Keys
+                client.style.transform = "scale(1.05)";
+                clientState.innerText = "K, K1, K2";
+                clientState.style.color = "var(--accent-cyan)";
+                explain.innerHTML = `<span style="color: var(--accent-cyan); font-weight: bold;">[CLIENTE - SETUP DE LLAVES]</span><br>El cliente genera una clave maestra secreta <span style="font-family: monospace;">K</span> y deriva claves secundarias <span style="font-family: monospace;">K1, K2</span> localmente. El servidor no sabe nada.`;
+                btn2.disabled = false;
+                sim1State = 1;
+            } else if (step === 2) {
+                // Encrypt and Upload
+                client.style.transform = "scale(1.02)";
+                transitStatus.innerText = "Cargando Índice...";
+                transitStatus.style.color = "var(--accent-yellow)";
+                flowLabel.innerText = "Índice + Docs Cifrados";
+                
+                // Animate packet
+                packet.style.transform = "translateX(120px)";
+                
+                setTimeout(() => {
+                    server.style.transform = "scale(1.05)";
+                    serverState.innerText = "Índice I + Cifrados C";
+                    serverState.style.color = "var(--accent-purple)";
+                    transitStatus.innerText = "Subido con éxito";
+                    transitStatus.style.color = "var(--accent-green)";
+                    explain.innerHTML = `<span style="color: var(--accent-purple); font-weight: bold;">[CANAL & SERVIDOR - SUBIDA DE DATOS]</span><br>El cliente cifra los logs con AES-GCM, genera el índice cifrado y lo sube al servidor remoto. El servidor ahora aloja metadatos indescifrables.`;
+                    btn3.disabled = false;
+                    sim1State = 2;
+                }, 800);
+            } else if (step === 3) {
+                // Trapdoor and search
+                client.style.transform = "scale(1.02)";
+                transitStatus.innerText = "Enviando Trapdoor...";
+                transitStatus.style.color = "var(--accent-cyan)";
+                flowLabel.innerText = "Trapdoor Tw = 0x8a92";
+                packet.style.background = "var(--accent-cyan)";
+                packet.style.transform = "translateX(120px)";
+                
+                setTimeout(() => {
+                    server.style.transform = "scale(1.05)";
+                    transitStatus.innerText = "Evaluando...";
+                    
+                    setTimeout(() => {
+                        packet.style.transform = "translateX(-20px)";
+                        packet.style.background = "var(--accent-green)";
+                        transitStatus.innerText = "Devolviendo Docs...";
+                        transitStatus.style.color = "var(--accent-green)";
+                        
+                        setTimeout(() => {
+                            client.style.transform = "scale(1.05)";
+                            explain.innerHTML = `<span style="color: var(--accent-green); font-weight: bold;">[BÚSQUEDA EXITOSA A CIEGAS]</span><br>El cliente envió el Trapdoor <span style="font-family: monospace;">Tw</span>. El servidor localizó la dirección hash ciega en el índice, descifró el enlace y devolvió los IDs de documentos coincidentes.`;
+                            transitStatus.innerText = "Listo";
+                        }, 800);
+                    }, 800);
+                }, 800);
+            }
+            lucide.createIcons();
+        }
+
+        // Slide 2: AES vs SSE Mode & Action
+        let sim2Mode = 'aes';
+        function setSim2Mode(mode) {
+            sim2Mode = mode;
+            document.getElementById('btn-sim-aes').classList.remove('active');
+            document.getElementById('btn-sim-sse').classList.remove('active');
+            
+            const btnText = document.getElementById('btn-sim2-text');
+            const runBtn = document.getElementById('btn-sim2-run');
+            
+            if (mode === 'aes') {
+                document.getElementById('btn-sim-aes').classList.add('active');
+                btnText.innerText = "Generar Cifrado AES-GCM";
+                runBtn.setAttribute('onclick', 'runSim2Action()');
+                runSim2Live();
+            } else {
+                document.getElementById('btn-sim-sse').classList.add('active');
+                btnText.innerText = "Ejecutar Búsqueda a Ciegas";
+                runBtn.setAttribute('onclick', 'runSim2Action()');
+                runSim2Live();
+            }
+            lucide.createIcons();
+        }
+
+        function runSim2Live() {
+            const inputVal = document.getElementById('sim2-input').value.trim() || "failed";
+            const viewport = document.getElementById('sim2-viewport');
+            
+            if (sim2Mode === 'aes') {
+                // Simple deterministic mock hash
+                let mockHash1 = "";
+                for (let i=0; i<8; i++) {
+                    mockHash1 += Math.floor(Math.random()*16).toString(16);
+                }
+                viewport.innerHTML = `
+                    <div style="color: var(--accent-red); font-weight: bold; font-size: 1.05em;">[AES-GCM - CIFRADO PROBABILÍSTICO]</div>
+                    <div style="margin-top: 6px;">Texto plano: "<span style="color: var(--accent-yellow);">${inputVal}</span>"</div>
+                    <div style="margin-top: 6px; color: var(--text-secondary); font-size: 0.9em;">
+                        Cifrado A (Nonce X): <span style="color: var(--accent-cyan);">0x9f2a8c5b${mockHash1}74a...</span><br>
+                        Cifrado B (Nonce Y): <span style="color: var(--accent-cyan);">0x4e0d2b7f5e8c1b9a...</span>
+                    </div>
+                    <div style="margin-top: 10px; border-left: 2px solid var(--accent-red); padding-left: 8px; font-size: 0.85em; color: var(--text-secondary);">
+                        <strong style="color: var(--accent-red);">Falla de diseño para búsqueda:</strong> El mismo término produce ciphertexts totalmente diferentes. El servidor no puede indexarlos. Obliga al cliente a descargar y descifrar todo.
+                    </div>
+                `;
+            } else {
+                // Generate a stable visual representation of the secure index
+                let hash = 5381;
+                for (let i = 0; i < inputVal.length; i++) {
+                    hash = ((hash << 5) + hash) + inputVal.charCodeAt(i);
+                }
+                const hexTag = '0x' + Math.abs(hash).toString(16).substring(0, 8);
+                viewport.innerHTML = `
+                    <div style="color: var(--accent-purple); font-weight: bold; font-size: 1.05em;">[SSE - ÍNDICE DE LISTA ENLAZADA]</div>
+                    <div style="margin-top: 6px;">Palabra clave: "<span style="color: var(--accent-yellow);">${inputVal}</span>"</div>
+                    <div style="margin-top: 6px; color: var(--text-secondary); font-size: 0.9em;">
+                        1. Cliente calcula localmente Tag: <span style="color: var(--accent-cyan); font-weight: bold;">${hexTag}</span><br>
+                        2. Clave del enlace local: <span style="color: var(--accent-purple);">Kw = HMAC(K2, "${inputVal}")</span>
+                    </div>
+                    <div style="margin-top: 10px; border-left: 2px solid var(--accent-green); padding-left: 8px; font-size: 0.85em; color: var(--text-secondary);">
+                        <strong style="color: var(--accent-green);">Búsqueda Sublineal:</strong> El cliente envía el trapdoor <span style="color: var(--accent-cyan); font-weight: bold;">(${hexTag}, Kw)</span>. El servidor accede a la dirección <span style="font-family: monospace;">${hexTag}</span> y descifra a ciegas.
+                    </div>
+                `;
+            }
+        }
+
+        function runSim2Action() {
+            const viewport = document.getElementById('sim2-viewport');
+            const inputVal = document.getElementById('sim2-input').value.trim() || "failed";
+            
+            if (sim2Mode === 'aes') {
+                let bytes = [];
+                for(let i=0; i<16; i++) {
+                    bytes.push(Math.floor(Math.random()*256).toString(16).padStart(2, '0'));
+                }
+                let ciphertext = "0x" + bytes.join("");
+                viewport.innerHTML = `
+                    <div style="color: var(--accent-red); font-weight: bold; font-size: 1.05em;">[AES-GCM NATIVO - NUEVO TEXTO CIFRADO]</div>
+                    <div style="margin-top: 6px; color: var(--accent-yellow);">Clave K3 + IV aleatorio de 96 bits generado.</div>
+                    <div style="font-family: monospace; font-size: 0.9em; word-break: break-all; margin-top: 6px; color: var(--accent-cyan);">
+                        Texto plano: "${inputVal}"<br>
+                        Ciphertext: ${ciphertext}...
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.85em; color: var(--text-muted);">
+                        El texto cifrado ha cambiado por completo. La nube es incapaz de identificar coincidencias sobre este bloque.
+                    </div>
+                `;
+            } else {
+                let hash = 5381;
+                for (let i = 0; i < inputVal.length; i++) {
+                    hash = ((hash << 5) + hash) + inputVal.charCodeAt(i);
+                }
+                const hexTag = '0x' + Math.abs(hash).toString(16).substring(0, 8);
+                viewport.innerHTML = `
+                    <div style="color: var(--accent-green); font-weight: bold; font-size: 1.05em;">[BÚSQUEDA SSE EJECUTADA]</div>
+                    <div style="margin-top: 6px; color: var(--text-secondary);">Enviando token: <span style="color: var(--accent-cyan); font-weight: bold;">${hexTag}</span> a la nube...</div>
+                    <div style="margin-top: 6px; font-size: 0.9em; color: var(--accent-yellow);">
+                        -> Buscando en dirección de memoria ${hexTag}<br>
+                        -> Nodo descifrado con Kw exitosamente!<br>
+                        -> Coincidencia detectada en: <span style="color: var(--accent-green); font-weight: bold;">[Doc 1, Doc 4]</span>
+                    </div>
+                    <div style="margin-top: 10px; font-size: 0.85em; color: var(--accent-green); border-left: 2px solid var(--accent-green); padding-left: 8px;">
+                        Búsqueda realizada a ciegas en O(1) tiempo de respuesta. El servidor remoto no aprendió el texto plano.
+                    </div>
+                `;
+            }
+        }
+
+        // Slide 3: PRF live tree simulator
+        function runSim3PRF() {
+            const query = document.getElementById('sim3-query').value.trim() || "malware";
+            
+            let h1 = 5381;
+            let h2 = 89;
+            for (let i = 0; i < query.length; i++) {
+                h1 = ((h1 << 5) + h1) + query.charCodeAt(i);
+                h2 = ((h2 << 7) - h2) + query.charCodeAt(i);
+            }
+            
+            const tagVal = '0x' + Math.abs(h1).toString(16).padStart(8, '0').substring(0, 8);
+            const kwVal = '0x' + Math.abs(h2).toString(16).padStart(8, '0').substring(0, 8);
+            
+            document.getElementById('sim3-tag').innerText = tagVal;
+            document.getElementById('sim3-kw').innerText = kwVal;
+        }
+
+        // Slide 4: SSE 4 Algorithms Stepper
+        function setAlgStep(step) {
+            const viewport = document.getElementById('alg-viewport');
+            const btns = [
+                document.getElementById('btn-alg-setup'),
+                document.getElementById('btn-alg-index'),
+                document.getElementById('btn-alg-trapdoor'),
+                document.getElementById('btn-alg-search')
+            ];
+            
+            btns.forEach((btn, idx) => {
+                if (idx + 1 === step) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            if (step === 1) {
+                viewport.innerHTML = `
+                    <div style="color: var(--accent-cyan); font-weight: bold;">1. Setup(1<sup>&lambda;</sup>) &rarr; Cliente</div>
+                    <div style="color: var(--text-secondary); margin-top: 6px; font-size: 0.9em;">
+                        El cliente inicializa el sistema localmente generando las claves simétricas:
+                    </div>
+                    <div style="background: hsla(224, 71%, 1%, 0.6); padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.8em; margin-top: 8px; color: var(--accent-yellow);">
+                        K_master = GenRandomKeys(256 bits)<br>
+                        K1 = HMAC(K_master, "dir")<br>
+                        K2 = HMAC(K_master, "enc")
+                    </div>
+                    <div style="color: var(--text-muted); font-size: 0.8em; margin-top: 8px;">
+                        * Nada de esto sale del dispositivo del cliente.
+                    </div>
+                `;
+            } else if (step === 2) {
+                viewport.innerHTML = `
+                    <div style="color: var(--accent-purple); font-weight: bold;">2. BuildIndex(K, D) &rarr; Cliente</div>
+                    <div style="color: var(--text-secondary); margin-top: 6px; font-size: 0.9em;">
+                        El cliente crea el índice invertido cifrado a partir de los documentos:
+                    </div>
+                    <div style="background: hsla(224, 71%, 1%, 0.6); padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.8em; margin-top: 8px; color: var(--accent-purple);">
+                        Para cada palabra 'w' en vocabulario:<br>
+                        &nbsp;&nbsp;Addr = PRF(K1, w)<br>
+                        &nbsp;&nbsp;Kw = PRF(K2, w)<br>
+                        &nbsp;&nbsp;C_node = Encrypt(Kw, DocID || NextAddr)<br>
+                        &nbsp;&nbsp;Insertar C_node en Tabla Hash en dirección Addr
+                    </div>
+                `;
+            } else if (step === 3) {
+                viewport.innerHTML = `
+                    <div style="color: var(--accent-yellow); font-weight: bold;">3. Trapdoor(K, w) &rarr; Cliente</div>
+                    <div style="color: var(--text-secondary); margin-top: 6px; font-size: 0.9em;">
+                        El cliente calcula la trampa criptográfica para la palabra de búsqueda 'w':
+                    </div>
+                    <div style="background: hsla(224, 71%, 1%, 0.6); padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.8em; margin-top: 8px; color: var(--accent-yellow);">
+                        T_w = (Addr_1, K_w)<br>
+                        &nbsp;&nbsp;donde Addr_1 = PRF(K1, w || 1)<br>
+                        &nbsp;&nbsp;y Kw = PRF(K2, w)
+                    </div>
+                    <div style="color: var(--text-muted); font-size: 0.8em; margin-top: 8px;">
+                        * El cliente envía T_w a la nube de manera segura.
+                    </div>
+                `;
+            } else if (step === 4) {
+                viewport.innerHTML = `
+                    <div style="color: var(--accent-green); font-weight: bold;">4. Search(I, T_w) &rarr; Servidor Cloud</div>
+                    <div style="color: var(--text-secondary); margin-top: 6px; font-size: 0.9em;">
+                        El servidor procesa la consulta de forma ciega:
+                    </div>
+                    <div style="background: hsla(224, 71%, 1%, 0.6); padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.8em; margin-top: 8px; color: var(--accent-green);">
+                        1. Leer nodo de memoria en Addr_1<br>
+                        2. Descifrar metadatos del nodo con Kw<br>
+                        3. Extraer DocID y saltar a la dirección NextAddr<br>
+                        4. Repetir hasta NextAddr == NULL
+                    </div>
+                `;
+            }
+        }
+
+        // Slide 5: Song et al. Sequential Scan Simulation
+        let sim5Running = false;
+        function runSim5Scan() {
+            if (sim5Running) return;
+            sim5Running = true;
+            
+            const badge = document.getElementById('badge-scan-status');
+            const counter = document.getElementById('scan-complexity-counter');
+            const rows = document.querySelectorAll('.db-file-row');
+            const btn = document.getElementById('btn-sim5-run');
+            const log = document.getElementById('sim5-log');
+            const searchWord = document.getElementById('sim5-keyword').value.trim() || "failed";
+            
+            btn.disabled = true;
+            badge.innerText = "Buscando...";
+            badge.className = "badge badge-yellow";
+            counter.innerText = "Pasos: 0";
+            log.innerHTML = `Iniciando escaneo secuencial para encontrar la palabra cifrada de "<span style="color: var(--accent-yellow); font-weight: bold;">${searchWord}</span>"...`;
+
+            // Reset classes
+            rows.forEach(r => {
+                r.className = 'db-file-row';
+            });
+
+            let docIndex = 0;
+            const matches = [0, 3]; // Mock matches (Doc 1 and Doc 4)
+
+            function scanNext() {
+                if (docIndex > 0) {
+                    rows[docIndex - 1].classList.remove('scanning');
+                    if (matches.includes(docIndex - 1)) {
+                        rows[docIndex - 1].classList.add('matched');
+                    }
+                }
+
+                if (docIndex < rows.length) {
+                    rows[docIndex].classList.add('scanning');
+                    counter.innerText = `Pasos: ${docIndex + 1}`;
+                    
+                    let isMatch = matches.includes(docIndex);
+                    let resultMsg = isMatch 
+                        ? `<span style="color: var(--accent-green); font-weight: bold;">COINCIDENCIA ENCONTRADA</span>` 
+                        : `<span style="color: var(--text-muted);">Sin coincidencia</span>`;
+                        
+                    log.innerHTML = `Examinando <strong>Documento ${docIndex + 1}</strong>...<br>` +
+                                    `Haciendo descifrado de prueba... Resultado: ${resultMsg}`;
+                    docIndex++;
+                    setTimeout(scanNext, 1000);
+                } else {
+                    badge.innerText = "O(N) Escaneado";
+                    badge.className = "badge badge-green";
+                    log.innerHTML = `<strong style="color: var(--accent-green);">Búsqueda finalizada.</strong> Se examinaron <strong>${rows.length}</strong> documentos.<br>Complejidad final: <strong style="color: var(--accent-yellow);">O(N) lineal</strong>. Consumo ineficiente a escala.`;
+                    btn.disabled = false;
+                    sim5Running = false;
+                }
+            }
+            scanNext();
+        }
+
+        // Slide 6: Curtmola Linked List Jump Simulation
+        let sim6Running = false;
+        function runSim6Jump() {
+            if (sim6Running) return;
+            sim6Running = true;
+            
+            const badge = document.getElementById('badge-jump-status');
+            const counter = document.getElementById('jump-complexity-counter');
+            const btn = document.getElementById('btn-sim6-run');
+            const log = document.getElementById('sim6-log');
+            const nodes = document.querySelectorAll('.hash-node');
+            
+            btn.disabled = true;
+            badge.innerText = "Buscando...";
+            badge.className = "badge badge-cyan";
+            counter.innerText = "Accesos a Memoria: 0";
+            log.innerHTML = "Cliente envía Trapdoor (0x7f83, Kw). Servidor salta al punto de entrada...";
+
+            // Reset grid
+            nodes.forEach(n => {
+                n.className = 'hash-node';
+            });
+
+            // Steps of jumps: m1 (0x7f83) -> m3 (0x1a9c)
+            setTimeout(() => {
+                const node1 = document.getElementById('sim6-m1');
+                node1.classList.add('active-node');
+                counter.innerText = "Accesos a Memoria: 1";
+                log.innerHTML = `<strong>Accediendo a Addr 0x7f83 (Nodo 1)</strong>.<br>` +
+                                `Descifrando con Kw &rarr; Revela <strong>Doc 1</strong>.<br>` +
+                                `Siguiente dirección: <span style="color: var(--accent-cyan); font-weight: bold;">0x1a9c</span>. Saltando...`;
+                
+                setTimeout(() => {
+                    node1.className = 'hash-node visited-node';
+                    const node2 = document.getElementById('sim6-m3');
+                    node2.classList.add('active-node');
+                    counter.innerText = "Accesos a Memoria: 2";
+                    log.innerHTML = `<strong>Accediendo a Addr 0x1a9c (Nodo 2)</strong>.<br>` +
+                                    `Descifrando con Kw &rarr; Revela <strong>Doc 4</strong>.<br>` +
+                                    `Siguiente dirección: <span style="color: var(--accent-red); font-weight: bold;">NULL</span>. Fin de cadena.`;
+                    
+                    setTimeout(() => {
+                        node2.className = 'hash-node visited-node';
+                        badge.innerText = "O(t) Completado";
+                        badge.className = "badge badge-green";
+                        log.innerHTML = `<strong style="color: var(--accent-green);">Búsqueda óptima completada.</strong><br>` +
+                                        `Costo total: <strong style="color: var(--accent-green);">2 accesos (O(t))</strong> frente a los 8 bloques en base de datos. ¡Sublinealidad pura!`;
+                        btn.disabled = false;
+                        sim6Running = false;
+                    }, 1400);
+                }, 1400);
+            }, 800);
+        }
+
+        // Slide 7: Leakage Query and History Tracker
+        let sim7History = [];
+        function runSim7Query(keyword) {
+            const historyContainer = document.getElementById('sim7-history');
+            const log = document.getElementById('sim7-log');
+            
+            // Derive a stable mock tag
+            let hash = 987;
+            for (let i=0; i<keyword.length; i++) {
+                hash = ((hash << 5) - hash) + keyword.charCodeAt(i);
+            }
+            const tag = '0x' + Math.abs(hash).toString(16).substring(0, 4);
+            
+            const docs = keyword === 'IP' ? '[Doc 1, Doc 4]' : keyword === 'Port' ? '[Doc 2]' : '[Doc 1, Doc 3]';
+            
+            // Record query
+            sim7History.push({ keyword, tag, docs, time: new Date().toLocaleTimeString() });
+            if (sim7History.length > 3) {
+                sim7History.shift();
+            }
+            
+            // Render history
+            historyContainer.innerHTML = sim7History.map((h, idx) => `
+                <div style="border-bottom: 1px dashed var(--border-color); padding: 4px 0;">
+                    [${h.time}] Consulta de Token <span style="color: var(--accent-cyan); font-weight: bold;">${h.tag}</span> &rarr; Retorna docs: <span style="color: var(--accent-green);">${h.docs}</span>
+                </div>
+            `).join('');
+            
+            // Check repetitions for Search Pattern
+            const counts = {};
+            sim7History.forEach(h => counts[h.tag] = (counts[h.tag] || 0) + 1);
+            const repeated = Object.keys(counts).find(k => counts[k] > 1);
+            
+            if (repeated) {
+                log.innerHTML = `
+                    <span style="color: var(--accent-red); font-weight: bold;"><i data-lucide="alert-triangle"></i> ¡ALERTA DE FUGA DETECTADA!</span><br>
+                    <strong>Search Pattern:</strong> El servidor notó la repetición del token <strong style="color: var(--accent-red);">${repeated}</strong>.<br>
+                    El host deduce que estás buscando el mismo término estratégico en logs.
+                `;
+            } else {
+                log.innerHTML = `
+                    <strong>Consulta realizada.</strong> Servidor observó el token <span style="color: var(--accent-cyan); font-weight: bold;">${tag}</span> y devolvió los IDs ${docs}.<br>
+                    <span style="color: var(--accent-yellow);">Información fugada:</span> Patrón de acceso de documentos e indicador de consulta.
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        // Slide 8: Mitigation switchboard live simulator
+        function runSim8Toggle() {
+            const padding = document.getElementById('sim8-toggle-padding').checked;
+            const dummy = document.getElementById('sim8-toggle-dummy').checked;
+            const oram = document.getElementById('sim8-toggle-oram').checked;
+            const log = document.getElementById('sim8-log');
+
+            let activeMitigations = [];
+            if (padding) activeMitigations.push("<span style='color: var(--accent-green); font-weight: bold;'>Padding</span>");
+            if (dummy) activeMitigations.push("<span style='color: var(--accent-cyan); font-weight: bold;'>Dummy Queries</span>");
+            if (oram) activeMitigations.push("<span style='color: var(--accent-purple); font-weight: bold;'>ORAM</span>");
+
+            if (activeMitigations.length === 0) {
+                log.innerHTML = "Ninguna mitigación activa. El servidor puede deducir el volumen de coincidencias, las frecuencias de búsqueda y relacionar los IDs de documentos accedidos.";
+            } else {
+                let report = `<strong>Mitigaciones activas:</strong> ${activeMitigations.join(', ')}.<br>`;
+                
+                if (padding) {
+                    report += `&bull; <strong style='color: var(--accent-green);'>Padding:</strong> Servidor ve todos los archivos y listas de igual tamaño (ej: 10KB). Anula los ataques de volumen.<br>`;
+                }
+                if (dummy) {
+                    report += `&bull; <strong style='color: var(--accent-cyan);'>Dummies:</strong> Se inyectan consultas falsas periódicas. La nube ve una tasa de consultas uniforme y plana.<br>`;
+                }
+                if (oram) {
+                    report += `&bull; <strong style='color: var(--accent-purple);'>ORAM:</strong> Se leen bloques aleatorios y se baraja la memoria remota en cada lectura. ¡El patrón de acceso se ha enmascarado al 100%!`;
+                }
+                log.innerHTML = report;
+            }
+        }
+
+        // Slide 9: SOC Role Visualizer Dashboard
+        function setSocRole(role) {
+            const viewport = document.getElementById('soc-viewport');
+            const btns = [
+                document.getElementById('btn-soc-analyst'),
+                document.getElementById('btn-soc-cloud'),
+                document.getElementById('btn-soc-attacker')
+            ];
+            
+            btns.forEach((btn, idx) => {
+                if (idx + 1 === role) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            if (role === 1) {
+                viewport.innerHTML = `
+                    <div style="color: var(--accent-cyan); font-weight: bold;"><i data-lucide="user-check"></i> Vista del Analista SOC (Autorizado)</div>
+                    <div style="margin-top: 6px; font-size: 0.95em;">
+                        <strong>Búsqueda en texto plano:</strong> "failed log attempts"<br>
+                        <strong>Resultados recibidos y descifrados:</strong>
+                    </div>
+                    <div style="background: hsla(224, 71%, 1%, 0.6); padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.8em; margin-top: 6px;">
+                        Doc 1: "ALERT - root login failed from IP 192.168.1.50"<br>
+                        Doc 4: "ALERT - ssh password check failed for user admin"
+                    </div>
+                `;
+            } else if (role === 2) {
+                viewport.innerHTML = `
+                    <div style="color: var(--accent-purple); font-weight: bold;"><i data-lucide="server"></i> Vista del Servidor Cloud (Host Ciego)</div>
+                    <div style="margin-top: 6px; font-size: 0.95em;">
+                        <strong>Tokens recibidos:</strong> Token1 = 0x7f83, Kw = 0x3c7e9a<br>
+                        <strong>Datos en el almacenamiento del Servidor:</strong>
+                    </div>
+                    <div style="background: hsla(224, 71%, 1%, 0.6); padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.8em; margin-top: 6px; font-family: monospace; color: var(--text-muted);">
+                        MemAddr 0x7f83: [Encrypted Block: 9a2b7c4f00e12d]<br>
+                        MemAddr 0x1a9c: [Encrypted Block: d87a6c5b4e3f10]
+                    </div>
+                    <div style="color: var(--accent-purple); font-size: 0.8em; margin-top: 6px;">
+                        * El servidor sabe qué direcciones leyó, pero no sabe qué significa "failed" ni el contenido de los logs.
+                    </div>
+                `;
+            } else if (role === 3) {
+                viewport.innerHTML = `
+                    <div style="color: var(--accent-red); font-weight: bold;"><i data-lucide="shield-alert"></i> Vista del Atacante (Inspección Pasiva/Fugas)</div>
+                    <div style="margin-top: 6px; font-size: 0.95em;">
+                        El atacante intercepta la base de datos y monitorea los accesos:
+                    </div>
+                    <div style="background: hsla(224, 71%, 1%, 0.6); padding: 8px; border-radius: 4px; border: 1px solid var(--border-color); font-size: 0.8em; margin-top: 6px;">
+                        &bull; Frecuencia del Token 0x7f83: 15 consultas por hora<br>
+                        &bull; Correlación: Token 0x7f83 siempre abre Doc 1 y Doc 4.<br>
+                        &bull; Tamaño de Doc 1: 540 bytes. Tamaño de Doc 4: 980 bytes.
+                    </div>
+                    <div style="color: var(--accent-red); font-size: 0.8em; margin-top: 6px; border-left: 2px solid var(--accent-red); padding-left: 6px;">
+                        <strong>Objetivo del ataque:</strong> Cruzar estos metadatos con logs auxiliares públicos para deducir las palabras buscadas.
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

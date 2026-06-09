@@ -1,0 +1,2476 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repaso Último Día — Introducción a la Seguridad Informática</title>
+  
+  <!-- SEO Tags -->
+  <meta name="description" content="Plataforma interactiva para el último día de repaso antes del examen de Ciberdefensa. Diseñada con técnicas de ciencia cognitiva.">
+  <meta name="author" content="Antigravity Ciberdefensa Engine">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==========================================================================
+       1. VARIABLES Y DISEÑO NEÓN PREMIUM (CYBERPUNK GLASSMORPHISM)
+       ========================================================================== */
+    :root {
+      --font-sans: 'Inter', sans-serif;
+      --font-display: 'Outfit', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+      
+      /* Dark Theme (Default) */
+      --bg-body: #070b13;
+      --bg-panel: rgba(15, 22, 38, 0.75);
+      --bg-card: rgba(22, 33, 58, 0.6);
+      --bg-input: #0e1626;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dark: #0f172a;
+      
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      
+      /* Neon Accents */
+      --neon-cyan: #00f2fe;
+      --neon-purple: #8b5cf6;
+      --neon-pink: #ff007f;
+      --neon-green: #05ffc0;
+      --neon-amber: #ffaa00;
+      
+      --shadow-glow-cyan: 0 0 15px rgba(0, 242, 254, 0.25);
+      --shadow-glow-purple: 0 0 15px rgba(139, 92, 246, 0.25);
+      --shadow-glow-pink: 0 0 15px rgba(255, 0, 127, 0.25);
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      
+      --glass-backdrop: blur(16px);
+    }
+
+    [data-theme="light"] {
+      --bg-body: #f8fafc;
+      --bg-panel: rgba(255, 255, 255, 0.85);
+      --bg-card: rgba(241, 245, 249, 0.9);
+      --bg-input: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --text-dark: #f8fafc;
+      
+      --border-color: rgba(15, 23, 42, 0.08);
+      --border-hover: rgba(15, 23, 42, 0.15);
+      
+      --neon-cyan: #0d9488;
+      --neon-purple: #6d28d9;
+      --neon-pink: #be185d;
+      --neon-green: #047857;
+      --neon-amber: #b45309;
+      
+      --shadow-glow-cyan: 0 4px 12px rgba(13, 148, 136, 0.12);
+      --shadow-glow-purple: 0 4px 12px rgba(109, 40, 217, 0.12);
+      --shadow-glow-pink: 0 4px 12px rgba(190, 24, 93, 0.12);
+    }
+
+    /* ==========================================================================
+       2. RESET Y ESTILOS GENERALES
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-body);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(0, 242, 254, 0.03) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.03) 0%, transparent 40%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      line-height: 1.6;
+      padding-bottom: 4rem;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 1.5rem;
+    }
+
+    /* ==========================================================================
+       3. CABECERA Y METADATOS DE RENDIMIENTO
+       ========================================================================== */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      backdrop-filter: var(--glass-backdrop);
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      box-shadow: var(--shadow-glow-cyan);
+    }
+
+    .brand-area {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .brand-logo {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 8px rgba(0,242,254,0.3));
+    }
+
+    .brand-text h1 {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-text p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .btn-theme {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .btn-theme:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: var(--shadow-glow-cyan);
+    }
+
+    /* ==========================================================================
+       4. ESTADÍSTICAS DEL PROGRAMA DE REPASO
+       ========================================================================== */
+    .dashboard-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: var(--glass-backdrop);
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: var(--neon-purple);
+    }
+
+    .stat-card.cyan::before { background: var(--neon-cyan); }
+    .stat-card.pink::before { background: var(--neon-pink); }
+    .stat-card.green::before { background: var(--neon-green); }
+    .stat-card.amber::before { background: var(--neon-amber); }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-subtext {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    /* ==========================================================================
+       5. NAVEGACIÓN POR PESTAÑAS METODOLÓGICAS
+       ========================================================================== */
+    .tabs-nav {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .tabs-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: var(--radius-sm);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .tab-btn.active {
+      color: var(--neon-cyan);
+      background: rgba(0, 242, 254, 0.08);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.05);
+    }
+
+    .tab-pane {
+      display: none;
+      animation: tabFadeIn 0.4s ease forwards;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes tabFadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       6. MÓDULO 1: EVOCACIÓN ACTIVA (ACTIVE RECALL WORKSPACE)
+       ========================================================================== */
+    .recall-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.8fr;
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 900px) {
+      .recall-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .recall-sidebar {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      backdrop-filter: var(--glass-backdrop);
+    }
+
+    .recall-unit-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .recall-unit-item {
+      padding: 0.75rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-align: left;
+      color: var(--text-muted);
+    }
+
+    .recall-unit-item:hover, .recall-unit-item.active {
+      color: var(--text-main);
+      border-color: var(--neon-cyan);
+      background: rgba(0, 242, 254, 0.05);
+    }
+
+    .recall-card-workspace {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 450px;
+      backdrop-filter: var(--glass-backdrop);
+      position: relative;
+    }
+
+    .recall-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .unit-tag {
+      padding: 0.25rem 0.75rem;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid currentColor;
+    }
+
+    .tag-purple { color: var(--neon-purple); }
+    .tag-cyan { color: var(--neon-cyan); }
+    .tag-pink { color: color-mix(in srgb, var(--neon-pink) 80%, white); }
+
+    .recall-concept-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .recall-prompt {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 500px;
+      margin: 0 auto 2rem;
+    }
+
+    .recall-answer-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      margin-top: 1rem;
+      display: none;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .recall-answer-box h4 {
+      font-family: var(--font-display);
+      color: var(--neon-cyan);
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .recall-controls {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 0.75rem 1.5rem;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.95rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-main);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn:hover {
+      border-color: var(--text-main);
+    }
+
+    .btn-primary {
+      background: var(--neon-cyan);
+      color: var(--text-dark);
+      border-color: var(--neon-cyan);
+    }
+
+    .btn-primary:hover {
+      background: #00d5e0;
+      box-shadow: var(--shadow-glow-cyan);
+    }
+
+    .btn-success { background: rgba(5, 255, 192, 0.15); border-color: var(--neon-green); color: var(--neon-green); }
+    .btn-success:hover { background: rgba(5, 255, 192, 0.25); box-shadow: 0 0 10px rgba(5, 255, 192, 0.2); }
+    .btn-warning { background: rgba(255, 170, 0, 0.15); border-color: var(--neon-amber); color: var(--neon-amber); }
+    .btn-warning:hover { background: rgba(255, 170, 0, 0.25); box-shadow: 0 0 10px rgba(255, 170, 0, 0.2); }
+    .btn-danger { background: rgba(255, 0, 127, 0.15); border-color: var(--neon-pink); color: var(--neon-pink); }
+    .btn-danger:hover { background: rgba(255, 0, 127, 0.25); box-shadow: var(--shadow-glow-pink); }
+
+    /* ==========================================================================
+       7. MÓDULO 2: REPETICIÓN ESPACIADA (LEITNER BOXES)
+       ========================================================================== */
+    .leitner-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .leitner-boxes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    @media (max-width: 800px) {
+      .leitner-boxes {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .leitner-box {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      min-height: 300px;
+      backdrop-filter: var(--glass-backdrop);
+    }
+
+    .leitner-box-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .box-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .box-badge {
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+    }
+
+    .box-red { border-top: 4px solid var(--neon-pink); }
+    .box-yellow { border-top: 4px solid var(--neon-amber); }
+    .box-green { border-top: 4px solid var(--neon-green); }
+
+    .leitner-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      max-height: 350px;
+      overflow-y: auto;
+      padding-right: 0.25rem;
+    }
+
+    .leitner-mini-card {
+      padding: 0.75rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .leitner-mini-card:hover {
+      border-color: var(--neon-cyan);
+    }
+
+    .leitner-actions-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-panel);
+      padding: 1.25rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+    }
+
+    /* ==========================================================================
+       8. MÓDULO 3: PALACIO DE LA MEMORIA (TACTICAL TABS / COGNITIVE ROOMS)
+       ========================================================================== */
+    .palace-intro {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 2rem;
+    }
+
+    .palace-intro h3 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .palace-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (max-width: 1000px) {
+      .palace-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-rows: auto;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .palace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .palace-room {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      cursor: pointer;
+      text-align: center;
+      min-height: 140px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      backdrop-filter: var(--glass-backdrop);
+      position: relative;
+    }
+
+    .palace-room:hover, .palace-room.active {
+      border-color: var(--neon-cyan);
+      box-shadow: var(--shadow-glow-cyan);
+      transform: translateY(-2px);
+    }
+
+    .room-num {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--neon-purple);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .room-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.3;
+    }
+
+    .room-icon {
+      font-size: 1.75rem;
+    }
+
+    .palace-detail-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--neon-cyan);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-glow-cyan);
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .palace-mnemonic-box {
+      background: rgba(0, 242, 254, 0.05);
+      border-left: 4px solid var(--neon-cyan);
+      padding: 1.25rem;
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      margin-bottom: 1.5rem;
+    }
+
+    .palace-mnemonic-box h4 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--neon-cyan);
+    }
+
+    .palace-mnemonic-box p {
+      font-style: italic;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .palace-room-concepts {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .palace-concept-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.25rem;
+    }
+
+    .palace-concept-card h5 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    /* ==========================================================================
+       9. MÓDULO 4: EXPLICACIÓN FEYNMAN (EXPLAIN LIKE I'M 10)
+       ========================================================================== */
+    .feynman-search-bar {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .feynman-search-input {
+      flex: 1;
+      background: var(--bg-input);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1.25rem;
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 1rem;
+      outline: none;
+    }
+
+    .feynman-search-input:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: var(--shadow-glow-cyan);
+    }
+
+    .feynman-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .feynman-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      backdrop-filter: var(--glass-backdrop);
+    }
+
+    .feynman-card:hover {
+      border-color: var(--neon-purple);
+      box-shadow: var(--shadow-glow-purple);
+    }
+
+    .feynman-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+
+    .feynman-title {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .feynman-badge {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 99px;
+      background: rgba(139, 92, 246, 0.15);
+      color: var(--neon-purple);
+      border: 1px solid var(--neon-purple);
+      font-weight: 700;
+    }
+
+    .feynman-definition {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.75rem;
+    }
+
+    .feynman-analogy-box {
+      background: rgba(255, 170, 0, 0.05);
+      border-left: 3px solid var(--neon-amber);
+      padding: 0.75rem 1rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    }
+
+    .feynman-analogy-title {
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--neon-amber);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 0.25rem;
+    }
+
+    .feynman-analogy-text {
+      font-size: 0.88rem;
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    /* ==========================================================================
+       10. MÓDULO 5: PRÁCTICA ENTRELAZADA (SCENARIOS & CALCULATIONS QUIZ)
+       ========================================================================== */
+    .quiz-card {
+      max-width: 750px;
+      margin: 0 auto;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: var(--glass-backdrop);
+    }
+
+    .quiz-progress-bar {
+      height: 4px;
+      background: var(--border-color);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--neon-cyan), var(--neon-purple));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .quiz-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .quiz-meta span {
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .quiz-question-box {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      line-height: 1.4;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .quiz-option {
+      width: 100%;
+      text-align: left;
+      padding: 1.1rem 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-weight: 500;
+      font-size: 0.95rem;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .quiz-option:hover:not(:disabled) {
+      border-color: var(--neon-cyan);
+      background: rgba(0, 242, 254, 0.02);
+    }
+
+    .quiz-option.correct {
+      border-color: var(--neon-green);
+      background: rgba(5, 255, 192, 0.08);
+    }
+
+    .quiz-option.incorrect {
+      border-color: var(--neon-pink);
+      background: rgba(255, 0, 127, 0.08);
+    }
+
+    .quiz-explanation {
+      background: rgba(139, 92, 246, 0.06);
+      border: 1px dashed var(--neon-purple);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      margin-top: 1.5rem;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .quiz-explanation h5 {
+      font-family: var(--font-display);
+      color: var(--neon-purple);
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+    }
+
+    /* ==========================================================================
+       11. PIE DE PÁGINA Y ESTRUCTURAS FLOTANTES
+       ========================================================================== */
+    .app-footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border-color);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- CABECERA -->
+    <header class="app-header">
+      <div class="brand-area">
+        <span class="brand-logo">🛡️</span>
+        <div class="brand-text">
+          <h1>Simulador de Último Repaso</h1>
+          <p>Maestría en Ciberdefensa · Introducción a la Seguridad Informática</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="theme-toggle" class="btn-theme">🌙</button>
+      </div>
+    </header>
+
+    <!-- ESTADÍSTICAS DEL ESTUDIO -->
+    <section class="dashboard-stats">
+      <div class="stat-card cyan">
+        <div class="stat-value" id="stats-total-concepts">80</div>
+        <div class="stat-title">Conceptos Totales</div>
+        <div class="stat-subtext">Distribuidos en 10 Unidades</div>
+      </div>
+      <div class="stat-card pink">
+        <div class="stat-value" id="stats-box-urgente">80</div>
+        <div class="stat-title">Repasar Urgente</div>
+        <div class="stat-subtext">Caja 1 (Leitner System)</div>
+      </div>
+      <div class="stat-card amber">
+        <div class="stat-value" id="stats-box-dudas">0</div>
+        <div class="stat-title">Con Dudas</div>
+        <div class="stat-subtext">Caja 2 (Leitner System)</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-value" id="stats-box-dominado">0</div>
+        <div class="stat-title">Dominado</div>
+        <div class="stat-subtext">Caja 3 (Leitner System)</div>
+      </div>
+    </section>
+
+    <!-- NAVEGACIÓN -->
+    <nav class="tabs-nav" aria-label="Metodologías de estudio">
+      <button class="tab-btn active" data-tab="recall">🧠 Evocación Activa</button>
+      <button class="tab-btn" data-tab="leitner">🗂️ Cajas Leitner</button>
+      <button class="tab-btn" data-tab="palace">🏰 Palacio de la Memoria</button>
+      <button class="tab-btn" data-tab="feynman">💡 Explicaciones Feynman</button>
+      <button class="tab-btn" data-tab="quiz">📝 Práctica Entrelazada</button>
+    </nav>
+
+    <!-- PANELES DE CONTENIDO -->
+    <main>
+      
+      <!-- Pestaña 1: Evocación Activa -->
+      <div id="recall-pane" class="tab-pane active">
+        <div class="recall-layout">
+          <div class="recall-sidebar">
+            <h3 style="font-family: var(--font-display); font-size: 1.25rem; margin-bottom: 1rem;">Elegir Unidad</h3>
+            <div class="recall-unit-list" id="recall-unit-list">
+              <!-- Se carga dinámicamente -->
+            </div>
+          </div>
+          
+          <div class="recall-card-workspace">
+            <div class="recall-card-header">
+              <span class="unit-tag tag-cyan" id="recall-unit-badge">Unidad I</span>
+              <span id="recall-progress-text" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Concepto 1 de 8</span>
+            </div>
+            
+            <div>
+              <div class="recall-concept-title" id="recall-concept-title">Confidencialidad</div>
+              <p class="recall-prompt">Haz el esfuerzo mental de definir este concepto antes de ver la respuesta.</p>
+              
+              <div class="recall-answer-box" id="recall-answer-box">
+                <h4>Definición Académica:</h4>
+                <p id="recall-academic-def" style="font-size:0.95rem; margin-bottom:1rem;"></p>
+                <div class="feynman-analogy-box">
+                  <div class="feynman-analogy-title">Analogía Feynman:</div>
+                  <p class="feynman-analogy-text" id="recall-feynman-analogy"></p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="recall-controls" id="recall-init-controls">
+              <button class="btn btn-primary" onclick="revealRecallAnswer()">Revelar Respuesta 🔄</button>
+            </div>
+            
+            <div class="recall-controls" id="recall-feedback-controls" style="display: none;">
+              <button class="btn btn-danger" onclick="evaluateRecall(1)">No lo sabía ❌</button>
+              <button class="btn btn-warning" onclick="evaluateRecall(2)">A medias ⚠️</button>
+              <button class="btn btn-success" onclick="evaluateRecall(3)">Lo domino ✅</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña 2: Cajas Leitner (Repetición Espaciada) -->
+      <div id="leitner-pane" class="tab-pane">
+        <div class="leitner-layout">
+          <div class="leitner-boxes">
+            <!-- Caja 1 -->
+            <div class="leitner-box box-red">
+              <div class="leitner-box-header">
+                <span class="box-title">🚨 Repasar Urgente</span>
+                <span class="box-badge" id="leitner-count-1">0</span>
+              </div>
+              <div class="leitner-cards-list" id="leitner-list-1">
+                <!-- Conceptos dinámicos -->
+              </div>
+            </div>
+            
+            <!-- Caja 2 -->
+            <div class="leitner-box box-yellow">
+              <div class="leitner-box-header">
+                <span class="box-title">⚠️ Con Dudas</span>
+                <span class="box-badge" id="leitner-count-2">0</span>
+              </div>
+              <div class="leitner-cards-list" id="leitner-list-2">
+                <!-- Conceptos dinámicos -->
+              </div>
+            </div>
+            
+            <!-- Caja 3 -->
+            <div class="leitner-box box-green">
+              <div class="leitner-box-header">
+                <span class="box-title">✅ Dominado</span>
+                <span class="box-badge" id="leitner-count-3">0</span>
+              </div>
+              <div class="leitner-cards-list" id="leitner-list-3">
+                <!-- Conceptos dinámicos -->
+              </div>
+            </div>
+          </div>
+          
+          <div class="leitner-actions-row">
+            <span style="font-size:0.9rem; color:var(--text-muted);">Usa las tarjetas en el modo <strong>Evocación Activa</strong> para clasificarlas dinámicamente entre las distintas cajas.</span>
+            <button class="btn btn-primary" onclick="startLeitnerSession()">Iniciar Sesión de Leitner Express ⚡</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña 3: Palacio de la Memoria -->
+      <div id="palace-pane" class="tab-pane">
+        <div class="palace-intro">
+          <h3>El Castillo de la Ciberdefensa</h3>
+          <p style="color:var(--text-muted); font-size:0.95rem;">
+            Técnica del Palacio de la Memoria: Asocia conceptos abstractos con imágenes extravagantes u objetos inusuales ubicados en habitaciones específicas. Haz clic en cualquier habitación para visitarla.
+          </p>
+        </div>
+        
+        <div class="palace-grid" id="palace-grid">
+          <!-- Habitaciones creadas dinámicamente -->
+        </div>
+        
+        <div class="palace-detail-card" id="palace-detail-card" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+            <h3 id="palace-room-title" style="font-family:var(--font-display); font-size:1.6rem; color:var(--neon-cyan);"></h3>
+            <span class="unit-tag tag-cyan" id="palace-room-badge">Unidad I</span>
+          </div>
+          
+          <div class="palace-mnemonic-box">
+            <h4>Imagen Mental Mnemotécnica:</h4>
+            <p id="palace-room-mnemonic"></p>
+          </div>
+          
+          <h4 style="font-family:var(--font-display); font-weight:700; margin-bottom:1rem; border-bottom:1px solid var(--border-color); padding-bottom:0.5rem;">Conceptos Asociados a la Habitación:</h4>
+          <div class="palace-room-concepts" id="palace-room-concepts">
+            <!-- Conceptos dinámicos -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Pestaña 4: Explicaciones Feynman -->
+      <div id="feynman-pane" class="tab-pane">
+        <div class="feynman-search-bar">
+          <input type="text" class="feynman-search-input" id="feynman-search" placeholder="Buscar conceptos por nombre o palabra clave (ej: Biba, SQLi, CISO)...">
+        </div>
+        
+        <div class="feynman-grid" id="feynman-grid">
+          <!-- Tarjetas creadas dinámicamente -->
+        </div>
+      </div>
+
+      <!-- Pestaña 5: Práctica Entrelazada -->
+      <div id="quiz-pane" class="tab-pane">
+        <div class="quiz-card" id="quiz-workspace">
+          <!-- Configuración inicial -->
+          <div id="quiz-start-view" style="text-align:center;">
+            <h2 style="font-family:var(--font-display); font-size:1.8rem; margin-bottom:1rem;">Práctica Entrelazada (Interleaving Quiz)</h2>
+            <p style="color:var(--text-muted); max-width:550px; margin:0 auto 2rem; font-size:0.95rem;">
+              Este simulador entrelaza preguntas de diversas unidades de forma aleatoria, mezclando teoría, escenarios realistas y cálculos numéricos rápidos (ALE/SLE/ARO). Así entrenas a tu cerebro a seleccionar la herramienta correcta en cada momento.
+            </p>
+            <button class="btn btn-primary" onclick="startQuizRound()" style="padding:1rem 2rem; font-size:1.1rem;">Iniciar Ronda Corta (10 Preguntas) 📝</button>
+          </div>
+          
+          <!-- Ronda activa -->
+          <div id="quiz-active-view" style="display:none;">
+            <div class="quiz-progress-bar">
+              <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
+            </div>
+            <div class="quiz-meta">
+              <span id="quiz-question-number" style="color:var(--neon-purple);">Pregunta 1 de 10</span>
+              <span id="quiz-score-indicator" style="color:var(--neon-green);">Aciertos: 0/0</span>
+            </div>
+            
+            <div class="quiz-question-box" id="quiz-question-text">
+              Pregunta
+            </div>
+            
+            <div class="quiz-options" id="quiz-options-container">
+              <!-- Botones de opciones -->
+            </div>
+            
+            <div class="quiz-explanation" id="quiz-explanation-box" style="display:none;">
+              <h5 id="quiz-explanation-title">Explicación Técnica:</h5>
+              <p id="quiz-explanation-text" style="font-size:0.9rem; line-height:1.5;"></p>
+            </div>
+            
+            <div style="display:flex; justify-content:flex-end; margin-top:2rem;">
+              <button class="btn btn-primary" id="quiz-next-btn" onclick="nextQuizQuestion()" style="display:none;">Siguiente →</button>
+            </div>
+          </div>
+
+          <!-- Fin de Ronda -->
+          <div id="quiz-results-view" style="display:none; text-align:center;">
+            <h2 style="font-family:var(--font-display); font-size:2.2rem; margin-bottom:0.5rem;" id="quiz-results-title">¡Buen intento!</h2>
+            <p style="font-size:1.1rem; color:var(--text-muted); margin-bottom:1.5rem;" id="quiz-results-score">Puntuación: 7 / 10 aciertos (70%)</p>
+            <div id="quiz-recommendations" style="background:var(--bg-card); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.5rem; text-align:left; max-width:500px; margin:0 auto 2rem;">
+              <h4 style="font-family:var(--font-display); color:var(--neon-amber); margin-bottom:0.5rem;">Unidades sugeridas para repasar urgente:</h4>
+              <ul id="quiz-recommendations-list" style="margin-left:1.5rem; font-size:0.9rem; display:flex; flex-direction:column; gap:0.5rem;">
+                <!-- Unidades dinámicas -->
+              </ul>
+            </div>
+            <button class="btn btn-primary" onclick="resetQuiz()">Volver a Jugar 🔄</button>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="app-footer">
+      <p>© 2026 Maestría en Ciberdefensa · Introducción a la Seguridad Informática</p>
+      <p style="margin-top:0.25rem; font-size:0.75rem;">Guía de repaso interactiva optimizada para el día previo al examen.</p>
+    </footer>
+  </div>
+
+  <!-- SCRIPT CON DATOS Y LÓGICA COGNITIVA -->
+  <script>
+    /* ==========================================================================
+       1. BASE DE DATOS COMPLETA DE 10 UNIDADES CON FEYNMAN Y PALACIOS
+       ========================================================================== */
+    const units = [
+      {
+        num: "I",
+        title: "Fundamentos de la Seguridad",
+        sub: "Tríada CIA, no repudio, vulnerabilidad, amenaza, riesgo y controles.",
+        color: "purple",
+        tip: "Distingue seguridad de la información (negocio/procesos) de seguridad informática (técnica/sistemas).",
+        mnemonic: "Entras al Vestíbulo del Castillo (Unidad I). Ves un escudo brillante con tres cerraduras de color azul (CIA). A su lado, un notario firmando un contrato digital que nadie puede negar haber escrito (No Repudio).",
+        icon: "🗝️",
+        concepts: [
+          { 
+            name: "Confidencialidad", 
+            desc: "Propiedad que garantiza que la información sensible sea accesible únicamente para personas explicitamente autorizadas.",
+            feynman: "Como mandarle una carta secreta a tu amigo: le pones un candado y solo él tiene la llave. Si alguien intercepta la carta, solo verá letras mezcladas."
+          },
+          { 
+            name: "Integridad", 
+            desc: "Garantía de la exactitud y completitud de los datos, impidiendo alteraciones o manipulaciones no autorizadas.",
+            feynman: "Como firmar un cheque con tinta especial: si alguien intenta borrar un cero o cambiar tu firma, el papel se rompe y el banco se da cuenta de que fue alterado."
+          },
+          { 
+            name: "Disponibilidad", 
+            desc: "Aseguramiento de que los servicios y datos estén accesibles para los usuarios autorizados cuando lo requieran.",
+            feynman: "Como que un supermercado de 24 horas siempre tenga las puertas abiertas y comida en los estantes cuando vayas a comprar a medianoche."
+          },
+          { 
+            name: "Vulnerabilidad", 
+            desc: "Fallo, debilidad o defecto en el diseño, configuración o código de un sistema que puede ser explotado.",
+            feynman: "Como dejar la ventana de tu casa rota o sin seguro. No significa que te vayan a robar hoy, pero es un punto débil por donde alguien podría entrar."
+          },
+          { 
+            name: "Amenaza", 
+            desc: "Fuerza o agente externo que tiene el potencial de explotar una vulnerabilidad y causar daño.",
+            feynman: "Como un ladrón que camina por tu vecindario buscando ventanas abiertas, o una tormenta eléctrica que podría apagar la luz de la cuadra."
+          },
+          { 
+            name: "Riesgo", 
+            desc: "Probabilidad matemática de que una amenaza explote una vulnerabilidad concreta causando un impacto negativo.",
+            feynman: "La posibilidad de que el ladrón (amenaza) vea tu ventana abierta (vulnerabilidad), entre a tu casa y se robe tu consola de videojuegos (impacto)."
+          },
+          { 
+            name: "Control", 
+            desc: "Salvaguarda técnica, administrativa u operativa diseñada para mitigar fallos y reducir riesgos.",
+            feynman: "Como poner una reja de metal en la ventana rota y contratar un guardia. El control reduce la posibilidad de que el ladrón logre entrar."
+          },
+          { 
+            name: "No Repudio", 
+            desc: "Mecanismo criptográfico que impide que un emisor o receptor niegue haber enviado o recibido un mensaje.",
+            feynman: "Como enviar un correo por correo certificado donde debes firmar al recibirlo. No puedes decir 'yo nunca recibí esa carta' porque tu firma escrita demuestra lo contrario."
+          }
+        ]
+      },
+      {
+        num: "II",
+        title: "Gestión del Riesgo",
+        sub: "Riesgo inherente, residual, cualitativo vs cuantitativo, COBIT y mitigación.",
+        color: "cyan",
+        tip: "Estudia las fórmulas cuantitativas: SLE = AV * EF; ALE = SLE * ARO.",
+        mnemonic: "Pasas al Salón del Trono (Unidad II). Un ogro salvaje gigante sin armadura (Riesgo Inherente) lucha contra un duendecillo que lleva una armadura ligera y un escudo pequeño (Riesgo Residual).",
+        icon: "⚖️",
+        concepts: [
+          { 
+            name: "Riesgo Inherente", 
+            desc: "Nivel de riesgo de un activo ante amenazas externas antes de aplicar cualquier control o salvaguarda.",
+            feynman: "Conducir una motocicleta a toda velocidad sin casco, guantes ni frenos ABS. Estás expuesto al máximo peligro posible en caso de accidente."
+          },
+          { 
+            name: "Riesgo Residual", 
+            desc: "El riesgo remanente que queda activo después de haber implementado controles de seguridad eficientes.",
+            feynman: "Conducir la moto con casco de fibra de carbono, rodilleras y a velocidad permitida. Sigue existiendo una pequeña posibilidad de caerte, pero el daño será mínimo."
+          },
+          { 
+            name: "Apetito de Riesgo", 
+            desc: "El volumen y tipo de riesgo general que una organización está dispuesta a aceptar para lograr sus objetivos.",
+            feynman: "Un inversionista que decide meter sus ahorros en criptomonedas muy volátiles porque quiere ganar mucho dinero rápido, aceptando que podría perderlo todo."
+          },
+          { 
+            name: "Análisis Cualitativo", 
+            desc: "Evaluación ágil que clasifica el riesgo según su probabilidad e impacto en categorías descriptivas (ej: Alto, Medio, Bajo).",
+            feynman: "Clasificar el clima de mañana como 'muy caluroso' o 'templado' basándote en cómo se siente el viento hoy en tu cara, sin mirar un termómetro."
+          },
+          { 
+            name: "Análisis Cuantitativo", 
+            desc: "Evaluación financiera que calcula el coste monetario exacto del impacto usando datos numéricos e históricos.",
+            feynman: "Medir el clima diciendo: 'Mañana habrá exactamente 38.5 grados centígrados y la humedad será del 72%', basándote en estadísticas de satélites."
+          },
+          { 
+            name: "SLE (Single Loss Expectancy)", 
+            desc: "La expectativa de pérdida financiera ante un único evento adverso (Asset Value × Exposure Factor).",
+            feynman: "Si tienes un teléfono de $1,000 USD y se te cae al agua dañando el 50% de sus componentes, tu pérdida de ese único accidente es de $500 USD."
+          },
+          { 
+            name: "ALE (Annual Loss Expectancy)", 
+            desc: "La expectativa de pérdida financiera total esperada por una amenaza durante un año (SLE × ARO).",
+            feynman: "Si de media se te cae el teléfono al agua 2 veces al año (ARO = 2), y cada caída te cuesta $500 USD (SLE), tu coste anual estimado por descuidos es de $1,000 USD."
+          },
+          { 
+            name: "Tratamiento del Riesgo", 
+            desc: "Las decisiones estratégicas para gestionar el riesgo: mitigar, transferir, aceptar o evitar.",
+            feynman: "Ante el riesgo de que roben tu moto: puedes ponerle alarma (mitigar), comprar un seguro contra robos (transferir), aceptar que te la pueden robar (aceptar) o vender la moto y andar en autobús (evitar)."
+          }
+        ]
+      },
+      {
+        num: "III",
+        title: "Gobierno y Gestión",
+        sub: "Gobierno estratégico vs gestión táctica, SGSI, ISO 27001, 27002, 27014, SoA y PDCA.",
+        color: "purple",
+        tip: "ISO 27001 es certificable (requisitos); ISO 27002 es una guía complementaria no certificable.",
+        mnemonic: "Entras al Gabinete de Mapas (Unidad III). Un almirante con catalejo planifica la ruta del barco en la pared (Gobierno) mientras un contramaestre hace sonar su silbato para ordenar a los marineros (Gestión).",
+        icon: "🧭",
+        concepts: [
+          { 
+            name: "Gobierno de Seguridad", 
+            desc: "Dirección estratégica de la seguridad realizada por la junta directiva: evalúa, dirige y monitoriza.",
+            feynman: "Los directores de una escuela deciden que el objetivo del año es erradicar el acoso escolar y aprueban el presupuesto para contratar psicólogos."
+          },
+          { 
+            name: "Gestión de Seguridad", 
+            desc: "Planificación, construcción y operación del día a día técnico a cargo del CISO y su equipo.",
+            feynman: "Los profesores y prefectos organizan las charlas diarias en las aulas, vigilan los pasillos durante los recreos y aplican las reglas aprobadas."
+          },
+          { 
+            name: "SGSI (ISO 27001)", 
+            desc: "Sistema de Gestión de la Seguridad de la Información, marco formal para proteger los activos mediante mejora continua.",
+            feynman: "El manual oficial de reglas de la escuela que detalla cómo se protegen las calificaciones, los expedientes de los alumnos y las llaves de las oficinas."
+          },
+          { 
+            name: "Declaración de Aplicabilidad (SoA)", 
+            desc: "Documento mandatorio de ISO 27001 que detalla qué controles del Anexo A se aplican o se excluyen y por qué.",
+            feynman: "Una lista de control donde el director marca qué medidas de seguridad del reglamento nacional aplican a su escuela (ej: sí aplican extintores, pero no detectores de metales)."
+          },
+          { 
+            name: "Ciclo PDCA (Deming)", 
+            desc: "Metodología de mejora continua de cuatro fases: Planificar (Plan), Hacer (Do), Verificar (Check), Actuar (Act).",
+            feynman: "1. Planeas estudiar 1 hora. 2. Estudias esa hora. 3. Haces un test para ver qué fallaste. 4. Corriges tu método de estudio para la próxima sesión."
+          },
+          { 
+            name: "ISO 27002", 
+            desc: "Guía de buenas prácticas que proporciona directrices de implementación para los controles de ISO 27001.",
+            feynman: "Un libro de recetas de cocina muy detallado que te explica paso a paso cómo preparar cada platillo que el menú de la escuela (ISO 27001) exige servir."
+          },
+          { 
+            name: "ISO 27014", 
+            desc: "Estándar internacional que define los principios y estructura para el gobierno de la seguridad de la información.",
+            feynman: "La guía de directores que les enseña cómo deben evaluar el desempeño del departamento de seguridad sin interferir en su trabajo diario."
+          },
+          { 
+            name: "Alcance del SGSI", 
+            desc: "Definición documentada de las fronteras físicas, de red y organizativas protegidas bajo la certificación.",
+            feynman: "Establecer que las reglas de seguridad solo protegen al edificio principal de secundaria, dejando fuera las canchas deportivas externas."
+          }
+        ]
+      },
+      {
+        num: "IV",
+        title: "Factor Humano y Métricas",
+        sub: "Rol del CISO, ingeniería social, phishing, concientización y madurez CMM.",
+        color: "cyan",
+        tip: "El factor humano es el eslabón más débil. Las métricas deben aportar valor al negocio (Gary Brotby).",
+        mnemonic: "Subes a la Torre de Guardia (Unidad IV). Un oficial entrena a una oveja (Concientización) para que ignore a un lobo gris hambriento disfrazado de repartidor de pizza (Phishing).",
+        icon: "👤",
+        concepts: [
+          { 
+            name: "Rol del CISO", 
+            desc: "Ejecutivo responsable de alinear la ciberseguridad con los objetivos financieros y de riesgo del negocio.",
+            feynman: "El director de seguridad de un gran banco que le traduce al presidente (en dinero) por qué es necesario comprar nuevos servidores contra hackers."
+          },
+          { 
+            name: "Ingeniería Social", 
+            desc: "Técnicas de manipulación psicológica para engañar a las personas y hacer que revelen datos privados.",
+            feynman: "Un extraño te llama diciendo que es de la compañía telefónica y que ganaste un premio, pidiéndote tu clave de banco para depositarte el dinero."
+          },
+          { 
+            name: "Phishing", 
+            desc: "Vector de ataque que simula comunicaciones legítimas (emails, SMS) para robar contraseñas o instalar malware.",
+            feynman: "Recibir un correo idéntico al de Netflix que dice: 'Tu cuenta está suspendida, haz clic aquí para actualizar tu tarjeta de crédito'."
+          },
+          { 
+            name: "Concientización (Awareness)", 
+            desc: "Programas educativos continuos para dotar a los empleados no técnicos de cultura de ciberseguridad.",
+            feynman: "Hacer simulacros de incendio en la escuela para que todos sepan cómo salir ordenadamente en caso de emergencia real sin entrar en pánico."
+          },
+          { 
+            name: "KPI (Key Performance Indicator)", 
+            desc: "Métrica retrospectiva que mide la eficiencia operativa o progreso de un control o proyecto.",
+            feynman: "La calificación que sacas en tu examen de matemáticas, que mide cuánto lograste aprender durante todo el mes de clases."
+          },
+          { 
+            name: "KRI (Key Risk Indicator)", 
+            desc: "Indicador proactivo que monitorea el incremento del riesgo para alertar antes de que ocurra un incidente.",
+            feynman: "La luz roja que parpadea en el tablero del coche cuando te estás quedando sin gasolina, alertándote antes de que el motor se apague por completo."
+          },
+          { 
+            name: "CMM (Capability Maturity Model)", 
+            desc: "Modelo para medir el nivel de madurez y estandarización de procesos de seguridad (de 1 a 5).",
+            feynman: "Nivel 1 es hacer la comida al azar con lo que encuentres. Nivel 5 es una cocina de restaurante con recetas exactas, control de higiene e inspección automática."
+          },
+          { 
+            name: "Métricas Pragmáticas (Brotby)", 
+            desc: "Filosofía que exige que los datos de seguridad sean fáciles de medir, claros y ligados al negocio.",
+            feynman: "En lugar de decirle al jefe: 'Bloqueamos 5 millones de paquetes IP', decirle: 'Las defensas evitaron una pérdida estimada de $10,000 USD en fraudes'."
+          }
+        ]
+      },
+      {
+        num: "V",
+        title: "Cumplimiento y Políticas",
+        sub: "Políticas, estándares, procedimientos, compliance, SoD y directrices.",
+        color: "pink",
+        tip: "La jerarquía documental va de lo conceptual (política) a lo técnico obligatorio (estándar) y al paso a paso (procedimiento).",
+        mnemonic: "Ingresas a la Biblioteca del Castillo (Unidad V). Una pirámide de libros apilados: el de la cima dice 'Políticas del Reino', el del medio 'Estándares de Acero', y el de la base tiene casillas de verificación (Compliance).",
+        icon: "📋",
+        concepts: [
+          { 
+            name: "Política de Seguridad", 
+            desc: "Documento de alto nivel estratégico que define la postura de seguridad obligatoria de la empresa.",
+            feynman: "La ley general de la escuela escrita por el director: 'Está prohibido que personas ajenas entren a las aulas sin autorización'."
+          },
+          { 
+            name: "Estándar de Seguridad", 
+            desc: "Directrices técnicas obligatorias que definen qué tecnologías o configuraciones usar.",
+            feynman: "El reglamento técnico: 'Todas las cerraduras de las puertas de la escuela deben ser de la marca Yale, modelo X200'."
+          },
+          { 
+            name: "Procedimiento", 
+            desc: "Guía detallada paso a paso que instruye cómo ejecutar una tarea de seguridad específica.",
+            feynman: "Las instrucciones del conserje: '1. Introduce la llave. 2. Gira a la derecha dos veces. 3. Retira la llave. 4. Empuja el pestillo'."
+          },
+          { 
+            name: "Compliance", 
+            desc: "El estado de cumplimiento formal ante normativas legales, regulaciones industriales o políticas internas.",
+            feynman: "Aprobar la inspección del gobierno que certifica que la escuela cumple con tener salidas de emergencia y extintores vigentes."
+          },
+          { 
+            name: "Segregación de Funciones (SoD)", 
+            desc: "Principio de control de accesos que divide tareas críticas entre varias personas para evitar fraudes.",
+            feynman: "Para sacar dinero de la caja fuerte de la escuela, se necesita la llave del director Y la contraseña del tesorero. Ninguno puede hacerlo solo."
+          },
+          { 
+            name: "Compliance Beyond (Ross)", 
+            desc: "Concepto de Ronald Ross que postula que cumplir la ley es solo el nivel mínimo; la seguridad real requiere ir más allá.",
+            feynman: "Tener extintores porque la ley lo exige (compliance), pero además instalar rociadores automáticos y dar cursos de bomberos a los profesores."
+          },
+          { 
+            name: "Directriz (Guideline)", 
+            desc: "Recomendaciones opcionales o consejos de buenas prácticas que sirven de referencia no obligatoria.",
+            feynman: "Una sugerencia en la pizarra de la escuela: 'Se recomienda usar zapatos cómodos durante los días de simulacro de sismos'."
+          },
+          { 
+            name: "Regulación Sectorial (GDPR/PCI)", 
+            desc: "Leyes obligatorias según el rubro de la empresa: protección de datos (GDPR) o procesamiento de tarjetas de pago (PCI).",
+            feynman: "Las reglas estrictas que obligan a un hospital a cuidar los expedientes médicos de los pacientes bajo multas millonarias si se filtran."
+          }
+        ]
+      },
+      {
+        num: "VI",
+        title: "Control de Acceso",
+        sub: "DAC, MAC, RBAC, Bell-LaPadula (confidencialidad) y Biba (integridad).",
+        color: "purple",
+        tip: "Bell-LaPadula: no read up, no write down. Biba: no read down, no write up.",
+        mnemonic: "Bajas a las Mazmorras (Unidad VI). Un gran muro de piedra (Chinese Wall) separa dos celdas enemigas, vigiladas por un pingüino de Linux con armadura impenetrable de SELinux (MAC).",
+        icon: "🛡️",
+        concepts: [
+          { 
+            name: "DAC (Discrecional)", 
+            desc: "Modelo donde el dueño de un archivo decide de forma autónoma quién tiene permisos sobre él.",
+            feynman: "Crear una carpeta en tu computadora y elegir compartirla solo con tus dos mejores amigos mediante clic derecho."
+          },
+          { 
+            name: "MAC (Mandatorio)", 
+            desc: "Modelo donde el sistema restringe el acceso basándose en etiquetas de seguridad inmutables del usuario y del objeto.",
+            feynman: "En una base militar: tu credencial dice 'Secreto'. No puedes leer documentos marcados como 'Top Secreto', aunque el autor quiera mostrártelos."
+          },
+          { 
+            name: "RBAC (Basado en Roles)", 
+            desc: "Asignación de privilegios según la función laboral (rol) de la persona dentro de la organización.",
+            feynman: "Cualquier persona contratada como 'Cajero' en el supermercado tiene acceso automático a abrir la caja, pero no a ver el inventario central."
+          },
+          { 
+            name: "Bell-LaPadula", 
+            desc: "Modelo matemático de confidencialidad: impide leer hacia arriba (no read up) y escribir hacia abajo (no write down).",
+            feynman: "Un soldado no puede leer los planes del General (no read up), y el General no puede escribir secretos de estado en hojas públicas (no write down)."
+          },
+          { 
+            name: "Modelo Biba", 
+            desc: "Modelo de integridad: impide leer hacia abajo (no read down) y escribir hacia arriba (no write up).",
+            feynman: "Un cirujano no lee recetas médicas escritas en la pared de un baño sucio (no read down) ni escribe anotaciones médicas en servilletas sucias (no write up)."
+          },
+          { 
+            name: "Chinese Wall (Brewer-Nash)", 
+            desc: "Modelo dinámico que previene conflictos de interés aislando el acceso a empresas de la competencia.",
+            feynman: "Un consultor que trabaja para Coca-Cola tiene prohibido por el sistema acceder a las bases de datos de Pepsi para evitar espionaje."
+          },
+          { 
+            name: "Matriz de Control de Acceso", 
+            desc: "Tabla bidimensional que cruza sujetos (filas) con objetos (columnas) para definir permisos específicos.",
+            feynman: "Una planilla donde en la fila de 'Juan' y columna de 'Notas de Examen' dice 'Leer', y para 'Pedro' dice 'Ninguno'."
+          },
+          { 
+            name: "SELinux", 
+            desc: "Mecanismo del kernel de Linux que añade control de acceso mandatorio (MAC) para aislar procesos comprometidos.",
+            feynman: "Un escudo de fuerza invisible alrededor del servidor web de Linux: aunque un hacker tome el control del servidor, no puede salir a husmear en los archivos del sistema."
+          }
+        ]
+      },
+      {
+        num: "VII",
+        title: "Autenticación e Identidad",
+        sub: "Factores de autenticación, cracking de hashes, MFA, salting y Keycloak.",
+        color: "cyan",
+        tip: "El salting rompe la utilidad de las Rainbow Tables al hacer que cada hash sea único.",
+        mnemonic: "Entras al Laboratorio de Alquimia (Unidad VII). Un alquimista vierte un salero gigante (Salting) sobre una clave mágica para evitar que un espía la adivine usando tablas precalculadas (Rainbow Tables).",
+        icon: "🔑",
+        concepts: [
+          { 
+            name: "MFA (Multi-Factor)", 
+            desc: "Autenticación que requiere presentar al menos dos factores independientes de categorías distintas.",
+            feynman: "Para entrar a tu cuenta bancaria necesitas ingresar tu contraseña (algo que sabes) y poner tu huella digital en el lector (algo que eres)."
+          },
+          { 
+            name: "Salting (Sal Criptográfica)", 
+            desc: "Adición de bits aleatorios a una contraseña antes de aplicarle la función hash para hacer su hash único.",
+            feynman: "Echarle una pizca de condimento secreto y diferente a cada hamburguesa que cocinas. Si alguien intenta adivinar tu receta probando hamburguesas genéricas, fallará."
+          },
+          { 
+            name: "Rainbow Tables", 
+            desc: "Tablas precomputadas con millones de contraseñas populares asociadas a sus hashes para crackear claves rápido.",
+            feynman: "Un libro gigante que tiene anotados los hashes de palabras comunes como '123456' y 'password', permitiendo al hacker saber la clave al instante si la ve en la base de datos."
+          },
+          { 
+            name: "Identidad Federada", 
+            desc: "Sistema que permite usar una misma credencial gestionada por un IdP externo para acceder a múltiples servicios autónomos.",
+            feynman: "Poder iniciar sesión en Spotify, Pinterest y Airbnb usando simplemente tu cuenta y contraseña de Google."
+          },
+          { 
+            name: "OpenID Connect (OIDC)", 
+            desc: "Protocolo de identidad basado en JSON Web Tokens (JWT) construido encima del estándar de autorización OAuth 2.0.",
+            feynman: "Un pase de prensa que te da un festival de música: certifica quién eres y qué zonas VIP puedes pisar de forma estandarizada."
+          },
+          { 
+            name: "Keycloak", 
+            desc: "Solución open-source para la gestión de identidades y accesos (IAM) con soporte SSO, OIDC y SAML.",
+            feynman: "El portero principal del edificio corporativo: él revisa las identificaciones de todos los que entran y les da un gafete válido para pasar a las oficinas."
+          },
+          { 
+            name: "Ataque de Fuerza Bruta", 
+            desc: "Método de cracking que prueba de forma automática todas las combinaciones posibles de caracteres hasta dar con la clave.",
+            feynman: "Probar las combinaciones de un candado de maleta desde 0000, 0001, 0002... hasta que en el número 4321 el candado se abre."
+          },
+          { 
+            name: "TOTP", 
+            desc: "Algoritmo de contraseña de un solo uso que cambia dinámicamente según la hora UTC (ej: Google Authenticator).",
+            feynman: "Un código numérico de 6 dígitos en tu celular que caduca y cambia por completo cada 30 segundos exactos."
+          }
+        ]
+      },
+      {
+        num: "VIII",
+        title: "S.O. y Hardening",
+        sub: "Hardening, parches, buffer overflow, CVSS y stack canaries.",
+        color: "pink",
+        tip: "Hardening minimiza la superficie de ataque; DEP y ASLR son defensas activas del S.O. contra exploits.",
+        mnemonic: "Llegas a la Armería (Unidad VIII). Un cofre de hierro reforzado con candados (Hardening) tiene encima una jaula con un canario de pila (Stack Canary) vigilando la memoria.",
+        icon: "💻",
+        concepts: [
+          { 
+            name: "Hardening (Endurecimiento)", 
+            desc: "Proceso de configuración segura de un sistema operativo, eliminando servicios, puertos e interfaces innecesarias.",
+            feynman: "Quitarle las manijas exteriores a las ventanas de tu casa, cerrar las habitaciones vacías con llave y desactivar el timbre de noche."
+          },
+          { 
+            name: "Buffer Overflow", 
+            desc: "Fallo que ocurre cuando un programa escribe más datos de los permitidos en un búfer de memoria, alterando datos adyacentes.",
+            feynman: "Intentar meter 2 litros de agua en una taza de café. El agua se desborda y moja los documentos importantes que tenías al lado en la mesa."
+          },
+          { 
+            name: "DEP (Data Execution Prevention)", 
+            desc: "Tecnología que marca zonas de memoria de datos (pila/montón) como no ejecutables para bloquear malware.",
+            feynman: "Poner un letrero gigante en el almacén de cajas de la fábrica que dice: 'Prohibido encender fuegos artificiales aquí adentro'."
+          },
+          { 
+            name: "ASLR", 
+            desc: "Address Space Layout Randomization, aleatoriza la ubicación de programas en la memoria al iniciar.",
+            feynman: "Cambiar de lugar los cajones de tu escritorio todas las mañanas: el cajón de las llaves hoy está arriba a la derecha, mañana abajo a la izquierda."
+          },
+          { 
+            name: "Stack Canaries (Canarios)", 
+            desc: "Valores aleatorios colocados en la pila de memoria antes del retorno de función para detectar desbordamientos.",
+            feynman: "Colocar un vaso de cristal frágil justo detrás de la puerta del almacén. Si alguien empuja la puerta a la fuerza, el vaso se rompe y suena el ruido."
+          },
+          { 
+            name: "Severidad CVSS", 
+            desc: "Estándar industrial abierto que valora la gravedad de una vulnerabilidad en una escala de 0.0 a 10.0.",
+            feynman: "Un termómetro de peligro informático: 0.0 es un rasguño sin importancia; 10.0 es que el edificio se está derrumbando por completo."
+          },
+          { 
+            name: "Defensa en Profundidad", 
+            desc: "Estrategia que dispone múltiples capas y controles defensivos concéntricos para proteger los activos.",
+            feynman: "Tu casa protegida por una reja exterior, perros guardianes en el patio, puerta de seguridad blindada, alarma y una caja fuerte adentro."
+          },
+          { 
+            name: "Gestión de Parches", 
+            desc: "Proceso continuo de probar e instalar actualizaciones de software para corregir vulnerabilidades conocidas.",
+            feynman: "Revisar periódicamente si el techo de la casa tiene goteras y ponerles sellador de inmediato antes de que empiece a llover fuerte."
+          }
+        ]
+      },
+      {
+        num: "IX",
+        title: "Desarrollo Seguro",
+        sub: "SDLC seguro, OWASP Top 10, SAST vs DAST y modelado STRIDE.",
+        color: "purple",
+        tip: "SAST analiza el código estático sin ejecutarlo; DAST analiza la aplicación activa en tiempo de ejecución.",
+        mnemonic: "Entras al Taller de Construcción (Unidad IX). Un arquitecto con lupa inspecciona planos enrollados (SAST) mientras un robot ariete golpea las paredes del software en ejecución (DAST).",
+        icon: "🛠️",
+        concepts: [
+          { 
+            name: "SDLC Seguro", 
+            desc: "Integración de requisitos y pruebas de seguridad en todas las etapas del ciclo de desarrollo de software.",
+            feynman: "Diseñar un coche de carreras pensando en los cinturones de seguridad y bolsas de aire desde el plano de ingeniería, no al terminar el coche."
+          },
+          { 
+            name: "SAST (Análisis Estático)", 
+            desc: "Pruebas de caja blanca que analizan el código fuente sin ejecutar la aplicación para buscar fallas lógicas.",
+            feynman: "Un profesor de literatura que lee y corrige tu ensayo ortográficamente palabra por palabra antes de que lo expongas en público."
+          },
+          { 
+            name: "DAST (Análisis Dinámico)", 
+            desc: "Pruebas de caja negra que analizan la aplicación activa en tiempo de ejecución simulando ataques externos.",
+            feynman: "Un piloto de pruebas que enciende el coche de carreras y lo maneja a toda velocidad en una pista mojada para ver cómo responden los frenos."
+          },
+          { 
+            name: "Modelado de Amenazas", 
+            desc: "Proceso estructurado para identificar amenazas y mitigaciones en la fase de diseño de la aplicación.",
+            feynman: "Sentarte a pensar: 'Si construimos la casa en esta colina, ¿por dónde se metería el agua de lluvia si hay una tormenta?' y diseñar desagües."
+          },
+          { 
+            name: "Inyección SQL (SQLi)", 
+            desc: "Fallo donde comandos maliciosos son inyectados en formularios para manipular la base de datos.",
+            feynman: "Escribir en la ficha de inscripción de la escuela: 'Juan y bórrame todas las asistencias reprobadas'. Si la escuela lee la ficha de forma automática y la ejecuta, habrás alterado el sistema."
+          },
+          { 
+            name: "Cross-Site Scripting (XSS)", 
+            desc: "Inyección de scripts maliciosos de JavaScript en páginas web vistas por otros usuarios.",
+            feynman: "Pegar un post-it con pegamento extra fuerte en la pizarra del aula con un mensaje engañoso que obliga a cada alumno que lo lee a darle su merienda al bromista."
+          },
+          { 
+            name: "Modelo STRIDE", 
+            desc: "Mnemotecnia de Microsoft para clasificar amenazas: Spoofing, Tampering, Repudiation, Info Disclosure, DoS, Elevation.",
+            feynman: "Una lista de los 6 trucos que usan los ladrones de castillos: disfrazarse (Spoofing), envenenar la comida (Tampering), borrar sus huellas (Repudiation), robar el mapa (Info Disclosure), bloquear el puente (DoS) y coronarse rey (Elevation)."
+          },
+          { 
+            name: "OWASP Top 10", 
+            desc: "Listado consensuado mundialmente sobre las 10 vulnerabilidades más críticas de aplicaciones web.",
+            feynman: "La lista de los 10 errores más comunes que cometen los arquitectos novatos al construir casas y que los ladrones aprovechan."
+          }
+        ]
+      },
+      {
+        num: "X",
+        title: "Incidentes y Forense",
+        sub: "Ciclo NIST SP 800-61, volatilidad forense, cadena de custodia y respuesta CERT.",
+        color: "cyan",
+        tip: "La RAM es altamente volátil; en forense se recolectan primero las evidencias más efímeras.",
+        mnemonic: "Llegas a la Cámara del Tesoro Quemada (Unidad X). Un detective guarda un cubo de hielo (RAM volátil) en un termo al lado de un extintor con la etiqueta 'Contención'.",
+        icon: "🚨",
+        concepts: [
+          { 
+            name: "Incidente de Seguridad", 
+            desc: "Evento adverso confirmado que pone en peligro real la confidencialidad, integridad o disponibilidad de un sistema.",
+            feynman: "Ver que un intruso forzó la cerradura de la puerta trasera de la escuela y está dentro de la oficina de dirección buscando expedientes."
+          },
+          { 
+            name: "Contención", 
+            desc: "Fase de emergencia del ciclo de incidentes orientada a aislar y detener la propagación del daño activo.",
+            feynman: "Cerrar la llave de paso de agua principal inmediatamente cuando descubres que se rompió una tubería en el baño para que no se inunde el salón."
+          },
+          { 
+            name: "Erradicación", 
+            desc: "Fase posterior enfocada en eliminar de raíz la causa del incidente (borrar malware, parches).",
+            feynman: "Llamar al fontanero para que retire el tubo roto dañado, limpie las tuberías e instale un tubo de cobre reforzado nuevo."
+          },
+          { 
+            name: "Volatilidad Forense", 
+            desc: "La velocidad con la que la evidencia digital desaparece (ej: la memoria RAM se pierde al apagar el equipo).",
+            feynman: "Si se quema la cocina, primero salvas el helado de chocolate que se está derritiendo (RAM) antes de llevarte las latas de sopa de metal (Disco Duro)."
+          },
+          { 
+            name: "Cadena de Custodia", 
+            desc: "Documento técnico-legal ininterrumpido que registra quién tuvo acceso a una evidencia digital recolectada.",
+            feynman: "Una hoja de firmas pegada a una bolsa de pruebas que dice: 'Juan guardó el disco a las 10:00, se lo entregó a Pedro a las 12:00, y Pedro lo llevó al laboratorio a las 14:00'."
+          },
+          { 
+            name: "Análisis de Logs", 
+            desc: "Monitorización de registros de eventos mediante SIEM para correlacionar alertas y detectar ataques.",
+            feynman: "Revisar la libreta de registro del guardia de la entrada donde anota a qué hora entró y salió cada persona del edificio para saber quién estuvo allí durante el robo."
+          },
+          { 
+            name: "NIST SP 800-61", 
+            desc: "Guía de referencia estándar internacional que detalla cómo organizar la respuesta a incidentes informáticos.",
+            feynman: "El manual oficial de emergencias que le dice a los bomberos exactamente qué herramientas llevar y qué hacer en cada fase del incendio."
+          },
+          { 
+            name: "Regla de Locard", 
+            desc: "Principio criminalístico que dicta que todo contacto entre dos objetos deja un rastro físico o digital.",
+            feynman: "Aunque entres con mucho cuidado a una habitación con arena, siempre dejarás pisadas marcadas o te llevarás granos de arena pegados a tus zapatos."
+          }
+        ]
+      }
+    ];
+
+    const quizQuestions = [
+      {
+        unit: "I",
+        text: "¿Cuál es el pilar de la tríada CIA que garantiza que la información no sea modificada o alterada de manera no autorizada?",
+        options: [
+          "Confidencialidad",
+          "Integridad",
+          "Disponibilidad",
+          "No repudio"
+        ],
+        correct: 1,
+        explanation: "La Integridad salvaguarda la exactitud y completitud de los datos. La Confidencialidad evita la revelación no autorizada, y la Disponibilidad asegura el acceso."
+      },
+      {
+        unit: "I",
+        text: "De acuerdo a la teoría de Jeimy Cano, ¿cuál es la descripción correcta respecto a la seguridad informática?",
+        options: [
+          "La seguridad perfecta es lograble implementando firewalls avanzados y cifrado completo.",
+          "La seguridad absoluta es imposible de alcanzar; siempre habrá una inseguridad residual con la que convivir.",
+          "El cumplimiento normativo es suficiente para anular cualquier vector de amenaza.",
+          "La única amenaza real para una organización procede de actores externos estatales."
+        ],
+        correct: 1,
+        explanation: "Jeimy Cano plantea la idea de la 'inseguridad informática residual': la vulnerabilidad es la constante y la ciberseguridad es un proceso transitorio."
+      },
+      {
+        unit: "II",
+        text: "Si un servidor crítico valuado en $20,000 USD tiene un Factor de Exposición (EF) del 50% ante un ataque DDoS, y la Tasa de Ocurrencia Anual (ARO) es 0.2 (una vez cada cinco años), ¿cuál es la Expectativa de Pérdida Anual (ALE)?",
+        options: [
+          "$10,000 USD",
+          "$2,000 USD",
+          "$4,000 USD",
+          "$5,000 USD"
+        ],
+        correct: 1,
+        explanation: "SLE = Asset Value × EF = $20,000 × 0.50 = $10,000. ALE = SLE × ARO = $10,000 × 0.2 = $2,000 USD."
+      },
+      {
+        unit: "II",
+        text: "En la gestión de riesgos de seguridad, ¿cuál es la diferencia fundamental entre el análisis cuantitativo y el cualitativo?",
+        options: [
+          "El cuantitativo emplea escalas subjetivas y el cualitativo balances bancarios.",
+          "El cualitativo clasifica la criticidad del riesgo de forma subjetiva (ej: Alto/Medio/Bajo) y el cuantitativo se apoya en datos numéricos y métricas financieras reales.",
+          "El cualitativo es obligatorio bajo ISO 27001, mientras que el cuantitativo no se permite.",
+          "No existe ninguna diferencia en la práctica."
+        ],
+        correct: 1,
+        explanation: "El cualitativo usa descripciones basadas en experiencia (como escalas del 1 al 5 o colores). El cuantitativo usa valores financieros exactos y probabilidades matemáticas."
+      },
+      {
+        unit: "III",
+        text: "De acuerdo al marco COBIT, ¿cuál es la principal diferencia conceptual entre Gobierno y Gestión?",
+        options: [
+          "El Gobierno ejecuta controles tácticos diarios y la Gestión define la estrategia a largo plazo.",
+          "El Gobierno evalúa opciones estratégicas, define directrices y monitorea el cumplimiento; la Gestión planifica, construye, ejecuta y opera las actividades técnicas diarias.",
+          "El Gobierno lo ejerce el CISO y la Gestión es responsabilidad unánime del Directorio.",
+          "El Gobierno abarca controles puramente físicos y la Gestión controles lógicos."
+        ],
+        correct: 1,
+        explanation: "El Gobierno establece la dirección evaluando necesidades y riesgos. La Gestión ejecuta las tareas de desarrollo y mantenimiento técnico diario alineado con esa dirección."
+      },
+      {
+        unit: "III",
+        text: "En el contexto de la certificación ISO/IEC 27001, ¿qué función cumple la Declaración de Aplicabilidad (SoA)?",
+        options: [
+          "Es un contrato vinculante de servicios con el auditor externo certificador.",
+          "Identifica explícitamente cuáles de los controles del Anexo A se aplican o excluyen en el alcance de la organización, justificando técnicamente las decisiones.",
+          "Es el acta constitutiva formal del departamento de ciberdefensa de la organización.",
+          "Es el documento de políticas que firman los empleados al ingresar."
+        ],
+        correct: 1,
+        explanation: "El SoA (Statement of Applicability) justifica la selección y exclusión de los controles de seguridad del Anexo A de la norma ISO 27001."
+      },
+      {
+        unit: "IV",
+        text: "Para presentar métricas de seguridad efectivas a la junta de directores, ¿qué característica deben poseer según Gary Brotby?",
+        options: [
+          "Deben ser masivas y muy técnicas para demostrar la complejidad de los firewalls.",
+          "Deben presentarse con códigos binarios para demostrar confidencialidad.",
+          "Deben ser pragmáticas: fáciles de recolectar, expresadas de forma comprensible para el negocio y vinculadas directamente al riesgo.",
+          "Deben enfocarse solo en fallas lógicas de servidores inactivos."
+        ],
+        correct: 2,
+        explanation: "Según Brotby, las métricas deben ser accionables y comprensibles para los directivos (negocio), ligando los datos de seguridad al valor financiero y al riesgo corporativo."
+      },
+      {
+        unit: "IV",
+        text: "En el Modelo de Madurez de la Capacidad (CMM) aplicado a la seguridad, ¿qué describe al Nivel 3 (Definido)?",
+        options: [
+          "Los controles lógicos se despliegan de forma caótica y reactiva ante incidentes.",
+          "Los controles y procesos de ciberseguridad se encuentran plenamente documentados, estandarizados, comunicados e integrados formalmente en toda la empresa.",
+          "Las métricas se calculan mediante inteligencia artificial predictiva.",
+          "No existen políticas escritas y la seguridad depende del administrador."
+        ],
+        correct: 1,
+        explanation: "El nivel 3 (Definido) significa que los procesos están documentados y estandarizados a nivel organizacional, abandonando la reactividad o el enfoque aislado."
+      },
+      {
+        unit: "V",
+        text: "Dentro de la jerarquía documental de seguridad, ¿cuál es el orden correcto de los elementos desde el más estratégico al más operativo?",
+        options: [
+          "Procedimiento → Estándar → Política → Directriz (Guideline)",
+          "Estándar → Directriz → Procedimiento → Política",
+          "Política → Estándar → Procedimiento → Directriz (Guideline)",
+          "Directriz → Política → Estándar → Procedimiento"
+        ],
+        correct: 2,
+        explanation: "La Jerarquía Documental establece: 1. Política (estratégico, qué y por qué), 2. Estándar (técnico obligatorio), 3. Procedimiento (paso a paso operativo, cómo), 4. Directriz (guía opcional de referencia)."
+      },
+      {
+        unit: "V",
+        text: "¿Cuál es la premisa de Ronald Ross tras la enunciación de su principio estratégico de ciberseguridad 'Compliance Beyond'?",
+        options: [
+          "Las empresas deben focalizarse en cumplir leyes, ya que esto asegura invulnerabilidad táctica.",
+          "El cumplimiento normativo es meramente un piso básico elemental sobre el cual construir; la seguridad real exige ir más allá diseñando controles específicos ante amenazas reales.",
+          "El cumplimiento normativo es innecesario para servidores Linux.",
+          "La auditoría externa de cumplimiento debe realizarse sin el CISO."
+        ],
+        correct: 1,
+        explanation: "Ronald Ross establece que estar en cumplimiento ('compliant') es la base táctica de exigencia legal, pero no es suficiente. La resiliencia corporativa real requiere diseñar defensas específicas modelando amenazas activas."
+      },
+      {
+        unit: "VI",
+        text: "En control de accesos lógicos, ¿en qué consiste el modelo de Control de Acceso Mandatorio (MAC)?",
+        options: [
+          "El creador del archivo otorga discrecionalmente permisos a otros usuarios.",
+          "El sistema operativo impone las restricciones de lectura o escritura basado en etiquetas de seguridad asociadas a los sujetos y la clasificación de los objetos.",
+          "Los privilegios de acceso son asignados según el rol o cargo laboral.",
+          "Se basa en el análisis en tiempo real de la dirección IP geográfica del usuario."
+        ],
+        correct: 1,
+        explanation: "En MAC, el sistema operativo impone las autorizaciones comparando la etiqueta de confidencialidad del objeto con el nivel de acreditación del sujeto, de manera inmutable."
+      },
+      {
+        unit: "VI",
+        text: "El modelo formal de seguridad Bell-LaPadula se enfoca en resguardar la confidencialidad. ¿Cuáles son sus dos propiedades esenciales?",
+        options: [
+          "Simple Security Property ('no read down') y Star Property ('no write up').",
+          "Simple Security Property ('no read up' / no leer arriba) y Star Property ('no write down' / no escribir abajo).",
+          "No conflicto de intereses entre empresas y control de accesos discrecional.",
+          "Principio de separación de privilegios y uso obligatorio de cortafuegos."
+        ],
+        correct: 1,
+        explanation: "Propiedad Simple: un sujeto no puede leer un objeto de nivel de confidencialidad superior. Propiedad Star (*): un sujeto no puede escribir en objetos de nivel inferior para evitar filtraciones."
+      },
+      {
+        unit: "VII",
+        text: "¿Cuál es la contramedida defensiva criptográfica más efectiva para evitar que los atacantes utilicen Rainbow Tables para descifrar contraseñas comprometidas?",
+        options: [
+          "Encriptar la base de datos con claves simétricas RSA.",
+          "Desplegar un sistema de cortafuegos web (WAF) corporativo.",
+          "El uso de una 'sal' criptográfica única e impredecible (Salting) concatenada a la contraseña de cada usuario antes de aplicar el hashing.",
+          "Exigir contraseñas cortas que expiren cada dos horas sin excepción."
+        ],
+        correct: 2,
+        explanation: "Las Rainbow Tables usan hashes precalculados de contraseñas comunes. Agregar una sal criptográfica aleatoria rompe esta precomputación, obligando al atacante a crackear por fuerza bruta única para cada host."
+      },
+      {
+        unit: "VII",
+        text: "En el contexto de la identidad federada e inicio de sesión único (SSO), ¿qué protocolo actúa como una capa de identidad ligera formateada en JSON construida sobre el marco OAuth 2.0?",
+        options: [
+          "SAML",
+          "OpenID Connect (OIDC)",
+          "Active Directory Domain Services",
+          "Keycloak IAM Engine"
+        ],
+        correct: 1,
+        explanation: "OpenID Connect es el estándar moderno de identidad web edificado encima de OAuth 2.0. Utiliza JSON Web Tokens (JWT) para transmitir claims de identidad."
+      },
+      {
+        unit: "VIII",
+        text: "¿Cómo se denomina al proceso técnico de securizar y endurecer la configuración de un sistema operativo aplicando CIS Benchmarks, cerrando puertos no usados y desinstalando servicios innecesarios?",
+        options: [
+          "Buffer Overflow Mitigation",
+          "Pentesting Activo",
+          "Hardening (Endurecimiento)",
+          "Vulnerability Scan Pasivo"
+        ],
+        correct: 2,
+        explanation: "El endurecimiento o 'hardening' consiste en desactivar funcionalidades innecesarias y aplicar guías técnicas restrictivas para reducir la superficie de exposición."
+      },
+      {
+        unit: "VIII",
+        text: "¿Qué característica de seguridad lógica evita exploits de Stack Buffer Overflow denegando la ejecución en áreas de memoria reservadas para almacenar variables o datos?",
+        options: [
+          "ASLR (Aleatorización del Diseño del Espacio de Direcciones)",
+          "DEP / NX (Prevención de Ejecución de Datos / Bit No-Execute)",
+          "Nessus Escáner",
+          "Salting defensivo"
+        ],
+        correct: 1,
+        explanation: "DEP/NX marca la pila de datos como no ejecutable, impidiendo la ejecución de cargas útiles (shellcode) introducidas de forma fraudulenta por un hacker mediante desbordamiento."
+      },
+      {
+        unit: "IX",
+        text: "Durante el modelado de amenazas en la etapa de arquitectura y diseño, ¿qué categoría del modelo STRIDE representa la vulnerabilidad que permite falsificar o alterar información de una base de datos sin autorización?",
+        options: [
+          "Spoofing (Suplantación)",
+          "Tampering (Alteración de datos)",
+          "Repudiation (Repudio)",
+          "Elevation of Privilege (Elevación de privilegios)"
+        ],
+        correct: 1,
+        explanation: "En STRIDE, 'T' corresponde a Tampering (alteración no autorizada de datos). Spoofing es suplantar identidad y Repudiation es negar acciones realizadas."
+      },
+      {
+        unit: "IX",
+        text: "En ciberseguridad en el ciclo de vida de desarrollo de software (SDLC Seguro), ¿cuál es la diferencia fundamental entre el análisis estático (SAST) y el dinámico (DAST)?",
+        options: [
+          "SAST exige interactuar activamente con el servidor en la nube y DAST solo inspecciona archivos locales.",
+          "SAST es una prueba de 'caja blanca' que escanea el código fuente inactivo en busca de fallos sin ejecutar el programa; mientras que DAST es una auditoría de 'caja negra' que interactúa con la aplicación web en tiempo de ejecución simulando ataques externos.",
+          "SAST es analizado por el CISO de forma manual y DAST se ejecuta de manera automatizada.",
+          "No existe ninguna diferencia técnica."
+        ],
+        correct: 1,
+        explanation: "SAST (Static Application Security Testing) analiza el código fuente inactivo por dentro sin ejecutarlo. DAST (Dynamic Application Security Testing) analiza la aplicación levantada en ejecución atacando sus endpoints dinámicos."
+      },
+      {
+        unit: "X",
+        text: "De acuerdo a la informática forense y el principio de volatilidad, ¿en qué orden deben recopilarse los activos tecnológicos tras un incidente de intrusión?",
+        options: [
+          "Discos duros mecánicos → Logs en el SIEM → Memoria RAM → Archivos en cintas magnéticas.",
+          "Memoria RAM y conexiones de red activas → Espacio de intercambio (Swap/Páginas) → Archivos del disco duro y S.O. → Registros y logs remotos.",
+          "Backups externos → Servidor Apache → Memoria caché de la CPU → Certificados digitales.",
+          "El orden es irrelevante siempre que el equipo sea apagado de inmediato."
+        ],
+        correct: 1,
+        explanation: "El orden de volatilidad forense exige capturar primero los datos efímeros. La RAM y las conexiones de red desaparecen en cuanto el equipo se desenergiza o reinicia, haciéndolas la máxima prioridad."
+      },
+      {
+        unit: "X",
+        text: "En el ciclo de respuesta a incidentes de seguridad definido en la norma de referencia NIST SP 800-61, ¿cuál es la diferencia crítica entre la fase de Contención y la de Erradicación?",
+        options: [
+          "La contención restaura el sistema desde copias de seguridad de forma automatizada y la erradicación notifica a asuntos legales.",
+          "La contención busca aislar y frenar de inmediato la propagación del daño del ataque en curso; la erradicación se enfoca en eliminar de raíz la causa del incidente (ej: borrar malware, inhabilitar cuentas e instalar parches).",
+          "No hay diferencia técnica; representan el mismo paso operativo unificado por el CERT.",
+          "La erradicación se ejecuta antes de que el incidente de seguridad ocurra."
+        ],
+        correct: 1,
+        explanation: "La Contención aísla el entorno de red comprometido para que el atacante no infecte otros hosts. La Erradicación elimina los ficheros dañados y cierra la vulnerabilidad origen de manera permanente."
+      }
+    ];
+
+    /* ==========================================================================
+       2. GESTOR DE ESTADO E INICIALIZACIÓN
+       ========================================================================== */
+    const state = {
+      theme: "dark",
+      activeTab: "recall",
+      
+      // Leitner Leitner boxes
+      leitnerBoxes: {
+        1: [], // Repasar Urgente
+        2: [], // Con Dudas
+        3: []  // Dominado
+      },
+      
+      // Recall state
+      recallUnitIdx: 0,
+      recallConceptIdx: 0,
+      recallCurrentList: [],
+      
+      // Quiz state
+      quizCurrentQuestions: [],
+      quizCurrentQuestionIdx: 0,
+      quizAnswersGiven: [],
+      quizCorrectHits: 0,
+      quizIncorrectMisses: 0,
+      quizWrongUnits: new Set(),
+      
+      // Palace state
+      selectedRoomIdx: 0
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initTheme();
+      initTabs();
+      initLeitner();
+      loadRecallUnitList();
+      selectRecallUnit(0);
+      initPalace();
+      initFeynman();
+      setupFeynmanSearch();
+    });
+
+    /* ==========================================================================
+       3. GESTOR DE TEMAS Y COMPORTAMIENTOS GENERALES
+       ========================================================================== */
+    function initTheme() {
+      const toggle = document.getElementById("theme-toggle");
+      const saved = localStorage.getItem("ultimo-repaso-theme") || "dark";
+      setTheme(saved);
+      
+      toggle.addEventListener("click", () => {
+        const next = state.theme === "dark" ? "light" : "dark";
+        setTheme(next);
+      });
+    }
+
+    function setTheme(theme) {
+      state.theme = theme;
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("ultimo-repaso-theme", theme);
+      document.getElementById("theme-toggle").textContent = theme === "dark" ? "☀️" : "🌙";
+    }
+
+    function initTabs() {
+      const buttons = document.querySelectorAll(".tab-btn");
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          buttons.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          
+          const target = btn.dataset.tab;
+          document.querySelectorAll(".tab-pane").forEach(pane => {
+            pane.classList.remove("active");
+            if (pane.id === `${target}-pane`) {
+              pane.classList.add("active");
+            }
+          });
+          
+          state.activeTab = target;
+          
+          // Acciones específicas al entrar a una pestaña
+          if (target === "leitner") {
+            renderLeitnerBoxes();
+          } else if (target === "palace") {
+            selectPalaceRoom(state.selectedRoomIdx);
+          }
+        });
+      });
+    }
+
+    /* ==========================================================================
+       4. SISTEMA LEITNER (REPETICIÓN ESPACIADA)
+       ========================================================================== */
+    function initLeitner() {
+      // Cargar todas las tarjetas en la caja 1 al inicio si no hay datos guardados
+      const saved = localStorage.getItem("ciberdefensa-leitner");
+      if (saved) {
+        state.leitnerBoxes = JSON.parse(saved);
+      } else {
+        units.forEach((u, uIdx) => {
+          u.concepts.forEach((c, cIdx) => {
+            state.leitnerBoxes[1].push({
+              id: `${uIdx}-${cIdx}`,
+              name: c.name,
+              desc: c.desc,
+              feynman: c.feynman,
+              unitNum: u.num,
+              color: u.color
+            });
+          });
+        });
+        saveLeitner();
+      }
+      updateStats();
+    }
+
+    function saveLeitner() {
+      localStorage.setItem("ciberdefensa-leitner", JSON.stringify(state.leitnerBoxes));
+      updateStats();
+    }
+
+    function updateStats() {
+      document.getElementById("stats-box-urgente").textContent = state.leitnerBoxes[1].length;
+      document.getElementById("stats-box-dudas").textContent = state.leitnerBoxes[2].length;
+      document.getElementById("stats-box-dominado").textContent = state.leitnerBoxes[3].length;
+    }
+
+    function renderLeitnerBoxes() {
+      for (let boxNum = 1; boxNum <= 3; boxNum++) {
+        const list = document.getElementById(`leitner-list-${boxNum}`);
+        const countBadge = document.getElementById(`leitner-count-${boxNum}`);
+        list.innerHTML = "";
+        
+        const boxCards = state.leitnerBoxes[boxNum];
+        countBadge.textContent = boxCards.length;
+        
+        if (boxCards.length === 0) {
+          list.innerHTML = `<div style="text-align:center; padding:1.5rem; color:var(--text-muted); font-size:0.8rem;">Caja vacía</div>`;
+          continue;
+        }
+        
+        boxCards.forEach((card, idx) => {
+          const div = document.createElement("div");
+          div.className = "leitner-mini-card";
+          div.innerHTML = `
+            <span>${card.name}</span>
+            <span class="unit-tag tag-${card.color}" style="font-size:0.65rem; padding:0.1rem 0.4rem;">U. ${card.unitNum}</span>
+          `;
+          div.onclick = () => {
+            // Muestra detalle del concepto de forma sencilla
+            alert(`[Unidad ${card.unitNum}] ${card.name}:\n\n${card.desc}\n\nAnalogía Feynman: ${card.feynman}`);
+          };
+          list.appendChild(div);
+        });
+      }
+    }
+
+    function moveLeitnerCard(cardId, targetBox) {
+      // Remover de todas las cajas
+      let foundCard = null;
+      for (let boxNum = 1; boxNum <= 3; boxNum++) {
+        const idx = state.leitnerBoxes[boxNum].findIndex(c => c.id === cardId);
+        if (idx !== -1) {
+          foundCard = state.leitnerBoxes[boxNum].splice(idx, 1)[0];
+          break;
+        }
+      }
+      
+      if (foundCard) {
+        state.leitnerBoxes[targetBox].push(foundCard);
+        saveLeitner();
+      }
+    }
+
+    function startLeitnerSession() {
+      // Inicia una sesión de evocación activa enfocada en los términos de la caja de mayor urgencia (1 o 2)
+      if (state.leitnerBoxes[1].length > 0) {
+        alert("Iniciando repaso prioritario de las tarjetas en la caja 'Repasar Urgente'.");
+        state.recallCurrentList = [...state.leitnerBoxes[1]];
+        state.recallConceptIdx = 0;
+        switchTabToRecall();
+      } else if (state.leitnerBoxes[2].length > 0) {
+        alert("Iniciando repaso de las tarjetas en la caja 'Con Dudas'.");
+        state.recallCurrentList = [...state.leitnerBoxes[2]];
+        state.recallConceptIdx = 0;
+        switchTabToRecall();
+      } else {
+        alert("¡Increíble! Todas las tarjetas están dominadas en la Caja 3. Iniciando repaso general.");
+        state.recallCurrentList = [...state.leitnerBoxes[3]];
+        state.recallConceptIdx = 0;
+        switchTabToRecall();
+      }
+    }
+
+    function switchTabToRecall() {
+      // Desencadena navegación programada a la pestaña de evocación activa
+      const btn = document.querySelector(".tab-btn[data-tab='recall']");
+      if (btn) btn.click();
+      renderRecallConcept();
+    }
+
+    /* ==========================================================================
+       5. EVOCACIÓN ACTIVA (ACTIVE RECALL LOGIC)
+       ========================================================================== */
+    function loadRecallUnitList() {
+      const list = document.getElementById("recall-unit-list");
+      list.innerHTML = "";
+      
+      // Opción de repasar todo
+      const allDiv = document.createElement("div");
+      allDiv.className = "recall-unit-item active";
+      allDiv.textContent = "Todo el Programa (80 Conceptos)";
+      allDiv.onclick = () => selectRecallUnit("all", allDiv);
+      list.appendChild(allDiv);
+      
+      units.forEach((u, idx) => {
+        const div = document.createElement("div");
+        div.className = "recall-unit-item";
+        div.textContent = `Unidad ${u.num}: ${u.title}`;
+        div.onclick = () => selectRecallUnit(idx, div);
+        list.appendChild(div);
+      });
+    }
+
+    function selectRecallUnit(selection, element) {
+      // Modificar visualización activa en sidebar
+      document.querySelectorAll(".recall-unit-item").forEach(item => item.classList.remove("active"));
+      if (element) {
+        element.classList.add("active");
+      }
+      
+      state.recallConceptIdx = 0;
+      state.recallCurrentList = [];
+      
+      if (selection === "all") {
+        // Cargar todos los conceptos ordenados
+        units.forEach((u, uIdx) => {
+          u.concepts.forEach((c, cIdx) => {
+            state.recallCurrentList.push({
+              id: `${uIdx}-${cIdx}`,
+              name: c.name,
+              desc: c.desc,
+              feynman: c.feynman,
+              unitNum: u.num,
+              color: u.color
+            });
+          });
+        });
+      } else {
+        // Cargar unidad elegida
+        const uIdx = parseInt(selection);
+        state.recallUnitIdx = uIdx;
+        const u = units[uIdx];
+        u.concepts.forEach((c, cIdx) => {
+          state.recallCurrentList.push({
+            id: `${uIdx}-${cIdx}`,
+            name: c.name,
+            desc: c.desc,
+            feynman: c.feynman,
+            unitNum: u.num,
+            color: u.color
+          });
+        });
+      }
+      
+      // Barajar el set para forzar a la memoria a entrelazar
+      state.recallCurrentList.sort(() => Math.random() - 0.5);
+      
+      renderRecallConcept();
+    }
+
+    function renderRecallConcept() {
+      if (state.recallCurrentList.length === 0) return;
+      
+      const currentCard = state.recallCurrentList[state.recallConceptIdx];
+      
+      // Ocultar la respuesta
+      document.getElementById("recall-answer-box").style.display = "none";
+      document.getElementById("recall-feedback-controls").style.display = "none";
+      document.getElementById("recall-init-controls").style.display = "flex";
+      
+      // Actualizar datos de la tarjeta
+      const badge = document.getElementById("recall-unit-badge");
+      badge.textContent = `Unidad ${currentCard.unitNum}`;
+      badge.className = `unit-tag tag-${currentCard.color}`;
+      
+      document.getElementById("recall-concept-title").textContent = currentCard.name;
+      document.getElementById("recall-progress-text").textContent = `Concepto ${state.recallConceptIdx + 1} de ${state.recallCurrentList.length}`;
+      
+      document.getElementById("recall-academic-def").textContent = currentCard.desc;
+      document.getElementById("recall-feynman-analogy").textContent = currentCard.feynman;
+    }
+
+    function revealRecallAnswer() {
+      document.getElementById("recall-answer-box").style.display = "block";
+      document.getElementById("recall-init-controls").style.display = "none";
+      document.getElementById("recall-feedback-controls").style.display = "flex";
+    }
+
+    function evaluateRecall(score) {
+      const currentCard = state.recallCurrentList[state.recallConceptIdx];
+      
+      // Mover la tarjeta en el Leitner System
+      if (score === 1) {
+        moveLeitnerCard(currentCard.id, 1); // Caja 1 (Urgente)
+      } else if (score === 2) {
+        moveLeitnerCard(currentCard.id, 2); // Caja 2 (Dudas)
+      } else if (score === 3) {
+        moveLeitnerCard(currentCard.id, 3); // Caja 3 (Dominado)
+      }
+      
+      // Avanzar concepto
+      state.recallConceptIdx++;
+      if (state.recallConceptIdx >= state.recallCurrentList.length) {
+        alert("¡Has terminado este set de estudio! El set se volverá a barajar.");
+        state.recallConceptIdx = 0;
+        state.recallCurrentList.sort(() => Math.random() - 0.5);
+      }
+      
+      renderRecallConcept();
+    }
+
+    /* ==========================================================================
+       6. PALACIO DE LA MEMORIA (COGNITIVE SCENARIOS)
+       ========================================================================== */
+    function initPalace() {
+      const grid = document.getElementById("palace-grid");
+      grid.innerHTML = "";
+      
+      units.forEach((u, idx) => {
+        const div = document.createElement("div");
+        div.className = "palace-room";
+        div.innerHTML = `
+          <span class="room-num">Habitación ${idx + 1}</span>
+          <span class="room-icon">${u.icon}</span>
+          <span class="room-name">${u.title}</span>
+        `;
+        div.onclick = () => selectPalaceRoom(idx, div);
+        grid.appendChild(div);
+      });
+    }
+
+    function selectPalaceRoom(idx, element) {
+      state.selectedRoomIdx = idx;
+      
+      // Cambiar clases activas
+      document.querySelectorAll(".palace-room").forEach((room, i) => {
+        if (i === idx) {
+          room.classList.add("active");
+        } else {
+          room.classList.remove("active");
+        }
+      });
+      
+      const u = units[idx];
+      const detail = document.getElementById("palace-detail-card");
+      detail.style.display = "block";
+      
+      // Cargar datos
+      document.getElementById("palace-room-title").textContent = u.title;
+      document.getElementById("palace-room-badge").textContent = `Unidad ${u.num}`;
+      document.getElementById("palace-room-mnemonic").textContent = u.mnemonic;
+      
+      const conceptsList = document.getElementById("palace-room-concepts");
+      conceptsList.innerHTML = "";
+      
+      u.concepts.forEach(c => {
+        const card = document.createElement("div");
+        card.className = "palace-concept-card";
+        card.innerHTML = `
+          <h5>${c.name}</h5>
+          <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:0.5rem;">${c.desc}</p>
+          <div style="background:rgba(255, 170, 0, 0.03); border-left: 2px solid var(--neon-amber); padding:0.5rem; font-size:0.8rem; font-style:italic;">
+            ${c.feynman}
+          </div>
+        `;
+        conceptsList.appendChild(card);
+      });
+    }
+
+    /* ==========================================================================
+       7. MÓDULO FEYNMAN (CONCEPTS ANALOGIES SEARCH)
+       ========================================================================== */
+    function initFeynman() {
+      const grid = document.getElementById("feynman-grid");
+      grid.innerHTML = "";
+      
+      units.forEach((u, uIdx) => {
+        u.concepts.forEach((c, cIdx) => {
+          const card = document.createElement("div");
+          card.className = "feynman-card";
+          card.dataset.concept = c.name.toLowerCase();
+          card.dataset.desc = c.desc.toLowerCase();
+          
+          card.innerHTML = `
+            <div class="feynman-card-header">
+              <span class="feynman-title">${c.name}</span>
+              <span class="feynman-badge">U. ${u.num}</span>
+            </div>
+            <p class="feynman-definition">${c.desc}</p>
+            <div class="feynman-analogy-box">
+              <div class="feynman-analogy-title">💡 Método Feynman (Explicado Simple):</div>
+              <p class="feynman-analogy-text">${c.feynman}</p>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      });
+    }
+
+    function setupFeynmanSearch() {
+      const search = document.getElementById("feynman-search");
+      search.addEventListener("input", (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        const cards = document.querySelectorAll(".feynman-card");
+        
+        cards.forEach(card => {
+          const title = card.dataset.concept;
+          const desc = card.dataset.desc;
+          if (title.includes(query) || desc.includes(query)) {
+            card.style.display = "flex";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      });
+    }
+
+    /* ==========================================================================
+       8. SIMULADOR DE EXAMEN (INTERLEAVED PRACTICE)
+       ========================================================================== */
+    function startQuizRound() {
+      state.quizCurrentQuestions = [];
+      state.quizCurrentQuestionIdx = 0;
+      state.quizAnswersGiven = [];
+      state.quizCorrectHits = 0;
+      state.quizIncorrectMisses = 0;
+      state.quizWrongUnits.clear();
+      
+      // Tomar 10 preguntas aleatorias de la base
+      const pool = [...quizQuestions];
+      pool.sort(() => Math.random() - 0.5);
+      state.quizCurrentQuestions = pool.slice(0, 10);
+      
+      document.getElementById("quiz-start-view").style.display = "none";
+      document.getElementById("quiz-results-view").style.display = "none";
+      document.getElementById("quiz-active-view").style.display = "block";
+      
+      renderQuizQuestion();
+    }
+
+    function renderQuizQuestion() {
+      const qIdx = state.quizCurrentQuestionIdx;
+      const q = state.quizCurrentQuestions[qIdx];
+      const total = state.quizCurrentQuestions.length;
+      
+      // Meta UI
+      document.getElementById("quiz-question-number").textContent = `Pregunta ${qIdx + 1} de ${total}`;
+      document.getElementById("quiz-score-indicator").textContent = `Aciertos: ${state.quizCorrectHits}/${qIdx}`;
+      document.getElementById("quiz-progress-fill").style.width = `${Math.round((qIdx / total) * 100)}%`;
+      
+      // Question Text
+      document.getElementById("quiz-question-text").textContent = q.text;
+      
+      // Options container
+      const container = document.getElementById("quiz-options-container");
+      container.innerHTML = "";
+      
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement("button");
+        btn.className = "quiz-option";
+        btn.textContent = opt;
+        btn.onclick = () => evaluateQuizAnswer(idx);
+        container.appendChild(btn);
+      });
+      
+      // Ocultar explicación y botón de avanzar
+      document.getElementById("quiz-explanation-box").style.display = "none";
+      document.getElementById("quiz-next-btn").style.display = "none";
+    }
+
+    function evaluateQuizAnswer(selectedIdx) {
+      const qIdx = state.quizCurrentQuestionIdx;
+      const q = state.quizCurrentQuestions[qIdx];
+      const options = document.querySelectorAll(".quiz-option");
+      
+      // Deshabilitar todas las opciones
+      options.forEach(opt => opt.disabled = true);
+      
+      const isCorrect = selectedIdx === q.correct;
+      state.quizAnswersGiven[qIdx] = selectedIdx;
+      
+      // Aplicar estilos
+      options.forEach((opt, idx) => {
+        if (idx === q.correct) {
+          opt.classList.add("correct");
+        } else if (idx === selectedIdx && !isCorrect) {
+          opt.classList.add("incorrect");
+        }
+      });
+      
+      if (isCorrect) {
+        state.quizCorrectHits++;
+      } else {
+        state.quizIncorrectMisses++;
+        state.quizWrongUnits.add(q.unit); // Registrar unidad del fallo
+      }
+      
+      // Mostrar Explicación
+      const expBox = document.getElementById("quiz-explanation-box");
+      document.getElementById("quiz-explanation-text").textContent = q.explanation;
+      expBox.style.display = "block";
+      
+      // Mostrar botón siguiente
+      document.getElementById("quiz-next-btn").style.display = "block";
+      
+      // Actualizar marcador de aciertos
+      document.getElementById("quiz-score-indicator").textContent = `Aciertos: ${state.quizCorrectHits}/${qIdx + 1}`;
+    }
+
+    function nextQuizQuestion() {
+      state.quizCurrentQuestionIdx++;
+      if (state.quizCurrentQuestionIdx < state.quizCurrentQuestions.length) {
+        renderQuizQuestion();
+      } else {
+        renderQuizResults();
+      }
+    }
+
+    function renderQuizResults() {
+      document.getElementById("quiz-active-view").style.display = "none";
+      document.getElementById("quiz-results-view").style.display = "block";
+      
+      const total = state.quizCurrentQuestions.length;
+      const hits = state.quizCorrectHits;
+      const pct = Math.round((hits / total) * 100);
+      
+      document.getElementById("quiz-results-score").textContent = `Puntuación: ${hits} / ${total} aciertos (${pct}%)`;
+      
+      const title = document.getElementById("quiz-results-title");
+      if (pct >= 80) {
+        title.textContent = "🏆 ¡Excelente Repaso!";
+        title.style.color = "var(--neon-green)";
+      } else if (pct >= 60) {
+        title.textContent = "👍 Vas por buen camino";
+        title.style.color = "var(--neon-amber)";
+      } else {
+        title.textContent = "⚠️ Requiere repaso adicional";
+        title.style.color = "var(--neon-pink)";
+      }
+      
+      // Cargar sugerencias dinámicas de unidades
+      const list = document.getElementById("quiz-recommendations-list");
+      list.innerHTML = "";
+      
+      if (state.quizWrongUnits.size === 0) {
+        list.innerHTML = `<li>¡Ninguno! Dominas todas las áreas evaluadas en esta ronda.</li>`;
+      } else {
+        state.quizWrongUnits.forEach(uNum => {
+          const matchingUnit = units.find(u => u.num === uNum);
+          if (matchingUnit) {
+            list.innerHTML += `<li><strong>Unidad ${matchingUnit.num}: ${matchingUnit.title}</strong> (revisa la habitación ${matchingUnit.icon} en el palacio de la memoria).</li>`;
+          }
+        });
+      }
+    }
+
+    function resetQuiz() {
+      document.getElementById("quiz-results-view").style.display = "none";
+      document.getElementById("quiz-start-view").style.display = "block";
+    }
+  </script>
+</body>
+</html>
