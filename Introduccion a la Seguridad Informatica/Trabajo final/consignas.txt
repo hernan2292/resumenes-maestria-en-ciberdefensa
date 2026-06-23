@@ -1,0 +1,36 @@
+TRABAJO PRÁCTICO FINAL: VAULTWARDEN - SEGURIDAD Y AUTO-HOSPEDAJE
+Materia: Introducción a la Seguridad Informática
+Maestría en Ciberdefensa
+
+RESUMEN ACADÉMICO DEL TRABAJO:
+El presente trabajo analiza los aspectos técnicos, criptográficos y operativos del gestor de contraseñas auto-hospedado Vaultwarden (anteriormente Bitwarden_RS), comparándolo críticamente con la pila oficial de Bitwarden. 
+
+Eje Temático y Objetivos:
+1. Comprender la arquitectura de contraseñas Zero-Knowledge: cifrado simétrico en cliente (AES-256) y derivación de claves (PBKDF2 / Argon2id).
+2. Seguridad en capa de red (TLS/HTTPS): el rol indispensable de proxies inversos (Caddy/Nginx) y cabeceras de seguridad.
+3. Hardening de host/servidor: aislamiento de Docker (usuarios no-root), deshabilitación de registros públicos, mitigación de fuerza bruta con Fail2ban y backups de bases de datos.
+4. Gestión de identidad y acceso: políticas de autenticación y soporte multifactor (priorizando WebAuthn/FIDO2).
+5. Gobierno de TI y Gestión cuantitativa de riesgo: análisis costo-beneficio del auto-hospedaje aplicando métricas de riesgo (ALE = SLE x ARO).
+
+DIAPOSITIVAS INCORPORADAS EN LA PRESENTACIÓN INTERACTIVA (index.html):
+- Slide 1: Portada Académica (Maestría en Ciberdefensa)
+- Slide 2: Introducción al problema de los gestores y soberanía de datos
+- Slide 3: Arquitectura y lenguaje: C# (.NET / MSSQL) vs. Rust (Vaultwarden lightweight)
+- Slide 4: Criptografía Zero-Knowledge (Con visualizador de KDF interactivo incorporado)
+- Slide 5: Seguridad en transporte y topología (Con diagrama de flujo interactivo)
+- Slide 6: Hardening operativo del servidor (Docker, backups, fail2ban, tokens admin)
+- Slide 7: Políticas de MFA (TOTP, Duo, y estándar WebAuthn/FIDO2)
+- Slide 8: Matriz comparativa Bitwarden Cloud vs. Bitwarden Self-hosted vs. Vaultwarden
+- Slide 9: Gestión del riesgo y cálculo de coste anualizado de incidentes (ALE)
+- Slide 10: Conclusiones sobre la ciberseguridad como proceso y trade-offs del self-hosting
+- Slide 11: Cierre de la presentación y Q&A
+
+VIDEO DE REFERENCIA:
+El análisis comparativo de la viabilidad de uso personal vs. corporativo y limitaciones de soporte técnico se basó en el video de Pro Tech Show: "Bitwarden Vs Vaultwarden: Review & Comparison" (https://www.youtube.com/watch?v=xdiUoXwjahk).
+
+INSTRUCCIONES DE USO:
+1. Abrir el archivo `index.html` en cualquier navegador web moderno.
+2. Navegar usando las flechas izquierda/derecha o la barra espaciadora.
+3. Pulsar 'S' en el teclado o el botón 📋 de la cabecera para abrir las "Notas del Orador" (Speaker Notes) para guiar la exposición oral.
+4. Pulsar 'Esc' o el botón ⬜ para la vista general (Slide Overview Grid).
+5. Utilizar los simuladores y diagramas interactivos directamente en las diapositivas 4 y 5 durante la defensa del trabajo práctico.
