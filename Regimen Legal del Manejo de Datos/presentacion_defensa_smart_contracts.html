@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Defensa: Vacíos Legales y Seguridad Jurídica en los Smart Contracts - Real Estate</title>
+  <meta name="description" content="Presentación interactiva para defensa de tesina. Vista de Expositor (guión + cronómetro) y Vista de Proyector (alto contraste 720p).">
+  
+  <!-- Google Fonts: Outfit (headings) & Inter (body text) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Design System CSS Variables */
+    :root {
+      --bg-main: #090d16;
+      --bg-card: #111827;
+      --bg-card-hover: #1f2937;
+      --border-color: #374151;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-color: #38bdf8; /* Sky blue */
+      --accent-secondary: #fbbf24; /* Amber */
+      --accent-success: #34d399; /* Green */
+      --accent-error: #f87171; /* Red */
+      --glow-shadow: 0 0 20px rgba(56, 189, 248, 0.12);
+      --font-headings: 'Outfit', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    body.light-theme {
+      --bg-main: #f8fafc;
+      --bg-card: #ffffff;
+      --bg-card-hover: #f1f5f9;
+      --border-color: #cbd5e1;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --accent-color: #0284c7;
+      --accent-secondary: #d97706;
+      --accent-success: #059669;
+      --accent-error: #dc2626;
+      --glow-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      border-radius: 0 !important; /* Strict sharp corners layout */
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    /* ==========================================================================
+       DUAL VIEW MODE LAYOUT STRUCTURE (Default: Expositor Split Screen)
+       ========================================================================== */
+    body.view-expositor {
+      display: grid;
+      grid-template-columns: 60% 40%;
+      grid-template-rows: 64px 1fr 60px;
+      grid-template-areas:
+        "header header"
+        "viewport panel"
+        "footer panel";
+      height: 100vh;
+      width: 100vw;
+    }
+
+    body.view-proyector {
+      display: block;
+      height: 100vh;
+      width: 100vw;
+      background-color: var(--bg-main);
+    }
+
+    /* Element Area Assignments */
+    header {
+      grid-area: header;
+      padding: 0 32px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--bg-card);
+      height: 64px;
+      z-index: 10;
+    }
+
+    .presentation-viewport {
+      grid-area: viewport;
+      padding: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: var(--bg-main);
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .slides-container {
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      position: relative;
+      box-shadow: var(--glow-shadow);
+      overflow: hidden;
+    }
+
+    footer {
+      grid-area: footer;
+      padding: 0 32px;
+      border-top: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 60px;
+      z-index: 10;
+    }
+
+    /* ==========================================================================
+       EXPOSITOR PANEL (Presenter Dashboard)
+       ========================================================================== */
+    .expositor-panel {
+      grid-area: panel;
+      border-left: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      height: 100%;
+      overflow-y: auto;
+      z-index: 15;
+    }
+
+    body.view-proyector .expositor-panel,
+    body.view-proyector header,
+    body.view-proyector footer {
+      display: none !important;
+    }
+
+    body.view-proyector .presentation-viewport {
+      width: 100vw;
+      height: 100vh;
+      padding: 0;
+      margin: 0;
+    }
+
+    body.view-proyector .slides-container {
+      border: none;
+      box-shadow: none;
+    }
+
+    /* ==========================================================================
+       EXPOSITOR WIDGETS
+       ========================================================================== */
+    .panel-widget {
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+      padding: 16px;
+    }
+
+    .widget-title {
+      font-family: var(--font-headings);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-secondary);
+      margin-bottom: 12px;
+      border-left: 3px solid var(--accent-secondary);
+      padding-left: 8px;
+    }
+
+    /* Giant Practice Timer */
+    .giant-timer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timer-time {
+      font-family: monospace;
+      font-size: 3.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      line-height: 1;
+    }
+
+    .timer-controls {
+      display: flex;
+      gap: 16px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .control-btn {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 8px 16px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .control-btn:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--text-main);
+    }
+
+    /* Expositor Script / Pautas */
+    .script-viewer {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 250px;
+    }
+
+    .script-content-box {
+      font-size: 1.15rem; /* Larger font size for easy reading on screen */
+      line-height: 1.5;
+      color: var(--text-main);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .script-content-box ul {
+      list-style-type: none;
+      margin-top: 8px;
+    }
+
+    .script-content-box li {
+      position: relative;
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+
+    .script-content-box li::before {
+      content: "▪";
+      position: absolute;
+      left: 0;
+      color: var(--accent-color);
+    }
+
+    .script-content-box strong {
+      color: var(--accent-secondary);
+    }
+
+    /* Mode Action Switches */
+    .view-mode-selector {
+      display: flex;
+      gap: 8px;
+    }
+
+    .mode-btn {
+      flex-grow: 1;
+      padding: 10px;
+      background-color: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-family: var(--font-headings);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .mode-btn.active {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+      background-color: rgba(56, 189, 248, 0.05);
+    }
+
+    .mode-btn:hover:not(.active) {
+      background-color: var(--bg-card-hover);
+      color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       SLIDE COMPONENT DESIGNS
+       ========================================================================== */
+    .slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      padding: 40px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(8px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .slide-header {
+      border-left: 5px solid var(--accent-color);
+      padding-left: 16px;
+      margin-bottom: 24px;
+    }
+
+    .slide-subtitle {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-color);
+    }
+
+    .slide-title {
+      font-family: var(--font-headings);
+      font-weight: 700;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    .slide-body {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* Cover Slide Specifics */
+    .cover-layout {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      height: 100%;
+      border-left: 8px solid var(--accent-color);
+      padding-left: 48px;
+    }
+
+    .cover-subtitle {
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-secondary);
+    }
+
+    .cover-title {
+      font-family: var(--font-headings);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin: 12px 0 24px 0;
+    }
+
+    .cover-meta {
+      border-top: 1px solid var(--border-color);
+      padding-top: 24px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .meta-block span {
+      display: block;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 4px;
+    }
+
+    .meta-block strong {
+      color: var(--text-main);
+      font-weight: 700;
+    }
+
+    /* Conceptual Maps Node Layouts */
+    .map-container {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      position: relative;
+    }
+
+    .map-node {
+      background-color: var(--bg-main);
+      border: 2px solid var(--border-color);
+      padding: 24px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 8px;
+      transition: border-color 0.2s, background-color 0.2s, box-shadow 0.2s;
+    }
+
+    .map-node:hover {
+      border-color: var(--accent-color);
+      background-color: var(--bg-card-hover);
+      box-shadow: 0 0 15px rgba(56, 189, 248, 0.15);
+    }
+
+    .map-node.active {
+      border-color: var(--accent-secondary);
+      background-color: var(--bg-card-hover);
+      box-shadow: 0 0 20px rgba(251, 191, 36, 0.25);
+    }
+
+    .map-node.accent-node {
+      border-left: 6px solid var(--accent-color);
+    }
+
+    .map-node.warning-node {
+      border-left: 6px solid var(--accent-secondary);
+    }
+
+    .map-node.alert-node {
+      border-left: 6px solid var(--accent-error);
+    }
+
+    .map-node-title {
+      font-family: var(--font-headings);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      line-height: 1.1;
+    }
+
+    .map-node-desc {
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    /* Slide 2: El Choque Ontológico Grid */
+    .grid-choque {
+      grid-template-columns: 1fr 60px 1fr;
+      grid-template-rows: auto auto;
+      gap: 32px;
+      align-items: center;
+    }
+
+    .vs-box {
+      grid-column: 2;
+      grid-row: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: var(--font-headings);
+      font-weight: 800;
+      color: var(--accent-secondary);
+      border: 2px solid var(--border-color);
+      height: 60px;
+      width: 60px;
+      background-color: var(--bg-main);
+      margin: 0 auto;
+    }
+
+    .collision-area {
+      grid-column: 1 / span 3;
+      grid-row: 2;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+
+    /* Slide 3: Dimensiones de la Incompatibilidad Grid */
+    .grid-dimensiones {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+    }
+
+    .dimension-column {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .column-header {
+      font-family: var(--font-headings);
+      font-weight: 700;
+      color: var(--accent-color);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 8px;
+    }
+
+    /* Slide 4: Propuesta Grid */
+    .grid-propuesta {
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 24px;
+    }
+
+    .prop-conclusion {
+      grid-column: 1 / span 3;
+      grid-row: 2;
+      background-color: var(--bg-main);
+      border: 2px solid var(--border-color);
+      border-top: 4px solid var(--accent-success);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .prop-conclusion-icon {
+      color: var(--accent-success);
+      flex-shrink: 0;
+    }
+
+    .prop-conclusion-text h3 {
+      font-family: var(--font-headings);
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      color: var(--text-main);
+    }
+
+    .prop-conclusion-text p {
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ==========================================================================
+       DYNAMIC TYPOGRAPHY SCALING FOR VIEWS
+       ========================================================================== */
+    /* Expositor View Font Sizes (Presenter Scale) */
+    body.view-expositor .slide-subtitle { font-size: 0.8rem; }
+    body.view-expositor .slide-title { font-size: 1.7rem; }
+    body.view-expositor .cover-subtitle { font-size: 1.1rem; }
+    body.view-expositor .cover-title { font-size: 2.1rem; }
+    body.view-expositor .cover-meta { font-size: 0.8rem; }
+    body.view-expositor .map-node-title { font-size: 0.95rem; }
+    body.view-expositor .map-node-desc { font-size: 0.75rem; }
+    body.view-expositor .vs-box { font-size: 1.2rem; height: 50px; width: 50px; }
+    body.view-expositor .column-header { font-size: 0.8rem; }
+    body.view-expositor .prop-conclusion-text h3 { font-size: 0.95rem; }
+    body.view-expositor .prop-conclusion-text p { font-size: 0.8rem; }
+
+    /* Proyector View Font Sizes (Audience Scale - Optimized for 720p Proyectors) */
+    body.view-proyector .slide-subtitle { font-size: 1.4rem; }
+    body.view-proyector .slide-title { font-size: 3.2rem; }
+    body.view-proyector .cover-subtitle { font-size: 1.8rem; }
+    body.view-proyector .cover-title { font-size: 4rem; }
+    body.view-proyector .cover-meta { font-size: 1.4rem; padding-top: 32px; gap: 32px; }
+    body.view-proyector .cover-meta span { font-size: 1.1rem; }
+    body.view-proyector .map-node-title { font-size: 1.8rem; }
+    body.view-proyector .map-node-desc { font-size: 1.25rem; }
+    body.view-proyector .vs-box { font-size: 2.2rem; height: 80px; width: 80px; }
+    body.view-proyector .column-header { font-size: 1.5rem; padding-bottom: 12px; }
+    body.view-proyector .prop-conclusion-text h3 { font-size: 1.8rem; }
+    body.view-proyector .prop-conclusion-text p { font-size: 1.35rem; }
+    body.view-proyector .slide { padding: 60px; }
+    body.view-proyector .map-node { padding: 32px; gap: 12px; }
+    body.view-proyector .grid-choque { gap: 40px; }
+    body.view-proyector .collision-area { gap: 40px; }
+    body.view-proyector .grid-dimensiones { gap: 32px; }
+    body.view-proyector .grid-propuesta { gap: 32px; }
+    body.view-proyector .prop-conclusion { padding: 32px; gap: 32px; }
+
+    /* ==========================================================================
+       INTERFACE BUTTONS AND HELPERS
+       ========================================================================== */
+    /* Header Controls */
+    .header-logo {
+      font-family: var(--font-headings);
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .header-logo span {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 2px 6px;
+      background: var(--accent-color);
+      color: #000;
+    }
+
+    .header-nav {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .theme-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .theme-btn:hover {
+      background-color: var(--bg-card-hover);
+      border-color: var(--text-main);
+    }
+
+    /* Footer Navigation Controller */
+    .progress-bar-track {
+      flex-grow: 1;
+      height: 2px;
+      background-color: var(--border-color);
+      margin: 0 32px;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 25%;
+      background-color: var(--accent-color);
+      transition: width 0.3s ease;
+    }
+
+    .slide-indicator-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      min-width: 50px;
+      text-align: right;
+    }
+
+    /* Floating Exit Button for Projector Mode */
+    .floating-exit-trigger {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #fff;
+      padding: 10px 20px;
+      font-size: 0.8rem;
+      font-family: var(--font-headings);
+      font-weight: 700;
+      cursor: pointer;
+      z-index: 100;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .floating-exit-trigger:hover {
+      background: var(--accent-color);
+      color: #000;
+      border-color: var(--accent-color);
+    }
+
+    body.view-proyector .floating-exit-trigger {
+      display: block;
+    }
+
+    /* Keyboard Instructions Footer */
+    .keyboard-tip {
+      text-align: center;
+      padding: 8px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      background-color: var(--bg-main);
+    }
+
+    .key-badge {
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-card);
+      padding: 0 4px;
+      font-family: monospace;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body class="view-expositor"> <!-- Defaults to split-screen presenter view -->
+
+  <!-- Top bar (only in Expositor Mode) -->
+  <header>
+    <div class="header-logo">
+      <h1><span>TESINA DEFENSA</span> Smart Contracts & Real Estate</h1>
+    </div>
+    
+    <div class="header-nav">
+      <!-- Dark/Light High Contrast Toggle -->
+      <button class="theme-btn" onclick="toggleTheme()" title="Alternar entre tema oscuro y claro">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <span>Proyector (Contraste)</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Left Side: Interactive Slide Port -->
+  <main class="presentation-viewport">
+    <div class="slides-container">
+
+      <!-- DIAPOSITIVA 1: Portada -->
+      <section class="slide active" id="slide-1">
+        <div class="cover-layout">
+          <span class="cover-subtitle">Trabajo Final Integrador</span>
+          <h2 class="cover-title">Vacíos Legales y Seguridad Jurídica<br>en los Smart Contracts aplicados<br>al Real Estate Local</h2>
+          
+          <div class="cover-meta">
+            <div class="meta-block">
+              <span>Autor</span>
+              <strong>Lic. Hernán Herrera</strong>
+            </div>
+            <div class="meta-block">
+              <span>Materia y Comisión</span>
+              <strong>Régimen Legal del Manejo de Datos | 2026</strong>
+            </div>
+            <div class="meta-block">
+              <span>Docente Directora</span>
+              <strong>Prof. Dra. PhD Johanna Caterina Faliero</strong>
+            </div>
+            <div class="meta-block">
+              <span>Especialidad</span>
+              <strong>Maestría en Ciberdefensa</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DIAPOSITIVA 2: Choque Ontológico -->
+      <section class="slide" id="slide-2">
+        <div class="slide-header">
+          <span class="slide-subtitle">Problema e Hipótesis</span>
+          <h2 class="slide-title">El Choque Ontológico: Red Distribuida vs. Ley Local</h2>
+        </div>
+        <div class="slide-body">
+          <div class="map-container grid-choque">
+            <!-- Node Left: Blockchain -->
+            <div class="map-node accent-node" style="grid-column:1; grid-row:1;" onclick="selectNode(this, 'blockchain')">
+              <div class="map-node-title">Paradigma Blockchain</div>
+              <div class="map-node-desc">Autoejecución ("Code is Law"), descentralización y pseudonimato global.</div>
+            </div>
+
+            <!-- VS Box -->
+            <div class="vs-box">VS</div>
+
+            <!-- Node Right: CCyCN -->
+            <div class="map-node warning-node" style="grid-column:3; grid-row:1;" onclick="selectNode(this, 'ccycn')">
+              <div class="map-node-title">Derecho Real Local (CCyCN)</div>
+              <div class="map-node-desc">Escritura Pública Notarial (Art. 1017) e Inscripción Registral (Art. 1893).</div>
+            </div>
+
+            <!-- Bottom Collision Nodes -->
+            <div class="collision-area">
+              <div class="map-node alert-node" onclick="selectNode(this, 'debilidad-civil')">
+                <div class="map-node-title">Debilidad Sustancial (Civil)</div>
+                <div class="map-node-desc">Sin título real de propiedad. Simple crédito personal de difícil cobro.</div>
+              </div>
+
+              <div class="map-node alert-node" onclick="selectNode(this, 'debilidad-procesal')">
+                <div class="map-node-title">Debilidad Instrumental & Penal</div>
+                <div class="map-node-desc">Smart contract es instrumento no firmado (Art. 287). Pseudonimato ampara fraude.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DIAPOSITIVA 3: Dimensiones del Conflicto -->
+      <section class="slide" id="slide-3">
+        <div class="slide-header">
+          <span class="slide-subtitle">Análisis Dogmático y Práctico</span>
+          <h2 class="slide-title">Dimensiones del Conflicto de Seguridad Jurídica</h2>
+        </div>
+        <div class="slide-body">
+          <div class="map-container grid-dimensiones">
+            <!-- Column 1: Civil -->
+            <div class="dimension-column">
+              <div class="column-header">Eje Civil y Probatorio</div>
+              <div class="map-node accent-node" onclick="selectNode(this, 'firma-electronica')">
+                <div class="map-node-title">Firma Electrónica</div>
+                <div class="map-node-desc">Firma en blockchain carece de presunción legal de autoría (Ley 25.506).</div>
+              </div>
+              <div class="map-node accent-node" onclick="selectNode(this, 'valor-probatorio')">
+                <div class="map-node-title">Prueba (Art. 319)</div>
+                <div class="map-node-desc">Instrumento particular no firmado. Sujeto al criterio del juez.</div>
+              </div>
+            </div>
+
+            <!-- Column 2: Penal -->
+            <div class="dimension-column">
+              <div class="column-header">Eje Penal e Informático</div>
+              <div class="map-node alert-node" onclick="selectNode(this, 'estafa-informatica')">
+                <div class="map-node-title">Estafa (Art. 173 CP)</div>
+                <div class="map-node-desc">Defraudaciones mediante fallas de código, oráculos o hackeos (The DAO).</div>
+              </div>
+              <div class="map-node alert-node" onclick="selectNode(this, 'anonimato-wallets')">
+                <div class="map-node-title">Impunidad Subjetiva</div>
+                <div class="map-node-desc">Pseudonimato de wallets imposibilita imputar delitos penales.</div>
+              </div>
+            </div>
+
+            <!-- Column 3: Impacto -->
+            <div class="dimension-column">
+              <div class="column-header">Eje Socioeconómico</div>
+              <div class="map-node warning-node" onclick="selectNode(this, 'beneficios-fintech')">
+                <div class="map-node-title">Promesas del Canal</div>
+                <div class="map-node-desc">Democratización (fracciones de capital), liquidez y reducción de costes.</div>
+              </div>
+              <div class="map-node warning-node" onclick="selectNode(this, 'riesgos-fraude')">
+                <div class="map-node-title">Riesgos Operativos</div>
+                <div class="map-node-desc">Asimetría informática cognitiva y riesgo de lavado de dinero (UIF).</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DIAPOSITIVA 4: Propuesta Regulatoria -->
+      <section class="slide" id="slide-4">
+        <div class="slide-header">
+          <span class="slide-subtitle">Propuesta de Adecuación</span>
+          <h2 class="slide-title">La Propuesta: Modelo Híbrido Institucional</h2>
+        </div>
+        <div class="slide-body">
+          <div class="map-container grid-propuesta">
+            <!-- Pillar 1 -->
+            <div class="map-node accent-node" onclick="selectNode(this, 'oraculo-notarial')">
+              <div class="map-node-title">1. Escribano como Oráculo</div>
+              <div class="map-node-desc">El notario valida capacidad, libre voluntad y legitimación, firmando on-chain.</div>
+            </div>
+
+            <!-- Pillar 2 -->
+            <div class="map-node accent-node" onclick="selectNode(this, 'dlt-estatal')">
+              <div class="map-node-title">2. DLT Registral y Dominio-NFT</div>
+              <div class="map-node-desc">Los registros emiten NFT oficiales. La transferencia on-chain es oponible ante terceros.</div>
+            </div>
+
+            <!-- Pillar 3 -->
+            <div class="map-node accent-node" onclick="selectNode(this, 'identidad-soberana')">
+              <div class="map-node-title">3. Wallets Vinculadas a DNI</div>
+              <div class="map-node-desc">Billeteras asociadas a Mi Argentina / Renaper logran la Firma Digital (Ley 25.506).</div>
+            </div>
+
+            <!-- Synthesized Conclusion -->
+            <div class="prop-conclusion">
+              <div class="prop-conclusion-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+              <div class="prop-conclusion-text">
+                <h3>Conclusión General</h3>
+                <p>Amalgamar la eficiencia e inmutabilidad de los registros distribuidos con el control de legalidad preventivo y fe pública notarial. La tecnología debe servir de soporte, pero no sustituir las garantías del Estado de Derecho.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Right Side: Presenter Tools Dashboard -->
+  <aside class="expositor-panel">
+    <!-- View Switcher Widgets -->
+    <div class="panel-widget">
+      <div class="widget-title">Modo de Visualización</div>
+      <div class="view-mode-selector">
+        <button class="mode-btn active" id="btnExpositor" onclick="toggleViewMode('expositor')">Vista Expositor</button>
+        <button class="mode-btn" id="btnProyector" onclick="toggleViewMode('proyector')">Vista Proyector (Pantalla Completa)</button>
+      </div>
+    </div>
+
+    <!-- Oral Practice Timer Widget -->
+    <div class="panel-widget giant-timer">
+      <div class="widget-title">Temporizador de Defensa (Max 10m / Práctica 8m)</div>
+      <div class="timer-time timer-green" id="giantTimerDisplay">00:00</div>
+      <div class="timer-controls">
+        <button class="control-btn" onclick="toggleTimer()">
+          <span id="timerPlayText">Iniciar</span>
+        </button>
+        <button class="control-btn" onclick="resetTimer()">Reiniciar</button>
+      </div>
+    </div>
+
+    <!-- Speech Notes Script Widget -->
+    <div class="panel-widget script-viewer">
+      <div class="widget-title" id="scriptTitle">Guía General de Exposición</div>
+      <div class="script-content-box" id="scriptContentBox">
+        <!-- Content will be updated dynamically -->
+        Cargando notas...
+      </div>
+    </div>
+  </aside>
+
+  <!-- Bottom Navigation Control Bar (only in Expositor Mode) -->
+  <footer>
+    <div class="nav-buttons-container">
+      <button class="nav-btn" id="prevBtn" onclick="prevSlide()" disabled title="Atrás (Flecha Izquierda)" aria-label="Anterior">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </button>
+      <button class="nav-btn" id="nextBtn" onclick="nextSlide()" title="Siguiente (Espacio / Flecha Derecha)" aria-label="Siguiente">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
+
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressBarFill"></div>
+    </div>
+
+    <div class="slide-indicator-label" id="slideIndicatorLabel">1 / 4</div>
+  </footer>
+
+  <!-- Help floating back to expositor button (only active in proyector full screen mode) -->
+  <button class="floating-exit-trigger" id="floatingExitBtn" onclick="toggleViewMode('expositor')" title="Volver a Vista Expositor">
+    &larr; Volver a Vista Expositor (Esc)
+  </button>
+
+  <!-- Help tips footer (only in Expositor Mode) -->
+  <div class="keyboard-tip">
+    Teclado: <span class="key-badge">&rarr;</span> / <span class="key-badge">Espacio</span> avanza | <span class="key-badge">&larr;</span> retrocede | <span class="key-badge">P</span> modo proyector | <span class="key-badge">E</span> / <span class="key-badge">Esc</span> modo expositor
+  </div>
+
+  <!-- Interactive Slide logic and Script contents -->
+  <script>
+    let currentSlideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressFill = document.getElementById('progressBarFill');
+    const slideIndicator = document.getElementById('slideIndicatorLabel');
+
+    // UI View buttons
+    const btnExpositor = document.getElementById('btnExpositor');
+    const btnProyector = document.getElementById('btnProyector');
+
+    // Presenter Tools Panel Elements
+    const scriptTitle = document.getElementById('scriptTitle');
+    const scriptContent = document.getElementById('scriptContentBox');
+    
+    // Timer Variables
+    let timerInterval = null;
+    let timerSeconds = 0;
+    let isTimerRunning = false;
+    const giantTimerDisplay = document.getElementById('giantTimerDisplay');
+    const timerPlayText = document.getElementById('timerPlayText');
+
+    // ==========================================================================
+    // SCRIPTS AND PRESENTATION TALKING POINTS DATABASE
+    // ==========================================================================
+    const slideDefaultScripts = {
+      0: `
+        <strong>Pautas Generales de Portada (Minutos 0:00 - 1:30):</strong>
+        <ul>
+          <li><strong>Apertura y Agradecimiento:</strong> Saluda formalmente al jurado, especialmente a la Directora del Trabajo Dra. Faliero.</li>
+          <li><strong>Planteo del tema:</strong> Introduce el título. Destaca que la tesina investiga el choque normativo entre una tecnología disruptiva (los smart contracts en blockchain) y un derecho de orden público formalista como los derechos reales locales.</li>
+          <li><strong>Objetivo:</strong> Demostrar que la tokenización pura genera inseguridad jurídica y proponer una solución híbrida institucional que devuelva las garantías estatales a la tecnología sin frenar su eficiencia.</li>
+        </ul>
+      `,
+      1: `
+        <strong>Pautas del Choque Ontológico (Minutos 1:30 - 3:30):</strong>
+        <ul>
+          <li><strong>Desconexión Fundante:</strong> Explica el contraste lógico. Blockchain busca desintermediar ("El Código es la ley"). El CCyCN exige la intervención de un tercero fedatario (Notario) y publicidad registral.</li>
+          <li><strong>El mito de la compra del inmueble on-chain:</strong> Aclara que adquirir un token inmobiliario no otorga el Derecho Real de Dominio (título insuficiente). El comprador solo es un acreedor personal con un contrato privado de crédito contra una sociedad, expuesto a quiebra o fraude.</li>
+          <li>Selecciona los nodos para profundizar en cada aspecto durante la exposición.</li>
+        </ul>
+      `,
+      2: `
+        <strong>Pautas de Dimensiones del Conflicto (Minutos 3:30 - 6:00):</strong>
+        <ul>
+          <li><strong>Estructura analítica:</strong> Divide la exposición en los 3 ejes analizados en la tesina: civil/probatorio, penal y el impacto socioeconómico general.</li>
+          <li><strong>Prueba y Legitimación:</strong> Señala cómo los juzgados ven a la firma en blockchain (simple firma electrónica, no digital). El documento digital es un instrumento particular no firmado.</li>
+          <li><strong>Ciberseguridad y Tipicidad Penal:</strong> Detalla el vacío penal ante exploits y el anonimato.</li>
+          <li>Haz clic en los nodos de la diapositiva para ver las pautas de debate de cada dimensión.</li>
+        </ul>
+      `,
+      3: `
+        <strong>Pautas de la Propuesta Regulatoria e Integración (Minutos 6:00 - 8:30):</strong>
+        <ul>
+          <li><strong>La solución no es prohibir:</strong> Es amalgamar. Exponer los 3 pilares del modelo híbrido.</li>
+          <li><strong>Pilar 1: Escribano como Oráculo.</strong> Conservar la calificación jurídica preventora del fraude.</li>
+          <li><strong>Pilar 2: Registro Propiedad en DLT.</strong> Registro público emitiendo un Dominio-NFT.</li>
+          <li><strong>Pilar 3: Wallets y Renaper.</strong> Eliminar el pseudonimato. Lograr Firma Digital (Ley 25.506).</li>
+          <li><strong>Conclusión de Cierre (Minuto 8:30 - 10:00):</strong> Reflexionar que la tecnología aporta eficiencia transaccional pero no fe pública. El Estado debe garantizar la seguridad de los ciudadanos e inversores.</li>
+        </ul>
+      `
+    };
+
+    const nodeDetailScripts = {
+      'blockchain': {
+        title: "Paradigma Blockchain: Autoejecución",
+        body: `
+          <strong>Guía del nodo:</strong> Explica que los smart contracts se autoejecutan mediante reglas lógicas rígidas (if-then). Una vez desplegados en la EVM son inmutables y no se pueden detener, impidiendo contemplar la imprevisión contractual, el caso fortuito o la renegociación humana.
+        `
+      },
+      'ccycn': {
+        title: "Derecho Real Local: Rigidez Formal",
+        body: `
+          <strong>Guía del nodo:</strong> Cita el <strong>Art. 1017 inc. a del CCyCN</strong>. La escritura pública ante Escribano es formalidad solemne obligatoria. Cita el <strong>Art. 1893 del CCyCN</strong>: exige inscripción registral para oponer el derecho a terceros. Un smart contract no cumple con ninguno.
+        `
+      },
+      'debilidad-civil': {
+        title: "Debilidad Civil: Sin Título Real",
+        body: `
+          <strong>Guía del nodo:</strong> El adquirente del token inmobiliario cree que compra un departamento, pero jurídicamente solo compra un derecho de crédito (personal) contra una sociedad instrumental (Fideicomiso Fintech). Ante quiebras, hackeos o fraudes (rug pulls), queda desprotegido sin acción real de dominio.
+        `
+      },
+      'debilidad-procesal': {
+        title: "Debilidad Probatoria e Instrumental",
+        body: `
+          <strong>Guía del nodo:</strong> Al no contar con firmas digitales validadas por autoridades certificadas nacionales (ONTI), las transacciones on-chain se consideran <strong>Firma Electrónica</strong>. La tesina encuadra el smart contract como un <strong>instrumento particular no firmado (Art. 287 CCyCN)</strong>, cuya validez probatoria está sujeta a pericia técnica informática compleja.
+        `
+      },
+      'firma-electronica': {
+        title: "Eje Civil: Firma Electrónica vs. Digital",
+        body: `
+          <strong>Guía del nodo:</strong> Detalla la diferencia de la <strong>Ley 25.506</strong>. La firma digital tiene presunción de autoría e integridad y el emisor debe desmentirla. La firma electrónica (blockchain) carece de presunción y el que la invoca debe probarla ante el juez si es desconocida.
+        `
+      },
+      'valor-probatorio': {
+        title: "Eje Civil: Valor Probatorio (Art. 319)",
+        body: `
+          <strong>Guía del nodo:</strong> Según el <strong>Art. 319 del CCyCN</strong>, el valor probatorio de registros no firmados lo evalúa el juez según la congruencia de los hechos y la confiabilidad del sistema informático. Esto genera una incertidumbre jurídica inaceptable para transacciones de alto valor como el Real Estate.
+        `
+      },
+      'estafa-informatica': {
+        title: "Eje Penal: Estafa Informática (Art. 173 inc 16)",
+        body: `
+          <strong>Guía del nodo:</strong> La estafa informática se configura ante la manipulación técnica de datos para un beneficio ilícito. Analizar fallas lógicas de Solidity (ej. vulnerabilidad de reentrada del caso histórico <strong>The DAO en 2016</strong>) donde un hacker sustrajo fondos aprovechando el propio código, alegando que "el código es la ley".
+        `
+      },
+      'anonimato-wallets': {
+        title: "Eje Penal: El Anonimato de Wallets",
+        body: `
+          <strong>Guía del nodo:</strong> En la blockchain pública las wallets operan bajo pseudónimos. Ante un hackeo o estafa, los fiscales penales no pueden individualizar de manera inequívoca al titular de la clave privada, lo que neutraliza la persecución penal y el recupero del patrimonio de las víctimas.
+        `
+      },
+      'beneficios-fintech': {
+        title: "Eje Socioeconómico: Innovación y Democratización",
+        body: `
+          <strong>Guía del nodo:</strong> Menciona el potencial económico del fraccionamiento del capital. Permite a pequeños ahorristas comprar fracciones de metros cuadrados (tickets de U$D 100) para resguardar su capital contra la devaluación local, sumando liquidez 24/7 en mercados secundarios.
+        `
+      },
+      'riesgos-fraude': {
+        title: "Eje Socioeconómico: Asimetría y Lavado",
+        body: `
+          <strong>Guía del nodo:</strong> Resalta la asimetría informativa extrema. El ciudadano común no puede leer código en Solidity y confía a ciegas en el marketing Fintech. Además, expone el riesgo de lavado de dinero de origen ilícito en la construcción al eludir los reportes obligatorios a la <strong>UIF</strong>.
+        `
+      },
+      'oraculo-notarial': {
+        title: "Pilar 1: Escribanos como Nodos Oráculo",
+        body: `
+          <strong>Guía del nodo:</strong> El escribano actúa como oráculo introduciendo datos atestiguados en la blockchain (capacidad de partes, libre consentimiento, ausencia de gravámenes y verificación de origen de fondos UIF). Sin este input notarial con Firma Digital nacional, el smart contract inmobiliario no puede ejecutarse.
+        `
+      },
+      'dlt-estatal': {
+        title: "Pilar 2: Registro Propiedad DLT Estatal",
+        body: `
+          <strong>Guía del nodo:</strong> Sustituir bases tradicionales por redes DLT permisionadas gestionadas por el Estado. El Registro emite un <strong>NFT-Dominio</strong> de la propiedad. Transferir este NFT requiere firma del escribano y de las partes interesadas, logrando la inscripción en tiempo real (oponibilidad Art. 1893).
+        `
+      },
+      'identidad-soberana': {
+        title: "Pilar 3: Wallets con Identidad Soberana",
+        body: `
+          <strong>Guía del nodo:</strong> Las wallets autorizadas para transferencias inmobiliarias deben ligarse a la identidad soberana nacional (Renaper/Mi Argentina). Esto asocia la clave pública al DNI de la persona física, elevando legalmente las firmas on-chain al carácter de <strong>Firma Digital de la Ley 25.506</strong> con plena certeza probatoria.
+        `
+      }
+    };
+
+    // ==========================================================================
+    // DISPLAY MODES CONTROL (Proyector vs Expositor)
+    // ==========================================================================
+    function toggleViewMode(mode) {
+      if (mode === 'proyector') {
+        document.body.classList.remove('view-expositor');
+        document.body.classList.add('view-proyector');
+        btnExpositor.classList.remove('active');
+        btnProyector.classList.add('active');
+      } else {
+        document.body.classList.remove('view-proyector');
+        document.body.classList.add('view-expositor');
+        btnProyector.classList.remove('active');
+        btnExpositor.classList.add('active');
+      }
+      // Re-trigger slide scale and focus
+      updateSlides();
+    }
+
+    // Keyboard trigger configuration for mode changes
+    document.addEventListener('keydown', (e) => {
+      // Toggle presentation modes with E / P / Esc
+      if (e.key === 'p' || e.key === 'P') {
+        toggleViewMode('proyector');
+      } else if (e.key === 'e' || e.key === 'E' || e.key === 'Escape') {
+        toggleViewMode('expositor');
+      }
+    });
+
+    // ==========================================================================
+    // PRESENTATION SLIDE CAROUSEL LOGIC
+    // ==========================================================================
+    function updateSlides() {
+      slides.forEach((slide, index) => {
+        if (index === currentSlideIndex) {
+          slide.classList.add('active');
+          // Reset speech notes widget for active slide
+          resetScriptToSlide(index);
+        } else {
+          slide.classList.remove('active');
+        }
+      });
+
+      // Clear highlighted visual nodes on transition
+      document.querySelectorAll('.map-node').forEach(node => node.classList.remove('active'));
+
+      // Update control buttons
+      prevBtn.disabled = currentSlideIndex === 0;
+      nextBtn.disabled = currentSlideIndex === slides.length - 1;
+
+      // Update progress bar
+      const progressPercent = ((currentSlideIndex + 1) / slides.length) * 100;
+      progressFill.style.width = `${progressPercent}%`;
+
+      // Update counter indicator
+      slideIndicator.textContent = `${currentSlideIndex + 1} / ${slides.length}`;
+    }
+
+    function nextSlide() {
+      if (currentSlideIndex < slides.length - 1) {
+        currentSlideIndex++;
+        updateSlides();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlideIndex > 0) {
+        currentSlideIndex--;
+        updateSlides();
+      }
+    }
+
+    // Default Slide script updater
+    function resetScriptToSlide(slideIndex) {
+      scriptTitle.textContent = `Guía: Diapositiva ${slideIndex + 1}`;
+      scriptContent.innerHTML = slideDefaultScripts[slideIndex];
+    }
+
+    // Concept map node clicked callback
+    function selectNode(nodeElement, nodeKey) {
+      // Highlight active node visual indicator
+      const siblingNodes = nodeElement.parentElement.querySelectorAll('.map-node');
+      siblingNodes.forEach(sib => sib.classList.remove('active'));
+      
+      nodeElement.classList.add('active');
+
+      // Update presenter panel with specific speech outline
+      const nodeData = nodeDetailScripts[nodeKey];
+      if (nodeData) {
+        scriptTitle.textContent = `Apoyo Oral: ${nodeData.title}`;
+        scriptContent.innerHTML = nodeData.body;
+      }
+    }
+
+    // Keyboard Carousel Navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevSlide();
+      }
+    });
+
+    // ==========================================================================
+    // COUNTDOWN PRACTICE TIMER (MAX 10 MINUTES)
+    // ==========================================================================
+    function toggleTimer() {
+      if (isTimerRunning) {
+        pauseTimer();
+      } else {
+        startTimer();
+      }
+    }
+
+    function startTimer() {
+      if (!isTimerRunning) {
+        isTimerRunning = true;
+        timerPlayText.textContent = "Pausar";
+        timerInterval = setInterval(() => {
+          timerSeconds++;
+          updateTimerDisplay();
+        }, 1000);
+      }
+    }
+
+    function pauseTimer() {
+      if (isTimerRunning) {
+        isTimerRunning = false;
+        timerPlayText.textContent = "Reanudar";
+        clearInterval(timerInterval);
+      }
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      timerSeconds = 0;
+      timerPlayText.textContent = "Iniciar";
+      updateTimerDisplay();
+    }
+
+    function updateTimerDisplay() {
+      const minutes = Math.floor(timerSeconds / 60);
+      const seconds = timerSeconds % 60;
+      
+      const formattedTime = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      giantTimerDisplay.textContent = formattedTime;
+
+      // Practice limits formatting alerts:
+      // Green: 00:00 to 07:59
+      // Orange: 08:00 to 09:59 (warning zone)
+      // Red + pulsing: 10:00+ (out of limit)
+      giantTimerDisplay.className = "timer-time"; // reset class
+      if (minutes < 8) {
+        giantTimerDisplay.classList.add('timer-green');
+      } else if (minutes < 10) {
+        giantTimerDisplay.classList.add('timer-orange');
+      } else {
+        giantTimerDisplay.classList.add('timer-red', 'timer-pulse');
+      }
+    }
+
+    // ==========================================================================
+    // THEME CONTRAST TOGGLE
+    // ==========================================================================
+    function toggleTheme() {
+      document.body.classList.toggle('light-theme');
+      const isLight = document.body.classList.contains('light-theme');
+      localStorage.setItem('defensa-theme', isLight ? 'light' : 'dark');
+    }
+
+    // Apply saved theme preference on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedTheme = localStorage.getItem('defensa-theme');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+      }
+      updateSlides();
+    });
+  </script>
+</body>
+</html>
