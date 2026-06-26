@@ -1,0 +1,220 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Arial;}{\f1\fnil\fcharset0 Calibri;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\fs32\lang9 Matem\'e1tica para Criptograf\'eda\par
+Clase 1\par
+17/03/21\par
+N  = \{1, 2, 3, 4, ......  \}\par
+Z = \{....., -4, -3, -2, -1, 0, 1, 2, 3, 4\}\par
+Q = \{ a / b donde a, b E Z y b<>0\}\par
+\par
+N incluido Z incluido Q\par
+\par
+Definicion: a divide a b si E c tal que b = a.c\par
+Notamos a / b\par
+Ejemplo 7 / 28 pero 7 no divide a 30\par
+28 = 7 . c con c=4\par
+30 = 7 . c (no existe c, por lo tanto 7 no divide a 30)\par
+Definicion\par
+Si a divide a b diremos que a es un divisor de b\par
+o tambien que b es un multiplo de a\par
+\par
+Propiedades\par
+1)  1 / x para todo x E Z  porque  x = 1 . x\par
+2)  x / 0 para todo x E Z porque 0 = x . 0\par
+3)  x / x para todo x E Z porque x = x . 1\par
+4) Si a / b y b <> 0 entonces !a! <= !b!\par
+si a es >= 0, entonces !a! = a\par
+si a es < 0, entonces !a! = -a\par
+Conclusi\'f3n importante: Todo entero tiene finitos divisores\par
+5) Si a / b entonces \par
+a / -b,   -a / b, -a / -b\par
+Dem\par
+Como a / b entonces E c tal que b = a . c\par
+multiplico por -1 y me queda -b = a . (-c) entonces a / -b\par
+Como b = a . c , entonces b = (-a) . (-c) entonces -a / b\par
+Como b = a . c, entonces -b = (-a) . c entonces -a / -b\par
+Conclusi\'f3n Es suficiente trabajar siempre con n\'fameros naturales\par
+6) Si a / b y b / a entonces b = +- a\par
+7) Transitividad\par
+Si a / b y b / x entonces a / x\par
+Si a / b entonces E c tal que b = a . c\par
+Si b / x entonces E d tal que x = b . d\par
+Entonces x = b . d = a . (c . d)\par
+Luego x = a . (c . d) entonces a / x\par
+8) Existen infinitos m\'faltiplos\par
+Si a <> 0 entonces m\'faltiplos de a son \{0, a, 2a, 3a, .... , -a , -2a, ....\}\par
+o tambien \{k.a donde k E Z\}\par
+9) Propiedad importante\par
+Si b = a . c entonces a <= raiz(b) o c <= raiz(b)\par
+Ejemplo 120 = 2 . 60 = 3 . 40 = 4 . 30, =5.24, 6. 20\par
+raiz(120) = 10,9...\par
+Tratemos de demostrar esto por el m\'e9todo del absurdo\par
+Afirmo que a > raiz(b) y c > raiz(b)\par
+a . c >  raiz(b). raiz(b) = b\par
+Entonces a . c > b , esto es ABSURDO\par
+porque partimos de que b = a . c\par
+Luego a o c son menores que la ra\'edz de b\par
+\par
+10) Si a / b y k E Z entonces a / k.b\par
+Si a divide a b, entonces a divide a cualquier multiplo de b\par
+\par
+11) Importante Si a / b1 y a / b2 entonces a / (b1 + b2) y a / (b1 - b2)\par
+Ejemplo 4 / 12 y 4 / 16 entonces 4 / (12+16) = 28\par
+Dem:\par
+a / b1 entonces E c1 tal que b1 = a . c1\par
+a / b2 entonces E c2 tal que b2 = a . c2\par
+Sumando b1 + b2 = a . c1 + a . c2 = a . (c1 + c2)\par
+Como b1 + b2 = a . (c1 + c2) entonces quiere decir que a divide a b1 + b2\par
+Pregunto, es verdad la inversa, o sea si a / (b1 + b2) es verdad que a / b1 y a / b2\par
+4 / (20 + 8), y 4 / 20 y 4 / 8\par
+4 / (21 + 7), pero 4 no divide a 21 y 4 no divide a 7\par
+Entonces la inversa no es verdad\par
+\par
+12) Si a / (b1 + b2) y a / b1 entonces a / b2\par
+Dem\par
+b2 = b1 + b2 - b1\par
+Como a / (b1 + b2) y a / b1 entonces \par
+a / (b1 + b2 - b1), luego a / b2\par
+\par
+Conclusion de 11) y 12)\par
+Si un numero entero divide a la suma de otros dos  numeros enteros, entonces o divide a los 2 o no divide a ninguno\par
+\par
+\ul Sistemas de numeraci\'f3n\par
+\ulnone\par
+desarrollo decimal x = a3.10**3  + a2.10**2 + a1.10**1 + a0.10**0\par
+Por ejemplo quiero representar 5783 en base 10\par
+(*) 5783 = 578 . 10 + 3\par
+Divido 578 por 10, me queda\par
+578 = 57 . 10 + 8\par
+Luego en (*) 5783 = (57 . 10 + 8) . 10 + 3 =\par
+(**) 5783 = 57 . 10\super 2\nosupersub  + 8 . 10 + 3\par
+Divido 57 por 10, me queda 57 = 5 . 10 + 7\par
+Luego en (**) 5783 = (5.10 +7). 10\super 2\nosupersub  + 8 . 10 + 3 =\par
+\b 5783 = 5.10\super 3\nosupersub  + 7.10\super 2\nosupersub  + 8.10 + 3\par
+\b0 Este es el desarrollo decimal de 5783\par
+\par
+Criterios de divisibilidad\par
+Divisibilidad por 2: termina en 0, 2, 4, 6, 8 o termina en par\par
+Divisibilidad por 3: la suma de sus terminos es multiplo de 3 (ej 786)\par
+Div por 4: sus ultimas dos cifras terminan en multiplo de 4\par
+(ej 1.744.928)\par
+Div por 5: termina en cero o en 5\par
+Div por 6: divisible por 2 y 3\par
+Div por 7: Multiplicar la ultima cifra por 2 y restarsela al resto del nro\par
+(ej 2912) 291-4= 287 , 28-14 = 14\par
+Div por 8: sus ultimas 3 cifras terminan en multiplo de 8\par
+ej 34562965422200816\par
+Div por 9: la suma de sus terminos es multiplo de 9\par
+Div por 10: la ultima cifra es cero\par
+\par
+Sea a = 3427136\par
+Como 136 = 8 . 17, quiere decir que 136 es divisible por 8, quiero mostrar que entonces a es divisible por 8\par
+a = 3.10\super 6\nosupersub  + 4.10\super 5\nosupersub  + 2.10\super 4\nosupersub  + 7.10\super 3\nosupersub  + 1.10\super 2\nosupersub  + 3.10 + 6\par
+a = 10\super 3\nosupersub . (3.10\super 3\nosupersub  + 4.10\super 2\nosupersub  + 2.10 + 7) + 136\par
+8 / 1000 por lo tanto 8 / 10\super 3\nosupersub .(3.10\super 3\nosupersub  + 4.10\super 2\nosupersub  + 2.10 + 7) (por propiedad 10)\par
+\par
+Pero si 8 / 10\super 3\nosupersub .(3.10\super 3\nosupersub  + 4.10\super 2\nosupersub  + 2.10 + 7)  y 8 / 136 por la propiedad 11 divide a la suma\par
+pero la suma es a \par
+Por lo tanto si 136 es divisible por 8 , a es divisible por 8\par
+\par
+\ul Algoritmo divisi\'f3n entera\ulnone\par
+\fs36 Algoritmo division entera\par
+a , b E N. Supongamos que a < b.\par
+\par
+0   a   2a   3a   4a                                  qa  b  (q+1)a\par
+\fs32 0   7   14   21   28  35  42  44   49\par
+r = b - qa\par
+q es el cociente de la divisi\'f3n de b por a\par
+r es el resto de la divisi\'f3n de b por a\par
+Por ej en el caso b=44, a=7, q el cociente es 6, r es b - qa, en este caso 44 - 6.7 = 2\par
+Lo que vale es \par
+(i)  b = q.a + r \par
+(ii) 0 <= r < a\par
+En el ejemplo\par
+(i) 44 = 6.7 + 2\par
+(ii) 0 <= 2 < 7\par
+\par
+Enunciamos\par
+\ul Algoritmo de divisi\'f3n entera\ulnone\par
+\fs36 Dados a, b E N, Existe un \'fanico par q y r, que llamaremos cociente y resto de la divisi\'f3n entera de b por a, satisfaciendo:\par
+b = qa + r\par
+0 <= r < a\par
+\fs32 Dem\par
+Supongamos que q y r no son \'fanicos.\par
+Por lo tanto existe otro par p y s tal que\par
+\fs36 b = pa + s\par
+0 <= s < a\par
+\fs32 Sabemos que \par
+(1) \fs36 b = qa + r\par
+\fs32 (2) \fs36 b = pa + s\par
+\fs32 Supongamos p > q\par
+Restando (2) de (1)\par
+0 = pa + s - qa - r = (p - q).a + s - r\par
+0 = (p - q).a + s - r\par
+r - s = (p - q).a\par
+Como a es positivo y p > q resulta que p-q es positivo\par
+entonces (p-q).a es m\'faltiplo de a y (p-q).a > a\par
+Sabemos que \fs36 0 <= r < a\par
+\fs32 Restando s me queda -s <= \b r - s \b0 < a - s \b < a\fs36\par
+\b0\fs32 Por un lado digo que r-s es m\'faltiplo de a, y por otro lado que r-s es m\'e1s chico que a, eso es ABSURDO\par
+Eso parti\'f3 de suponer que p > q. Luego p = q, r = s, y entonces q y r son \'fanicos.\par
+\fs36\par
+\ul\fs32 Pr\'e1ctica\par
+\ulnone Ejercicios de Pr\'e1ctica 1\par
+Ejc 2\par
+El producto de dos nros naturales m y n aumenta en 132 si cada uno de ellos aumenta en 6. Determine todos los posibles valores de m y n, sabiendo adem\'e1s que n es m\'faltiplo de m\par
+m.n + 132 = (m+6) . (n+6)\par
+\strike\fs36 m.n \strike0 + 132 = \strike m.n \strike0 + 6.n + 6.m + 36\par
+132 - 36 = 6(n+m)\par
+96 / 6 = n + m\par
+16 = n + m\par
+n = 16 - m\par
+m                n = 16 - m\par
+\b\fs32 1\tab\tab\tab 15\b0\par
+\b 2                     14\b0\par
+3                     13\par
+\b 4                     12\b0\par
+5                      11\par
+6                      10\par
+7                        9\par
+\b 8                        8\b0\par
+9                        7\par
+10                     6\par
+11                      5\par
+12                      4\par
+13                      3\par
+14                      2\par
+15                      1\par
+\strike 16                       0\par
+17                     -1\par
+\strike0 Respuesta: Hay 4 pares posibles (1,15) (2,14) (4,12) (8,8)\par
+\par
+Ejc 5\par
+Demuestre las siguientes propiedades\par
+(a) La suma de dos nros impares consecutivos es m\'faltiplo de 4\par
+(b) La suma de tres n\'fameros impares consecutivos e divisible por 3 pero no por 6\par
+(c) El producto de dos n\'fameros pares consecutivos es divisible por 8\par
+\par
+Par: 2k, Impar: 2k + 1\par
+(a)\par
+2k + 1 + 2k + 3 = 4k + 4 = 4(k + 1) \par
+(b)\par
+2k + 1 + 2k + 3 + 2k + 5 = 6k + 9 = 3(2k + 3)\par
+Es m\'faltiplo de 3 por ser 3 por algo\par
+3(2k + 3) no es divisible por 2, porque los dos son impares, y el producto de impares siempre es impar\par
+\par
+(c)\par
+(2k).(2k + 2) = 4k\super 2\nosupersub  + 4k = 4k(k + 1)\par
+Como el producto de un nro par y otro impar es siempre par, entonces k(k+1) es par, entonces k(k+1) = 2t\par
+(2k).(2k + 2) = 4k(k + 1) = 4.2.t = 8t\par
+\par
+Mail ncabizon@gmail.com\par
+\par
+\par
+\par
+\par
+\par
+\par
+\f1\fs22\par
+}
+ 

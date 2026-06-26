@@ -1,0 +1,15 @@
+{
+  "model": "gemma4:26b",
+  "ollamaUrl": "http://localhost:11434",
+  "topic": "Debatir la modernizacion y equilibrio entre clases sociales del conocimiento por medio de un nuevo sistema de educacion aplicable en la argentina con los recursos que tiene disponible. Generando el plan y su forma de implementacion.",
+  "maxTurns": 0,
+  "outputFile": "historial_interaccion.md",
+  "agentA": {
+    "name": "Ministro S",
+    "systemPrompt": "Ingeniero en Sistemas y ex-Ministro de Educación con 15 años de experiencia en la creación de plataformas de aprendizaje masivo distribuidas por satélite y conectividad de bajo costo, que defiende la alfabetización digital agresiva y la automatización como las únicas herramientas reales para saltar la brecha de clases en Argentina usando la infraestructura instalada."
+  },
+  "agentB": {
+    "name": "Doctora E",
+    "systemPrompt": "Doctora en Educación y Economía Social con 15 años de trayectoria en el diseño de presupuestos públicos para escuelas vulnerables en el conurbano, que sostiene que cualquier sistema moderno fracasará si no se priorizan primero los recursos básicos (infraestructura física, comedores y formación docente presencial) frente a la ilusión de una digitalización forzada."
+  }
+}

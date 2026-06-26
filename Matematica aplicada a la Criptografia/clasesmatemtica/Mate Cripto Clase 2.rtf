@@ -1,0 +1,274 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033{\fonttbl{\f0\fnil\fcharset0 Arial;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\fs32\lang9 Matem\'e1tica para Criptograf\'eda\par
+Clase 2\par
+18/03/21\par
+\ul\par
+Algoritmo divisi\'f3n entera\ulnone\par
+\fs36 Algoritmo division entera\par
+a , b E N. Supongamos que a < b.\par
+\par
+0   a   2a   3a   4a                                  qa  b  (q+1)a\par
+\fs32 0   7   14   21   28  35  42  44   49\par
+r = b - qa\par
+q es el cociente de la divisi\'f3n de b por a\par
+r es el resto de la divisi\'f3n de b por a\par
+Por ej en el caso b=44, a=7, q el cociente es 6, r es b - qa, en este caso 44 - 6.7 = 2\par
+Lo que vale es \par
+(i)  b = q.a + r \par
+(ii) 0 <= r < a\par
+En el ejemplo\par
+(i) 44 = 6.7 + 2\par
+(ii) 0 <= 2 < 7\par
+\par
+Enunciamos\par
+\ul Algoritmo de divisi\'f3n entera\ulnone\par
+\fs36 Dados a, b E N, Existe un \'fanico par q y r, que llamaremos cociente y resto de la divisi\'f3n entera de b por a, satisfaciendo:\par
+b = qa + r\par
+0 <= r < a\par
+\fs32 Dem\par
+Supongamos que q y r no son \'fanicos.\par
+Por lo tanto existe otro par p y s tal que\par
+\fs36 b = pa + s\par
+0 <= s < a\par
+\fs32 Sabemos que \par
+(1) \fs36 b = qa + r\par
+\fs32 (2) \fs36 b = pa + s\par
+\fs32 Supongamos p > q\par
+Restando (2) de (1)\par
+0 = pa + s - qa - r = (p - q).a + s - r\par
+0 = (p - q).a + s - r\par
+r - s = (p - q).a\par
+Como a es positivo y p > q resulta que p-q es positivo\par
+entonces (p-q).a es m\'faltiplo de a y (p-q).a > a\par
+Sabemos que \fs36 0 <= r < a\par
+\fs32 Restando s me queda -s <= \b r - s \b0 < a - s \b < a\fs36\par
+\b0\fs32 Por un lado digo que r-s es m\'faltiplo de a, y por otro lado que r-s es m\'e1s chico que a, eso es ABSURDO\par
+Eso parti\'f3 de suponer que p > q. Luego p = q, r = s, y entonces q y r son \'fanicos.\par
+\fs36\par
+\ul Propiedad\par
+\ulnone a divide a b si y solo si el resto de dividir b por a es cero\par
+Dem:\par
+=> Si a divide a b, entonces E entero c tal que b = a.c\par
+b = a.c + 0. Por unicidad de q y r, entonces el resto es cero.\par
+<= Si el resto de dividir b por a es cero, entonces E q y r tal que b = q.a + r, entonces como r es cero, b = q.a, entonces "a" divide a "b"\par
+\par
+Aplicacion de unicidad del algoritmo\par
+Supongamos que tengo x E N tal que \par
+x = 24.k + 35\par
+(i) Cual es el resto de dividir x por 8?\par
+x = 3.8.k + 4.8 + 3 = (3k + 4).8 + 3\par
+q = 3k + 4\par
+r = 3, que cumple que 0 <= r < 8\par
+(ii) Cu\'e1l es el resto de dividir x por 6\par
+x = 24.k + 35 = 6.4.k + 6.5 + 5 = (4k + 5).6 + 5\par
+Por unicidad del algoritmo div entera, q = 4k + 5, r=5\par
+(iii) Cu\'e1l es el resto de dividir x por 7\par
+En este caso el resto va a depender de k\par
+x = (7.3 + 3).k + 7.5 = 7.3.k + 3.k + 7.5 =\par
+(3.k + 5).7 + 3.k\par
+\par
+\ul Propiedad\ulnone :\par
+Dos numeros enteros difieren en un multiplo de n si y solo si tienen el mismo resto al dividir por n\par
+0 2        7 9        14   16        21  23     28   30     35  37       42  44      49  51\par
+Dos numeros enteros difieren en un multiplo de 7 si y solo si tienen el mismo resto al dividir por 7\par
+Notacion r\sub a\nosupersub (b) es el resto de dividir b por a\par
+Ejemplo\par
+r\sub 7\nosupersub (23) = 2 , r\sub 7\nosupersub (44) = 2, r\sub 7\nosupersub (79) = 2\par
+Por ej 79 - 23 = 56, y 56 es m\'faltiplo de 7\par
+\ul Dem\ulnone :\par
+Sean x, y enteros\par
+Supongamos que x e y difieren en un m\'faltiplo de n\par
+(*) y - x = k.n\par
+Divido x por n, resulta que x = q.n + r\par
+De (*) se deduce que y = x + kn, reemplazando x queda que y = q.n + r + k.n = (q + k).n + r\par
+O sea qued\'f3 y = (q + k).n + r\par
+Luego r\sub n\nosupersub (x) = r\sub n\nosupersub (y)\par
+\par
+\ul Propiedades de operaciones entre restos\par
+\ulnone Sean x, y enteros, n E N, y sea \par
+r\sub n\nosupersub (x) = r y r\sub n\nosupersub (y) = s\par
+x = q.n + r\par
+y = k.n + s\par
+x + y = q.n + r + k.n + s = (q + k).n + r + s\par
+(x + y) - (r + s) = (q + k).n\par
+Luego r\sub n\nosupersub (x + y) = r\sub n\nosupersub (r + s)\par
+\b Propiedad: El resto de la suma es la suma de los restos (mismo para la resta)\b0\par
+Por ejemplo\par
+x= 44, y= 66, n=7\par
+x + y = 110 , r\sub 7\nosupersub (110) = 5\par
+r\sub 7\nosupersub (44) = 2    ; r\sub 7\nosupersub (66) = 3,\par
+Luego r\sub 7\nosupersub (44) + r\sub 7\nosupersub (66)  = 2 + 3 = 5\par
+\par
+Otro ejemplo x= 46, y = 68\par
+r\sub 7\nosupersub (46) = 4    ; r\sub 7\nosupersub (68) = 5, la suma es 9\par
+\par
+Similarmente el producto\par
+Multiplico\par
+x . y = (q.n + r).(k.n + s) = q.n.k.n + q.n.s + r.k.n + r.s\par
+(qnk + q.s + r.k).n + r.s\par
+Luego x.y - r.s = (qnk + q.s + r.k).n \par
+Luego r\sub n\nosupersub (x . y) = r\sub n\nosupersub (r . s)\par
+\b Propiedad: El resto del producto es el producto de los restos.\par
+\b0 Para las potencias tambien vale\par
+r\sub n\nosupersub (x\super t\nosupersub ) = (r\sub n\nosupersub (x))\super t\par
+\nosupersub\b Propiedad: El resto de la potencia es la potencia del resto.\par
+\b0\par
+Ejercicio\par
+Sea x = 98\super 3\nosupersub  . 69\super 2\nosupersub  .+ 126\par
+Calcular r\sub 13\nosupersub (x)\par
+Quiero calcular \b r\sub 13\nosupersub (98\super 3\nosupersub ) = 5\par
+\b0 r\sub 13\nosupersub (98) = 7 luego calculo 7\super 3\nosupersub  = 343, y calculo resto de dividir 343 por 13, que da 5.\par
+7\super 3\nosupersub  = 7\super 2\nosupersub .7 = 49.7 \par
+r\sub 13\nosupersub (49) = 10\par
+Luego hago 10.7 = 70 \par
+r\sub 13\nosupersub (70) = 5\par
+r\sub 13\nosupersub (69\super 2\nosupersub ) = r\sub 13\nosupersub (69) . r\sub 13\nosupersub (69) = 4 . 4 = 16 equiv 3\par
+\b r\sub 13\nosupersub (69\super 2\nosupersub ) = 3\par
+r\sub 13\nosupersub (126) = 9\par
+Luego r\sub 13\nosupersub (x) = 5.3 + 9 = 24 equiv 11\par
+\b0\par
+Otro ejercicio\par
+Sea x = 24\super 5\nosupersub   + 12\super 65\nosupersub  . 14\super 2\nosupersub\par
+Calcular resto de dividir x por 11\par
+24\super 5 \nosupersub equiv 2\super 5\nosupersub , como 2\super 5\nosupersub  es 32 entonces resto de dividir 32 por 11 es 10\par
+12\super 65 \nosupersub equiv 1\super 65 \nosupersub entonces es 1\par
+14\super 2 \nosupersub equiv 3\super 2\nosupersub  entonces da 9\par
+Finalmente r\sub 11\nosupersub (x) = 10 + 1 . 9 = 19 equiv a 8\par
+\par
+\ul M\'e1ximo com\'fan divisor\par
+\ulnone (84:120) = 12\par
+84 = \{\b 1,2,3,4,6\b0 ,7,\b 12\b0 ,14,21,28,42,84\}\par
+120 = \{\b 1,2,3,4\b0 ,5,\b 6\b0 ,8,10,\b 12\b0 ,15,20,24,30,40,60,120\}\par
+Notaci\'f3n\par
+M\'e1ximo com\'fan divisor entre a y b notaremos (a:b)\par
+\ul\par
+Definicion\ulnone :\par
+Sean a,b E N. Definimos maximo comun divisor entre a y b como el mayor de los divisores comunes entre ellos. Notaremos (a:b)\par
+En s\'edmbolos\par
+Dados a,b E N, definimos d = (a:b)\par
+(i) d / a y d / b\par
+(ii) Si t / a y t / b entonces t <= d\par
+\par
+\ul Propiedad importante\ulnone :\par
+\b Si a < b entonces (a : b) = (a : b - a)\par
+\b0 Por ej (84:120) = (84 : 120 - 84) = (84 : 36)\par
+\par
+Dem:\par
+Sea d = (a : b)\par
+Quiero demostrar que d = (a : b-a)\par
+(i) d / a y d / b-a\par
+(ii) Si t / a y t / b-a, entonces t <= d\par
+Tratemos de demostrarlo\par
+Por ser d = (a:b) resulta que\par
+d / a y d / b, luego d / a y d / b-a \b ya tengo (i)\par
+\b0 Sea t tal que t / a y t / b-a, entonces t divide a la suma, o sea t / a + b - a , luego t / b\par
+Pero si t / a y t / b, por ser d = (a:b), tiene que ser \par
+t <= d \b ya tengo (ii)\par
+\b0 Con lo cual queda demostrado que d = (a : b-a)\par
+\par
+\ul Metodo de restas sucesivas\ulnone\par
+(84:120) = (84 : 120 - 84) = (84 : 36) = (84-36:36) =\par
+(36 : 48) = (36 : 48 - 36) = (36 : 12) = (12 : 24) =\par
+ (12 : 12) = 12\par
+\par
+\ul Propiedad\ulnone\par
+El MCD entre a y b es multiplo de todos los divisores comunes entre a y b\par
+Sea d = (a : b), entonces si t / a y t / b\par
+no solo t <= d sino que ademas t / d\par
+\par
+\ul Algoritmo de Euclides\ulnone\par
+Calcular d = (1575 : 270)\par
+(270:1575)  \par
+(270: 1575-270) = (270:1305)\par
+(270:1305-270) = (270:1035)\par
+(270:765)\par
+(270:495)\par
+(225:270)\par
+(45:225)\par
+(45:180)\par
+(45:135)\par
+(45:90)\par
+(45:45)\par
+Conclusion d = 45\par
+\par
+Fijense que si divido 1575 por 270 me da cociente 5 y resto 225\par
+O sea 1575 = 5 . 270 + 225\par
+(270:1575) = (270:r) donde r es el resto de dividir 1575 por 270, que es 225\par
+En letras\par
+(a:b) = (a:r) donde r es el resto de dividir b por a\par
+\par
+\ul Ejercicios Pr\'e1ctica 1\par
+\ulnone\par
+Ejc 7 similar\par
+Las edades de 3 personas son numeros consecutivos. Si se dividen las edades por 11, las dos personas mas jovenes tienen cociente 3, y la persona mayor tiene cociente 4 . Cuales son las edades ?\par
+x  = 3.11 + r\par
+(*) x+1 = 3.11 + s\par
+(**) x+2 = 4.11 + t\par
+Restando (**) y (*) me queda\par
+x+2 - x-1 = 4.11 + t - 3.11 - s\par
+1 = 11 + t - s entonces 1 - 11 + s = t\par
+t = s - 10\par
+Fijense que 0 <= s < 11\par
+Restando 10 queda que -10 <= s-10 < 1\par
+Luego -10 <= t < 1\par
+Pero por otro lado como t tambi\'e9n es un resto de dividir por 11, vale que 0 <= t < 11\par
+Luego necesariamente t tiene que ser 0\par
+Luego x+2 = 4.11 + 0, luego x + 2 = 44, luego\par
+x = 42\par
+Luego las edades son 42, 43 y 44\par
+\par
+Ejc 9\par
+Sea a = 60k - 27 \par
+Calcular resto de dividir por 3 y por 4\par
+Resto dividir por 3\par
+a = 3.20.k - 3.9 = (20k - 9).3 luego resto es cero\par
+Resto dividir por 4\par
+a = 4.15.k -27 +28 -28 = 4.15.k + 1 - 4.7 =\par
+(15k - 7).4 + 1\par
+\par
+Ejc similar al 12\par
+r\sub 11\nosupersub (a) = 4\par
+(i)  a + 111\par
+4 + 1 = 5\par
+(ii) 2.a + 6\par
+2.4 + 6 = 14 equiv a 3\par
+(iii) 90 - a \par
+2 - 4 = -2 equiv -2+11 = 9\par
+(iv) 3 . a\super 3\nosupersub  - 19\par
+3 . 4\super 3 \nosupersub - 8 = 3.64 - 8 equiv 3.9 -8 = 19 equiv 8\par
+(v) 12\super 30\nosupersub  + 99. a\super 91\nosupersub  + 5.a \par
+1\super 30 \nosupersub + 0.4\super 91 \nosupersub + 5.4 = 21 equiv a 10\par
+\par
+Ejerc similar al 6\par
+Calcular cociente y resto de dividir 659 y 27, con las 4 variantes de signos\par
+b\tab\tab a\tab\tab q\tab\tab r\par
+659\tab\tab 27\tab\tab 24          11\par
+659\tab       -27   \tab        -24          11\par
+-659       27          -25          16\par
+-659      -27          25            16\par
+\par
+659 = 24 * 27 + 11   (*)\par
+659 = (-24) * (-27) + 11\par
+Multiplicando en (*) por -1 ambos miembros\par
+-659 = (-24) * 27 - 11   \par
+El yeite es sumar y restar 27, porque justamente estoy dividiendo por 27\par
+-659 = (-24)*27 - 11 + 27 - 27 = (-25)*27 + 16\par
+Como ya se que -659 = (-25)*27 + 16\par
+-659 = 25*(-27) + 16\par
+\par
+\par
+\par
+\par
+\par
+\b\par
+\b0\par
+\par
+\par
+\par
+\par
+\par
+\par
+\par
+}
+ 
