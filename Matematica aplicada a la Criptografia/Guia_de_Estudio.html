@@ -1,0 +1,1914 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio: Matemática Aplicada a la Criptografía</title>
+    <meta name="description" content="Guía interactiva de estudio para matemática aplicada a la criptografía. Resúmenes de clases, resoluciones de exámenes y calculadoras algorítmicas paso a paso.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- MathJax for rendering equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
+    <style>
+        :root {
+            --bg-color: #080b11;
+            --card-bg: rgba(13, 18, 30, 0.75);
+            --card-border: rgba(99, 102, 241, 0.15);
+            --primary: #6366f1; /* Indigo */
+            --primary-glow: rgba(99, 102, 241, 0.3);
+            --secondary: #10b981; /* Emerald */
+            --secondary-glow: rgba(16, 185, 129, 0.2);
+            --accent: #f43f5e; /* Rose */
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent-glow: rgba(244, 63, 94, 0.2);
+            --sidebar-width: 280px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0d121e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #252e46;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* Sidebar styling */
+        aside {
+            width: var(--sidebar-width);
+            background: rgba(10, 14, 23, 0.95);
+            border-right: 1px solid var(--card-border);
+            padding: 2rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 3rem;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: white;
+            box-shadow: 0 0 15px var(--primary-glow);
+        }
+
+        .logo-text {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.85rem 1rem;
+            border-radius: 10px;
+            color: var(--text-muted);
+            text-decoration: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            color: white;
+            background: rgba(99, 102, 241, 0.08);
+            border-color: rgba(99, 102, 241, 0.2);
+            box-shadow: inset 0 0 10px rgba(99, 102, 241, 0.05);
+        }
+
+        .nav-item.active {
+            border-left: 4px solid var(--primary);
+        }
+
+        .nav-item svg {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Main Content Container */
+        main {
+            margin-left: var(--sidebar-width);
+            flex-grow: 1;
+            padding: 2.5rem 3rem;
+            max-width: 1200px;
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        /* Global UI Elements */
+        .section-header {
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .section-header h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            box-shadow: 0 15px 40px rgba(99, 102, 241, 0.05);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 0.75rem;
+        }
+
+        /* Tabs and View Switching */
+        .view-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .view-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Timelines (Classes view) */
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid rgba(99, 102, 241, 0.15);
+            margin-left: 1rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: calc(-2rem - 6px);
+            top: 6px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--bg-color);
+            border: 3px solid var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+            transition: var(--transition);
+        }
+
+        .timeline-item:hover .timeline-marker {
+            background: var(--primary);
+            transform: scale(1.3);
+        }
+
+        .timeline-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.75rem;
+        }
+
+        .timeline-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(255,255,255,0.04);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .timeline-body {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .timeline-body strong {
+            color: white;
+        }
+
+        .timeline-collapse {
+            margin-top: 1rem;
+            padding: 1.25rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px;
+            display: none;
+        }
+
+        .timeline-collapse.active {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-toggle-timeline {
+            color: var(--primary);
+            cursor: pointer;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            margin-top: 0.5rem;
+            background: none;
+            border: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+        }
+
+        /* Math and highlight elements */
+        .math-block {
+            background: rgba(99, 102, 241, 0.04);
+            border-left: 3px solid var(--primary);
+            padding: 1.25rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.25rem 0;
+            font-family: 'Outfit', sans-serif;
+            line-height: 1.6;
+        }
+
+        .proof-block {
+            background: rgba(16, 185, 129, 0.03);
+            border-left: 3px solid var(--secondary);
+            padding: 1.25rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.25rem 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .alert-important {
+            background: rgba(244, 63, 94, 0.05);
+            border-left: 3px solid var(--accent);
+            padding: 1.25rem;
+            border-radius: 0 12px 12px 0;
+            margin: 1.25rem 0;
+            font-size: 0.95rem;
+        }
+
+        /* Tables */
+        table.euclid-table, table.fermat-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            text-align: center;
+        }
+
+        table.euclid-table th, table.fermat-table th {
+            background: rgba(99, 102, 241, 0.15);
+            color: white;
+            font-weight: 600;
+            padding: 0.85rem;
+            border: 1px solid var(--card-border);
+        }
+
+        table.euclid-table td, table.fermat-table td {
+            padding: 0.85rem;
+            border: 1px solid var(--card-border);
+            color: var(--text-muted);
+        }
+
+        table.euclid-table tr:hover, table.fermat-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+            color: white;
+        }
+
+        /* Calculators styling */
+        .calc-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .calc-input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .calc-label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .calc-input {
+            width: 100%;
+            background: rgba(10, 14, 23, 0.8);
+            border: 1px solid var(--card-border);
+            border-radius: 10px;
+            padding: 0.85rem 1rem;
+            color: white;
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .calc-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.15);
+        }
+
+        .btn-calc {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), #4f46e5);
+            border: none;
+            color: white;
+            padding: 0.9rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.2);
+            margin-top: 1rem;
+        }
+
+        .btn-calc:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .calc-result {
+            margin-top: 1.5rem;
+            padding: 1.25rem;
+            background: rgba(10, 14, 23, 0.6);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            font-family: inherit;
+            display: none;
+        }
+
+        .calc-result-title {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Exams selector */
+        .exam-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: rgba(10, 14, 23, 0.6);
+            padding: 0.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--card-border);
+        }
+
+        .exam-tab {
+            flex-grow: 1;
+            padding: 0.75rem;
+            text-align: center;
+            border-radius: 8px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .exam-tab.active, .exam-tab:hover {
+            background: rgba(99, 102, 241, 0.1);
+            color: white;
+        }
+
+        .exam-tab.active {
+            border: 1px solid rgba(99, 102, 241, 0.2);
+        }
+
+        .exam-content {
+            display: none;
+        }
+
+        .exam-content.active {
+            display: block;
+        }
+
+        .question-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.03);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .question-title {
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 1.05rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .question-body {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .question-solution {
+            margin-top: 1.25rem;
+            padding-top: 1.25rem;
+            border-top: 1px dashed rgba(255,255,255,0.08);
+        }
+
+        .sol-tag {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--secondary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 0.75rem;
+        }
+
+        .list-unstyled {
+            list-style: none;
+        }
+
+        .list-unstyled li {
+            position: relative;
+            padding-left: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .list-unstyled li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Custom Code / Monospace highlighting */
+        .code-inline {
+            font-family: 'Fira Code', monospace;
+            background: rgba(255,255,255,0.06);
+            padding: 0.15rem 0.35rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: #f472b6; /* pinkish code tint */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside>
+        <div class="logo-container">
+            <div class="logo-icon">MC</div>
+            <div class="logo-text">Criptografía</div>
+        </div>
+
+        <ul class="nav-menu">
+            <li class="nav-item active" onclick="switchView('timeline-view', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Línea de Tiempo (Clases)
+            </li>
+            <li class="nav-item" onclick="switchView('theory-view', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                Teoría Criptográfica
+            </li>
+            <li class="nav-item" onclick="switchView('methods-view', this)">
+                <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                Métodos y Algoritmos
+            </li>
+            <li class="nav-item" onclick="switchView('exams-view', this)">
+                <svg viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Modelos de Examen
+            </li>
+            <li class="nav-item" onclick="switchView('calc-view', this)">
+                <svg viewBox="0 0 24 24"><path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                Calculadoras
+            </li>
+        </ul>
+
+        <div class="sidebar-footer">
+            Maestría en Ciberdefensa<br>
+            FIE - 2026
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <!-- VIEW: TIMELINE (CLASSES) -->
+        <div id="timeline-view" class="view-content active">
+            <div class="section-header">
+                <h1>Clases de Matemática Aplicada a la Criptografía</h1>
+                <p>Evolución conceptual cronológica del programa académico de la cursada.</p>
+            </div>
+
+            <div class="timeline">
+                <!-- Class 1 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Clase 1: Divisibilidad en los Enteros ($\mathbb{Z}$)</h3>
+                        <span class="timeline-date">17/03/21</span>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Introducción a la divisibilidad básica en los conjuntos enteros, propiedades principales, criterios de divisibilidad básicos, desarrollo decimal e introducción al Algoritmo de División Entera.</p>
+                        <button class="btn-toggle-timeline" onclick="toggleCollapse('c1-details')">Ver detalles de la clase &darr;</button>
+                        <div id="c1-details" class="timeline-collapse">
+                            <p><strong>Temas y Definiciones:</strong></p>
+                            <ul class="list-unstyled">
+                                <li><strong>Conjuntos Numéricos</strong>: $\mathbb{N} \subset \mathbb{Z} \subset \mathbb{Q}$.</li>
+                                <li><strong>Definición de División</strong>: $a \mid b \iff \exists c \in \mathbb{Z} \text{ tal que } b = a \cdot c$.</li>
+                                <li><strong>Propiedades Clave</strong>:
+                                    <br>1. Si $a \mid b$ y $b \neq 0 \implies |a| \le |b|$ (los divisores son finitos).
+                                    <br>2. Si $a \mid b \implies a \mid -b$, $-a \mid b$ (es suficiente trabajar en naturales $\mathbb{N}$).
+                                    <br>3. Transitividad: Si $a \mid b$ y $b \mid x \implies a \mid x$.
+                                    <br>4. Si $a \mid b_1$ y $a \mid b_2 \implies a \mid (b_1 \pm b_2)$.
+                                    <br>5. Si $a \mid (b_1 + b_2)$ y $a \mid b_1 \implies a \mid b_2$.
+                                </li>
+                                <li><strong>Algoritmo de División Entera</strong>: Dados $a, b \in \mathbb{N}$ con $a < b$, existen únicos $q, r$ tales que:
+                                    <br>$b = q \cdot a + r$, con $0 \le r < a$.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 2 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Clase 2: Unicidad del Algoritmo de División y Aritmética de Restos</h3>
+                        <span class="timeline-date">18/03/21</span>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Demostración por el absurdo de la unicidad del cociente y el resto, análisis de residuos, propiedades de operaciones entre restos y el Máximo Común Divisor (MCD) por restas sucesivas.</p>
+                        <button class="btn-toggle-timeline" onclick="toggleCollapse('c2-details')">Ver detalles de la clase &darr;</button>
+                        <div id="c2-details" class="timeline-collapse">
+                            <p><strong>Demostración de Unicidad:</strong> Supongamos que no son únicos, existiendo $b = qa+r$ y $b = pa+s$ con $p > q$. Restando ambas, obtenemos $r - s = (p - q)a$. Como $p - q \ge 1 \implies r-s \ge a$. Sin embargo, de los límites del resto se sabe que $r - s < a$, lo cual es un ABSURDO. Luego, $p = q$ y $r = s$.</p>
+                            <p style="margin-top:0.5rem;"><strong>Aritmética de Restos:</strong> Notación $r_n(x)$ es el resto de dividir $x$ por $n$.</p>
+                            <ul class="list-unstyled">
+                                <li>Suma: $r_n(x + y) = r_n(r_n(x) + r_n(y))$.</li>
+                                <li>Producto: $r_n(x \cdot y) = r_n(r_n(x) \cdot r_n(y))$.</li>
+                                <li>Potencia: $r_n(x^t) = r_n((r_n(x))^t)$.</li>
+                                <li><strong>Máximo Común Divisor (MCD)</strong>: Si $a < b \implies (a:b) = (a:b-a)$ (Base de las restas sucesivas).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 3 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Clase 3: Algoritmo de Euclides Extendido y Coprimalidad</h3>
+                        <span class="timeline-date">25/03/21</span>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Aplicación del Algoritmo de Euclides para el cálculo de combinaciones lineales, definición de números coprimos, propiedades de divisores comunes y planteamiento de Ecuaciones Diofánticas Lineales.</p>
+                        <button class="btn-toggle-timeline" onclick="toggleCollapse('c3-details')">Ver detalles de la clase &darr;</button>
+                        <div id="c3-details" class="timeline-collapse">
+                            <p><strong>Algoritmo de Euclides:</strong> Permite calcular $d = (a:b)$ de forma eficiente usando restos sucesivos $(a:b) = (a:r)$ y hallar enteros $x, y$ tales que $d = a \cdot x + b \cdot y$. Se emplea la tabla extendida con las fórmulas recurrentes:</p>
+                            <div class="math-block">
+                                $x_i = x_{i-2} - x_{i-1} \cdot q_{i-1}$<br>
+                                $y_i = y_{i-2} - y_{i-1} \cdot q_{i-1}$
+                            </div>
+                            <p><strong>Coprimalidad:</strong> Dos números $a$ y $b$ son coprimos si $(a:b) = 1$. Se cumple que $1$ es combinación lineal de ellos.</p>
+                            <p><strong>Ecuación Diofántica Lineal:</strong> $a \cdot x + b \cdot y = c$. Es resoluble si y sólo si $d = (a:b)$ divide a $c$.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 4 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Clase 4: Ecuaciones Diofánticas con Restricciones e Introducción a Congruencias</h3>
+                        <span class="timeline-date">07/04/21</span>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Resolución detallada de ecuaciones diofánticas aplicando restricciones sobre los rangos de $X$ e $Y$. Introducción formal al concepto de Congruencia Numérica modular.</p>
+                        <button class="btn-toggle-timeline" onclick="toggleCollapse('c4-details')">Ver detalles de la clase &darr;</button>
+                        <div id="c4-details" class="timeline-collapse">
+                            <p><strong>Resolución con Restricciones:</strong> Si tenemos solución particular $(x_0, y_0)$, las infinitas soluciones enteras se representan por:</p>
+                            <div class="math-block">
+                                $X = x_0 + \frac{b}{d} \cdot t$<br>
+                                $Y = y_0 - \frac{a}{d} \cdot t$, para todo $t \in \mathbb{Z}$
+                            </div>
+                            <p>Para aplicar restricciones como $X > k$ e $Y > j$, se arman inecuaciones respecto de $t$ para hallar el rango de valores enteros de $t$ aceptables.</p>
+                            <p><strong>Congruencia:</strong> $a \equiv b \pmod m$ si $r_m(a) = r_m(b)$, o equivalentemente, $m \mid (b - a)$, o $b = a + k \cdot m$. Las clases de congruencia dividen a $\mathbb{Z}$ en $m$ subconjuntos exhaustivos y disjuntos.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 5 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Clase 5: Ecuaciones Lineales de Congruencia e Inversos Modulares</h3>
+                        <span class="timeline-date">14/04/21</span>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Resolución de ecuaciones de congruencia del tipo $aX \equiv b \pmod m$, cálculo de inversos modulares y cálculo de potencias modulares mediante el Pequeño Teorema de Fermat.</p>
+                        <button class="btn-toggle-timeline" onclick="toggleCollapse('c5-details')">Ver detalles de la clase &darr;</button>
+                        <div id="c5-details" class="timeline-collapse">
+                            <p><strong>Ecuación Lineal de Congruencia:</strong> $aX \equiv b \pmod m$ tiene solución si y sólo si $d = (a:m)$ divide a $b$. Si hay soluciones, existen exactamente $d$ soluciones en el rango $[0, m-1]$ dadas por:</p>
+                            <div class="math-block">
+                                $\{x_0, x_0 + \frac{m}{d}, x_0 + 2\frac{m}{d}, \dots, x_0 + (d-1)\frac{m}{d}\}$
+                            </div>
+                            <p><strong>Inverso Modular:</strong> Cuando $(a:m) = 1$, la ecuación $aX \equiv 1 \pmod m$ tiene una única solución llamada el inverso modular de $a$ módulo $m$ ($a^{-1} \pmod m$).</p>
+                            <p><strong>Pequeño Teorema de Fermat (PTF):</strong> Si $p$ es primo y $p \nmid a \implies a^{p-1} \equiv 1 \pmod p$. Útil para reducir potencias reduciendo el exponente módulo $p-1$.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 6 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Clase 6: Funciones de una Vía y Factorización de Fermat</h3>
+                        <span class="timeline-date">15/04/21</span>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Concepto de funciones de una vía en criptografía (exponenciación modular y multiplicación). Desarrollo del Algoritmo de Factorización de Fermat.</p>
+                        <button class="btn-toggle-timeline" onclick="toggleCollapse('c6-details')">Ver detalles de la clase &darr;</button>
+                        <div id="c6-details" class="timeline-collapse">
+                            <p><strong>Funciones de una Vía:</strong> Operaciones fáciles de computar en una dirección pero computacionalmente inviables en sentido opuesto.</p>
+                            <ul class="list-unstyled">
+                                <li>Multiplicar dos primos grandes $p \cdot q = n$ (fácil) vs Factorizar $n$ (difícil).</li>
+                                <li>Exponenciación modular $g^a \pmod p$ (fácil) vs Logaritmo discreto (difícil).</li>
+                            </ul>
+                            <p><strong>Método de Factorización de Fermat:</strong> Para un entero impar $n$, buscamos $x, y$ tales que $n = x^2 - y^2 \implies n = (x - y)(x + y)$.
+                            Buscamos enteros $x \ge \sqrt{n}$ tales que $x^2 - n = y^2$ sea un cuadrado perfecto.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 7 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Clase 7: Teorema Fundamental de la Aritmética e Indicador de Euler</h3>
+                        <span class="timeline-date">21/04/21</span>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Enunciado y consecuencias del Teorema Fundamental de la Aritmética, definición matemática de la función Indicador de Euler $\phi(n)$ y Teorema de Fermat-Euler.</p>
+                        <button class="btn-toggle-timeline" onclick="toggleCollapse('c7-details')">Ver detalles de la clase &darr;</button>
+                        <div id="c7-details" class="timeline-collapse">
+                            <p><strong>Teorema Fundamental de la Aritmética:</strong> Todo número natural $a > 1$ se expresa unívocamente como producto de factores primos distintos $a = p_1^{k_1}p_2^{k_2}\dots p_r^{k_r}$.</p>
+                            <p><strong>Demostración de Euclides sobre infinitos primos:</strong> Supongamos que son finitos $p_1, \dots, p_r$. El número $M = (p_1 \dots p_r) + 1$ no es divisible por ningún primo de la lista (ya que siempre deja resto 1), lo que implica que existe otro primo o que $M$ es primo. Contradicción.</p>
+                            <p><strong>Indicador de Euler $\phi(n)$:</strong> Cantidad de números coprimos con $n$ en $[1, n]$. Se calcula mediante:</p>
+                            <div class="math-block">
+                                $\phi(n) = n \cdot \prod_{p \mid n} (1 - \frac{1}{p}) = p_1^{k_1-1}(p_1-1) \dots p_r^{k_r-1}(p_r-1)$
+                            </div>
+                            <p><strong>Teorema de Fermat-Euler:</strong> Si $n \in \mathbb{N}$ y $(a:n) = 1 \implies a^{\phi(n)} \equiv 1 \pmod n$.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 8 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Clase 8: Orden Modular, Raíces Primitivas y Primalidad</h3>
+                        <span class="timeline-date">28/04/21</span>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Concepto de orden de un elemento, definición de Raíces Primitivas y noción general de los Tests de Primalidad (métodos determinísticos y probabilísticos).</p>
+                        <button class="btn-toggle-timeline" onclick="toggleCollapse('c8-details')">Ver detalles de la clase &darr;</button>
+                        <div id="c8-details" class="timeline-collapse">
+                            <p><strong>Orden Modular:</strong> El orden de $a$ módulo $p$, denotado $ord_p(a)$, es el mínimo $k \in \mathbb{N}$ tal que $a^k \equiv 1 \pmod p$. Se cumple que $ord_p(a) \mid \phi(p)$.</p>
+                            <p><strong>Raíz Primitiva:</strong> Si $ord_p(a) = p - 1$ (para un módulo primo $p$), entonces $a$ es una raíz primitiva módulo $p$. Significa que $a$ es un generador de todo el grupo multiplicativo $\mathbb{Z}_p^*$. El número de raíces primitivas módulo $p$ es exactamente $\phi(p-1)$.</p>
+                            <p><strong>Tests de Primalidad:</strong>
+                                <br>1. <strong>Determinísticos:</strong> Prueban con 100% de certeza si un número es primo (Ej: Wilson $(n-1)! \equiv -1 \pmod n$, Factorización Fermat).
+                                <br>2. <strong>Probabilísticos:</strong> Evalúan propiedades modulares; si fallan, el número es compuesto. Si pasan, la probabilidad de ser primo aumenta (Ej: Test de Fermat, Miller-Rabin).
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 9 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Clase 9: Criterio de Raíz Primitiva e Intercambio de Claves</h3>
+                        <span class="timeline-date">04/05/21</span>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Criterio sistemático para verificar raíces primitivas mediante factorización de $p-1$. Primer contacto con el algoritmo de intercambio de claves Diffie-Hellman.</p>
+                        <button class="btn-toggle-timeline" onclick="toggleCollapse('c9-details')">Ver detalles de la clase &darr;</button>
+                        <div id="c9-details" class="timeline-collapse">
+                            <p><strong>Criterio de Raíz Primitiva:</strong> Sean $q_1, \dots, q_n$ los divisores primos de $p-1$.
+                            Un número $a$ es raíz primitiva módulo $p$ si y sólo si:</p>
+                            <div class="math-block">
+                                $a^{\frac{p-1}{q_i}} \not\equiv 1 \pmod p$ para todo divisor primo $q_i$.
+                            </div>
+                            <p>Si se encuentra que alguna potencia da $1 \pmod p$, entonces $a$ no es raíz primitiva.</p>
+                            <p><strong>Diffie-Hellman (DH):</strong> Permite a dos partes acordar una clave compartida sobre un canal inseguro. Requiere elegir un primo grande $p$ y una raíz primitiva $g$ módulo $p$. La seguridad radica en la dificultad de resolver el problema del logaritmo discreto.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 10 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Clase 10: El Criptosistema Asimétrico RSA</h3>
+                        <span class="timeline-date">05/05/21</span>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Análisis y fundamentos matemáticos del algoritmo de cifrado asimétrico RSA. Generación de claves, procesos de cifrado/descifrado y ataques basados en factorización.</p>
+                        <button class="btn-toggle-timeline" onclick="toggleCollapse('c10-details')">Ver detalles de la clase &darr;</button>
+                        <div id="c10-details" class="timeline-collapse">
+                            <p><strong>Criptosistema RSA:</strong> Cifrado asimétrico basado en la dificultad de factorizar números compuestos grandes.</p>
+                            <ul class="list-unstyled">
+                                <li><strong>Clave Pública</strong>: $(n, e)$ donde $n = p \cdot q$ y $e$ es el exponente coprimo con $\phi(n)$.</li>
+                                <li><strong>Clave Privada</strong>: $(p, q, d)$ donde $d$ es el inverso modular de $e$ módulo $\phi(n)$: $e \cdot d \equiv 1 \pmod{\phi(n)}$.</li>
+                                <li><strong>Cifrado</strong>: $c = m^e \pmod n$.</li>
+                                <li><strong>Descifrado</strong>: $m = c^d \pmod n$.</li>
+                                <li><strong>Por qué funciona</strong>: $c^d \equiv (m^e)^d \equiv m^{e \cdot d} \equiv m^{1 + k\phi(n)} \equiv m \cdot (m^{\phi(n)})^k \equiv m \cdot 1^k \equiv m \pmod n$ (gracias al Teorema de Fermat-Euler).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Class 11 -->
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-header">
+                        <h3 class="timeline-title">Clase 11: Aplicación Integradora del Programa</h3>
+                        <span class="timeline-date">06/05/21</span>
+                    </div>
+                    <div class="timeline-body">
+                        <p>Ejemplo práctico integrador: cifrado y descifrado de texto completo mediante RSA con codificación en base alfabética de 28 caracteres. Repaso general del programa.</p>
+                        <button class="btn-toggle-timeline" onclick="toggleCollapse('c11-details')">Ver detalles de la clase &darr;</button>
+                        <div id="c11-details" class="timeline-collapse">
+                            <p><strong>Cifrado Alfabético:</strong> Se asocian caracteres a números $0..27$. Para enviar palabras de longitud $k$, se representan en base 28 para obtener un valor numérico $M < n$. Luego se calcula $c = M^e \pmod n$.</p>
+                            <p>El destinatario descifra $M = c^d \pmod n$, y luego reconvierte el número decimal a base 28 para recuperar los caracteres del texto original.</p>
+                            <p><strong>Repaso de Algoritmos Clave:</strong>
+                                <br>- Algoritmo de Euclides para Diofánticas y Congruencias lineales.
+                                <br>- Exponenciación modular rápida mediante tablas de base, exponente y acarreo.
+                                <br>- Determinación de raíces primitivas y tests de primalidad probabilísticos para la generación de claves.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: THEORY -->
+        <div id="theory-view" class="view-content">
+            <div class="section-header">
+                <h1>Marco Teórico y Teoremas Fundamentales</h1>
+                <p>Las demostraciones y conceptos que fundamentan los sistemas criptográficos modernos.</p>
+            </div>
+
+            <!-- Theorem 1 -->
+            <div class="card">
+                <h2 class="card-title">1. Teorema Fundamental de la Aritmética (TFA)</h2>
+                <p>El pilar de la teoría de números. Garantiza que la descomposición en factores primos es el bloque constructor de todos los números.</p>
+                <div class="math-block">
+                    Todo número entero $n > 1$ se puede expresar de forma única (salvo el orden de los factores) como un producto de factores primos:
+                    $$n = p_1^{k_1} \cdot p_2^{k_2} \cdots p_r^{k_r}$$
+                    Donde los $p_i$ son primos distintos y $k_i \in \mathbb{N}$.
+                </div>
+                <div class="proof-block">
+                    <strong>Demostración de la infinitud de números primos (Euclides):</strong>
+                    Supongamos que los primos son finitos: $\mathcal{P} = \{p_1, p_2, \dots, p_r\}$.
+                    Construimos el entero:
+                    $$M = (p_1 \cdot p_2 \dots p_r) + 1$$
+                    Por el TFA, $M$ debe ser divisible por algún primo $q$. Como nuestra lista contiene todos los primos, $q$ debe ser uno de los $p_i$.
+                    Esto implica que $q \mid (p_1 \dots p_r)$.
+                    Como también $q \mid M$, entonces $q$ debe dividir a su diferencia:
+                    $$q \mid M - (p_1 \dots p_r) \implies q \mid 1$$
+                    Lo cual es un ABSURDO, puesto que $q$ es un número primo y $q > 1$.
+                    Por lo tanto, la cantidad de números primos es infinita.
+                </div>
+            </div>
+
+            <!-- Theorem 2 -->
+            <div class="card">
+                <h2 class="card-title">2. Teorema de Existencia de Raíces Primitivas</h2>
+                <p>Establece que para módulos primos, el grupo multiplicativo siempre posee un generador.</p>
+                <div class="math-block">
+                    Para todo número primo $p$, existe al menos un elemento $g$ tal que su orden es máximo:
+                    $$ord_p(g) = \phi(p) = p - 1$$
+                    Dicho elemento $g$ se denomina <strong>Raíz Primitiva</strong> módulo $p$. La cantidad de raíces primitivas es $\phi(p-1)$.
+                </div>
+                <p><strong>Importancia en Criptografía:</strong> Si ciframos usando potencias modulares $c \equiv g^m \pmod p$, que $g$ sea raíz primitiva garantiza que el espacio de claves posibles sea máximo ($p-1$). Si $g$ no fuera raíz primitiva, el conjunto de valores que puede tomar el cifrado sería un subgrupo pequeño, facilitando los ataques de precomputación y búsqueda exhaustiva.</p>
+            </div>
+
+            <!-- Theorem 3 -->
+            <div class="card">
+                <h2 class="card-title">3. Pequeño Teorema de Fermat & Teorema de Fermat-Euler</h2>
+                <p>Herramientas fundamentales para reducir cálculos de potencias modulares gigantescas.</p>
+                <div class="math-block">
+                    <strong>Pequeño Teorema de Fermat (PTF):</strong> Si $p$ es un número primo y $a \in \mathbb{Z}$ tal que $p \nmid a$, entonces:
+                    $$a^{p-1} \equiv 1 \pmod p$$
+                </div>
+                <div class="math-block">
+                    <strong>Teorema de Fermat-Euler:</strong> Si $n \in \mathbb{N}$ y $a \in \mathbb{Z}$ es coprimo con $n$ (es decir, $(a:n)=1$), entonces:
+                    $$a^{\phi(n)} \equiv 1 \pmod n$$
+                </div>
+                <p><strong>Criterio de Reducción del Exponente:</strong> Para calcular $a^k \pmod p$ (con $p$ primo), dividimos $k$ por $p-1$: $k = q(p-1) + r$. Entonces:
+                $$a^k = a^{q(p-1)+r} = (a^{p-1})^q \cdot a^r \equiv 1^q \cdot a^r \equiv a^r \pmod p$$
+                Así, basta con calcular $a^{r} \pmod p$ donde $r = k \pmod{p-1}$.</p>
+            </div>
+
+            <!-- RSA & DH -->
+            <div class="card">
+                <h2 class="card-title">4. Criptografía Asimétrica: RSA y Diffie-Hellman</h2>
+                <div class="math-block">
+                    <strong>Algoritmo de Intercambio de Claves de Diffie-Hellman (DH):</strong>
+                    <br><strong>Propósito:</strong> Acordar una clave secreta simétrica entre dos partes sobre un canal inseguro. <strong>No sirve para encriptar mensajes directamente.</strong>
+                    <br><strong>Funcionamiento:</strong>
+                    <br>1. Se selecciona un primo grande $p$ y una raíz primitiva $g$ módulo $p$ (público).
+                    <br>2. Alicia elige su clave privada $a$ y calcula $A = g^a \pmod p$ (lo envía a Bernardo).
+                    <br>3. Bernardo elige su clave privada $b$ y calcula $B = g^b \pmod p$ (lo envía a Alicia).
+                    <br>4. Clave acordada: Alicia calcula $K \equiv B^a \equiv (g^b)^a \equiv g^{ab} \pmod p$.
+                    <br>5. Bernardo calcula $K \equiv A^b \equiv (g^a)^b \equiv g^{ab} \pmod p$.
+                </div>
+                <div class="math-block">
+                    <strong>Criptosistema RSA:</strong>
+                    <br><strong>Propósito:</strong> Cifrar y descifrar mensajes usando un par de claves (pública y privada).
+                    <br><strong>Funcionamiento:</strong>
+                    <br>1. Generación de claves: Se eligen dos primos grandes y distantes $p, q$.
+                    <br>2. Se calcula $n = p \cdot q$ y $\phi(n) = (p-1)(q-1)$.
+                    <br>3. Se elige un exponente cifrador $e$ tal que $(e:\phi(n))=1$.
+                    <br>4. Se calcula el exponente descifrador $d$ tal que $e \cdot d \equiv 1 \pmod{\phi(n)}$ (usando Euclides Extendido).
+                    <br>5. Clave Pública: $(n, e)$ | Clave Privada: $(p, q, d)$.
+                    <br>6. Cifrado: $c = m^e \pmod n$.
+                    <br>7. Descifrado: $m = c^d \pmod n$.
+                </div>
+            </div>
+
+            <!-- Primality Tests -->
+            <div class="card">
+                <h2 class="card-title">5. Tests de Primalidad</h2>
+                <p>¿Cómo se garantiza que los números elegidos para las claves son realmente primos?</p>
+                <div class="alert-important">
+                    <strong>Métodos Determinísticos:</strong> Brindan certeza del 100%.
+                    <br>- <i>Fuerza Bruta:</i> Probar divisores hasta $\sqrt{n}$. Inviable para números grandes.
+                    <br>- <i>Teorema de Wilson:</i> $n$ es primo $\iff (n-1)! \equiv -1 \pmod n$. Computacionalmente costoso por el factorial.
+                    <br>- <i>Factorización de Fermat:</i> Efectivo sólo si los factores primos de $n$ están muy cerca de $\sqrt{n}$.
+                </div>
+                <div class="alert-important" style="border-left-color: var(--secondary); background: rgba(16,185,129,0.03);">
+                    <strong>Métodos Probabilísticos:</strong> Rápidos y prácticos. Basados en condiciones necesarias pero no suficientes.
+                    <br>- <i>Test de Fermat:</i> Evalúa si $a^{n-1} \equiv 1 \pmod n$. Su talón de Aquiles son los <strong>Números de Carmichael</strong> (pseudoprimos absolutos como $561$) que pasan el test para todas las bases coprimas pero son compuestos.
+                    <br>- <i>Test de Rabin-Miller (Primalidad Fuerte):</i> Refinamiento que analiza raíces cuadradas de la unidad. Es el test más robusto en la práctica. Si supera $k$ rondas, la probabilidad de que $n$ no sea primo es menor a $\left(\frac{1}{4}\right)^k$. Con 20 rondas, el error es menor a uno en un billón.
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: METHODS -->
+        <div id="methods-view" class="view-content">
+            <div class="section-header">
+                <h1>Métodos Prácticos y Algoritmos Paso a Paso</h1>
+                <p>Procedimientos paso a paso para resolver las consignas típicas de los exámenes.</p>
+            </div>
+
+            <!-- Fermat Factorization Method -->
+            <div class="card">
+                <h2 class="card-title">1. Algoritmo de Factorización de Fermat</h2>
+                <p>Útil para factorizar números impares compuestos $n$. Consiste en representar $n$ como diferencia de cuadrados $n = x^2 - y^2$, donde los factores serán $(x-y)$ y $(x+y)$.</p>
+                <p><strong>Paso a paso:</strong></p>
+                <ul class="list-unstyled" style="margin-bottom:1rem;">
+                    <li>1. Calcular la raíz cuadrada de $n$: $R = \sqrt{n}$.</li>
+                    <li>2. Tomar como primer valor de $x$ el entero inmediato superior a $R$: $x = \text{entero}(R) + 1$.</li>
+                    <li>3. Calcular $y^2 = x^2 - n$.</li>
+                    <li>4. Si $y^2$ es un cuadrado perfecto (su raíz es entera), el algoritmo termina. Si no, incrementar $x$ en 1 y repetir desde el paso 3.</li>
+                    <li>5. Una vez hallado, los factores son $a = x - y$ y $b = x + y$.</li>
+                </ul>
+                <div class="alert-important" style="border-left-color: var(--secondary); background: rgba(16,185,129,0.03)">
+                    <strong>Ejemplo práctico:</strong> Factorizar $n = 1219331$.
+                    <br>- $\sqrt{1219331} \approx 1104.23 \implies x$ inicial $= 1105$.
+                    <br>- Para $x = 1105 \implies y^2 = 1105^2 - 1219331 = 1694$ (No es cuadrado).
+                    <br>- Para $x = 1106 \implies y^2 = 1106^2 - 1219331 = 3905$ (No es cuadrado).
+                    <br>...
+                    <br>- Para $x = 1110 \implies y^2 = 1110^2 - 1219331 = 12769 = 113^2$ (¡Es cuadrado!).
+                    <br>Luego, $x = 1110, y = 113$.
+                    <br>Factores: $1110 - 113 = \mathbf{997}$ y $1110 + 113 = \mathbf{1223}$.
+                </div>
+            </div>
+
+            <!-- Extended Euclidean Algorithm -->
+            <div class="card">
+                <h2 class="card-title">2. Tabla de Euclides Extendido</h2>
+                <p>Permite hallar $d = (a:b)$ y escribir la combinación lineal $d = a \cdot x + b \cdot y$. La estructura de la tabla recomendada por la cátedra es la siguiente:</p>
+                <div class="math-block">
+                    Fila 0: Se escribe el mayor ($b$) con coeficientes $x=0$, $y=1$.<br>
+                    Fila 1: Se escribe el menor ($a$) con coeficientes $x=1$, $y=0$, y su cociente $q = b // a$.<br>
+                    Para filas siguientes:
+                    $$r_i = r_{i-2} \pmod{r_{i-1}} \quad | \quad q_i = r_{i-1} // r_i$$
+                    $$x_i = x_{i-2} - x_{i-1} \cdot q_{i-1}$$
+                    $$y_i = y_{i-2} - y_{i-1} \cdot q_{i-1}$$
+                </div>
+                <p>El proceso se detiene cuando $r_i = 0$. La fila anterior a la del resto 0 contiene el valor de $d$, $x$ e $y$ finales.</p>
+            </div>
+
+            <!-- Diophantine and Congruence Equations -->
+            <div class="card">
+                <h2 class="card-title">3. Ecuaciones Diofánticas y de Congruencia</h2>
+                <p>Procedimiento sistemático para resolver ambas ecuaciones asociadas.</p>
+                <div class="alert-important">
+                    <strong>Resolución de Ecuación Diofántica $aX + bY = c$:</strong>
+                    <br>1. Calcular $d = (a:b)$ con Euclides. Si $d \nmid c$, <strong>no tiene solución</strong>.
+                    <br>2. Escribir la combinación lineal $d = a \cdot x_d + b \cdot y_d$.
+                    <br>3. Multiplicar toda la expresión por el factor $k = c/d \implies c = a(x_d \cdot k) + b(y_d \cdot k)$.
+                    <br>4. Definir la solución particular $x_0 = x_d \cdot k$, $y_0 = y_d \cdot k$.
+                    <br>5. Escribir las infinitas soluciones: $X = x_0 + (b/d)t$, $Y = y_0 - (a/d)t$.
+                </div>
+                <div class="alert-important" style="border-left-color: var(--primary); background: rgba(99,102,241,0.03);">
+                    <strong>Resolución de Congruencia Lineal $aX \equiv b \pmod m$:</strong>
+                    <br>1. Plantear la ecuación diofántica asociada: $aX - mY = b \implies aX + mK = b$.
+                    <br>2. Ver si $d = (a:m)$ divide a $b$. Si no, <strong>no tiene solución</strong>.
+                    <br>3. Hallar solución particular $x_0$ de la diofántica asociada.
+                    <br>4. Si existen soluciones, hay exactamente $d$ soluciones en el rango $[0, m-1]$ dadas por:
+                    $$X_i \equiv x_0 + i \cdot \frac{m}{d} \pmod m \quad \text{para } i = 0, \dots, d-1$$
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: EXAMS -->
+        <div id="exams-view" class="view-content">
+            <div class="section-header">
+                <h1>Modelos de Examen Resueltos</h1>
+                <p>Desarrollo exhaustivo y justificado de los exámenes de la cursada.</p>
+            </div>
+
+            <!-- Selector -->
+            <div class="exam-selector">
+                <div class="exam-tab active" onclick="switchExam('exam1', this)">Modelo 1 (Simulacro)</div>
+                <div class="exam-tab" onclick="switchExam('exam2', this)">Examen 25/08/2025</div>
+                <div class="exam-tab" onclick="switchExam('exam3', this)">Examen 30/06/2025</div>
+            </div>
+
+            <!-- Exam 1 content -->
+            <div id="exam1" class="exam-content active">
+                <div class="card">
+                    <h3 class="card-title">Modelo de Examen 1</h3>
+                    
+                    <!-- Question 1 -->
+                    <div class="question-box">
+                        <div class="question-title">1. Factorizar completamente el número 6.946.431.921</div>
+                        <div class="question-body">
+                            <p><strong>Paso 1: Extracción de divisores primos obvios</strong></p>
+                            <p>Probamos divisibilidad por primos pequeños:</p>
+                            <ul class="list-unstyled">
+                                <li>Divisibilidad por 3: Suma de cifras $6+9+4+6+4+3+1+9+2+1 = 45$, que es múltiplo de 9. Por lo tanto, es divisible por 9 ($3 \cdot 3$).
+                                    <br>$6946431921 / 9 = 771825769$.
+                                </li>
+                                <li>Divisibilidad por 11: Suma de posiciones pares menos impares: $(7+1+2+7+9) - (7+8+5+6) = 26 - 26 = 0$. Es divisible por 11.
+                                    <br>$771825769 / 11 = 70165979$.
+                                </li>
+                                <li>Divisibilidad por 13:
+                                    <br>$70165979 / 13 = 5397383$.
+                                </li>
+                            </ul>
+                            <p>De esta manera, el número se reduce a: $6946431921 = 3^2 \cdot 11 \cdot 13 \cdot 5397383$.</p>
+                            
+                            <p style="margin-top:1rem;"><strong>Paso 2: Aplicación del método de Fermat a $n = 5397383$</strong></p>
+                            <p>Calculamos $\sqrt{5397383} \approx 2323.22 \implies x$ inicial $= 2324$.</p>
+                            <table class="fermat-table">
+                                <thead>
+                                    <tr>
+                                        <th>$x$</th>
+                                        <th>$x^2 - n$</th>
+                                        <th>¿Es cuadrado perfecto?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2324</td>
+                                        <td>$2324^2 - 5397383 = 5400976 - 5397383 = 3593$</td>
+                                        <td>No ($\sqrt{3593} \approx 59.94$)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2325</td>
+                                        <td>$2325^2 - 5397383 = 5405625 - 5397383 = 8242$</td>
+                                        <td>No ($\sqrt{8242} \approx 90.78$)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2326</td>
+                                        <td>$2326^2 - 5397383 = 5410276 - 5397383 = 12893$</td>
+                                        <td>No ($\sqrt{12893} \approx 113.54$)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2327</td>
+                                        <td>$2327^2 - 5397383 = 5414929 - 5397383 = 17546$</td>
+                                        <td>No ($\sqrt{17546} \approx 132.46$)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2328</td>
+                                        <td>$2328^2 - 5397383 = 5419824 - 5397383 = \mathbf{22201}$</td>
+                                        <td><strong>SÍ</strong> ($149^2 = 22201$)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>Por lo tanto, obtenemos $x = 2328$ e $y = 149$. Los factores son:</p>
+                            <ul class="list-unstyled">
+                                <li>$a = x - y = 2328 - 149 = \mathbf{2179}$</li>
+                                <li>$b = x + y = 2328 + 149 = \mathbf{2477}$</li>
+                            </ul>
+                            <p>Verificamos si 2179 y 2477 son primos dividiendo por primos menores a sus raíces ($\approx 46$ y $\approx 49$). Ninguno tiene divisores, son primos.</p>
+                            
+                            <div class="question-solution">
+                                <span class="sol-tag">Respuesta</span>
+                                <p>La factorización completa es: <strong>$6946431921 = 3^2 \cdot 11 \cdot 13 \cdot 2179 \cdot 2477$</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-box">
+                        <div class="question-title">2. (a) Determinar si 3 es raíz primitiva módulo 599. (b) Calcular $11^{7151283} \pmod{997}$</div>
+                        <div class="question-body">
+                            <p><strong>Parte (a): Test de raíz primitiva para $a=3$ mod $p=599$</strong></p>
+                            <p>1. Factorizamos $p-1 = 598$.
+                                <br>$598 = 2 \cdot 299 = 2 \cdot 13 \cdot 23$. Los factores primos son $\{2, 13, 23\}$.
+                            </p>
+                            <p>2. Aplicamos el criterio de raíz primitiva evaluando si $3^{\frac{598}{q_i}} \equiv 1 \pmod{599}$ para cada divisor primo:</p>
+                            <ul class="list-unstyled">
+                                <li>Para $q_1 = 2$: calculamos $3^{299} \pmod{599}$. Por el criterio de Euler, $3^{299} \equiv \left(\frac{3}{599}\right) \pmod{599}$.
+                                    <br>Calculamos el símbolo de Legendre: $\left(\frac{3}{599}\right) = -\left(\frac{599}{3}\right)$ (ya que $599 \equiv 3 \pmod 4$ y $3 \equiv 3 \pmod 4$).
+                                    <br>$599 \equiv 2 \pmod 3 \implies -\left(\frac{2}{3}\right) = -(-1) = 1$.
+                                    <br>Entonces, $3^{299} \equiv 1 \pmod{599}$.
+                                </li>
+                            </ul>
+                            <p>Al dar la primera potencia $3^{299} \equiv 1 \pmod{599}$, el test falla. 3 <strong>no es</strong> raíz primitiva.</p>
+                            
+                            <p style="margin-top:1.5rem;"><strong>Parte (b): Calcular $11^{7151283} \pmod{997}$</strong></p>
+                            <p>1. El módulo $p = 997$ es primo. Por el Pequeño Teorema de Fermat, $11^{996} \equiv 1 \pmod{997}$.</p>
+                            <p>2. Reducimos el exponente módulo $996$:
+                                <br>$7151283 / 996 = 7180$ con resto $\mathbf{3}$.
+                            </p>
+                            <p>3. Por lo tanto: $11^{7151283} \equiv 11^3 \pmod{997}$.
+                                <br>$11^3 = 1331$.
+                                <br>$1331 \pmod{997} = 1331 - 997 = \mathbf{334}$.
+                            </p>
+                            
+                            <div class="question-solution">
+                                <span class="sol-tag">Respuesta</span>
+                                <p>(a) 3 <strong>no es</strong> raíz primitiva módulo 599 ya que $3^{299} \equiv 1 \pmod{599}$ (su orden es menor a 598).</p>
+                                <p>(b) $11^{7151283} \equiv \mathbf{334} \pmod{997}$.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-box">
+                        <div class="question-title">3. Teoría: (a) Cifrado RSA de Roberto a Tita. (b) Soluciones de Diofántica. (c) Importancia de raíz primitiva. (d) Teorema Fundamental. (e) Fórmula de primos.</div>
+                        <div class="question-body">
+                            <ul class="list-unstyled">
+                                <li><strong>(a) Procedimiento RSA:</strong> Roberto quiere enviar el mensaje $m$ (representado por una letra/número) a Tita. Tita publica su clave pública $(n,e)$.
+                                    <br>- ¿Es necesario acordar una clave previa? <strong>No</strong>, el cifrado asimétrico elimina la necesidad de compartir claves secretas de antemano.
+                                    <br>- Qué hace Roberto: Calcula el mensaje cifrado $c = m^e \pmod n$ usando la clave pública de Tita, y se lo envía.
+                                </li>
+                                <li><strong>(b) Ecuación Diofántica $aX+bY=c$:</strong> La opción correcta es <strong>"Puede ser que no tenga solución, o que tenga infinitas soluciones"</strong>. Si el MCD de $a$ y $b$ divide a $c$, existen infinitas soluciones dadas por la fórmula paramétrica en función de $t \in \mathbb{Z}$. Si no lo divide, no tiene solución. Nunca puede tener una sola solución o una cantidad finita no nula.
+                                </li>
+                                <li><strong>(c) Importancia de raíz primitiva en potencias modulares:</strong> En sistemas de potencias modulares, la base $g$ debe ser una raíz primitiva módulo $p$ para asegurar que el conjunto $\{g^1, g^2, \dots, g^{p-1}\} \pmod p$ recorra todos los $p-1$ elementos posibles del grupo. Esto maximiza el tamaño del espacio de claves y evita vulnerabilidades donde el texto cifrado caiga en subgrupos cíclicos pequeños que puedan ser vulnerados por fuerza bruta.
+                                </li>
+                                <li><strong>(d) Enunciado del Teorema Fundamental de la Aritmética:</strong> Todo número entero $n > 1$ se puede descomponer de manera única (salvo el orden de los factores) como producto de números primos.
+                                </li>
+                                <li><strong>(e) Fórmula de primos y selección:</strong> No existe una fórmula matemática general o polinómica para fabricar números primos de manera eficiente en la práctica. Para elegir un primo grande en criptografía, se genera un número aleatorio impar grande de los bits deseados y se le aplican tests probabilísticos de primality (como Miller-Rabin) con múltiples bases. Si pasa suficientes iteraciones sin ser catalogado como compuesto, se acepta como primo debido a que la probabilidad de error es infinitesimalmente pequeña.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-box">
+                        <div class="question-title">4. Resolver las siguientes Ecuaciones Lineales de Congruencia: (a) $77X \equiv 50 \pmod{91}$ y (b) $77X \equiv 42 \pmod{63}$</div>
+                        <div class="question-body">
+                            <p><strong>Parte (a): $77X \equiv 50 \pmod{91}$</strong></p>
+                            <p>1. Calculamos el MCD de $a=77$ y $m=91$ usando Euclides:</p>
+                            <table class="euclid-table">
+                                <thead>
+                                    <tr>
+                                        <th>$r$</th>
+                                        <th>$x$</th>
+                                        <th>$y$</th>
+                                        <th>$q$</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>91</td><td>1</td><td>0</td><td>-</td></tr>
+                                    <tr><td>77</td><td>0</td><td>1</td><td>1</td></tr>
+                                    <tr><td>14</td><td>1</td><td>-1</td><td>5</td></tr>
+                                    <tr><td>7</td><td>-5</td><td>6</td><td>2</td></tr>
+                                    <tr><td>0</td><td>-</td><td>-</td><td>-</td></tr>
+                                </tbody>
+                            </table>
+                            <p>El $d = (77:91) = 7$.
+                                <br>2. Verificamos si $d \mid b$: ¿$7$ divide a $50$? No.
+                                <br>Por lo tanto, la ecuación <strong>no tiene solución</strong>.
+                            </p>
+
+                            <p style="margin-top:1.5rem;"><strong>Parte (b): $77X \equiv 42 \pmod{63}$</strong></p>
+                            <p>1. Calculamos el MCD de $a=77$ y $m=63$:
+                                <br>$d = (77:63) = (14:63) = (14:7) = 7$.
+                                <br>2. Verificamos si $d \mid b$: ¿$7$ divide a $42$? Sí ($42 / 7 = 6$).
+                                <br>Existen exactamente $d=7$ soluciones en el rango $[0, 62]$.
+                            </p>
+                            <p>3. Reducimos la ecuación dividiendo todos los términos (incluyendo el módulo) por $7$:
+                                <br>$\frac{77}{7}X \equiv \frac{42}{7} \pmod{\frac{63}{7}} \implies 11X \equiv 6 \pmod 9$.
+                                <br>Como $11 \equiv 2 \pmod 9$, nos que: $2X \equiv 6 \pmod 9$.
+                                <br>Multiplicando por el inverso de 2 mod 9 (que es 5):
+                                <br>$X \equiv 30 \equiv \mathbf{3} \pmod 9$.
+                            </p>
+                            <p>4. Las 7 soluciones en el rango $[0, 62]$ se obtienen sumando múltiplos de $9$ al resto principal $3$:</p>
+                            <div class="math-block">
+                                $X_0 = 3$<br>
+                                $X_1 = 3 + 9 = 12$<br>
+                                $X_2 = 3 + 18 = 21$<br>
+                                $X_3 = 3 + 27 = 30$<br>
+                                $X_4 = 3 + 36 = 39$<br>
+                                $X_5 = 3 + 45 = 48$<br>
+                                $X_6 = 3 + 54 = 57$
+                            </div>
+                            
+                            <div class="question-solution">
+                                <span class="sol-tag">Respuesta</span>
+                                <p>(a) La ecuación $77X \equiv 50 \pmod{91}$ <strong>no tiene solución</strong>.</p>
+                                <p>(b) Las soluciones de $77X \equiv 42 \pmod{63}$ en $[0, 62]$ son: <strong>$\{3, 12, 21, 30, 39, 48, 57\}$</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exam 2 content -->
+            <div id="exam2" class="exam-content">
+                <div class="card">
+                    <h3 class="card-title">Examen Matemática Aplicada a la Criptografía - 25/08/2025</h3>
+                    
+                    <!-- Question 1 -->
+                    <div class="question-box">
+                        <div class="question-title">1. Factorizar completamente el número 1.799.096.585</div>
+                        <div class="question-body">
+                            <p><strong>Paso 1: Extracción de divisores primos obvios</strong></p>
+                            <ul class="list-unstyled">
+                                <li>Termina en 5: divisible por 5.
+                                    <br>$1799096585 / 5 = 359819317$.
+                                </li>
+                                <li>Divisibilidad por 11: Suma de posiciones pares menos impares: $(3+9+1+3) - (5+8+9+7) = 16 - 29 = -13$ (no es divisible por 11).
+                                    <br>Probamos división directa por 11: $359819317 / 11 = \mathbf{32710847}$ (resto 0).
+                                </li>
+                                <li>Divisibilidad por 13:
+                                    <br>$32710847 / 13 = \mathbf{2516219}$.
+                                </li>
+                            </ul>
+                            <p>El número se reduce a: $1799096585 = 5 \cdot 11 \cdot 13 \cdot 2516219$.</p>
+                            
+                            <p style="margin-top:1rem;"><strong>Paso 2: Aplicación del método de Fermat a $n = 2516219$</strong></p>
+                            <p>Calculamos $\sqrt{2516219} \approx 1586.25 \implies x$ inicial $= 1587$.</p>
+                            <table class="fermat-table">
+                                <thead>
+                                    <tr>
+                                        <th>$x$</th>
+                                        <th>$x^2 - n$</th>
+                                        <th>¿Es cuadrado perfecto?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1587</td>
+                                        <td>$1587^2 - 2516219 = 2518569 - 2516219 = 2350$</td>
+                                        <td>No</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1588</td>
+                                        <td>$1588^2 - 2516219 = 2521744 - 2516219 = 5525$</td>
+                                        <td>No</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1589</td>
+                                        <td>$1589^2 - 2516219 = 2524921 - 2516219 = 8702$</td>
+                                        <td>No</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1590</td>
+                                        <td>$1590^2 - 2516219 = 2528100 - 2516219 = \mathbf{11881}$</td>
+                                        <td><strong>SÍ</strong> ($109^2 = 11881$)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>Obtenemos $x = 1590$ e $y = 109$. Los factores son:</p>
+                            <ul class="list-unstyled">
+                                <li>$a = x - y = 1590 - 109 = \mathbf{1481}$</li>
+                                <li>$b = x + y = 1590 + 109 = \mathbf{1699}$</li>
+                            </ul>
+                            <p>Tanto 1481 como 1699 son primos (no admiten divisores menores a sus raíces $\approx 38$ y $\approx 41$).</p>
+                            
+                            <div class="question-solution">
+                                <span class="sol-tag">Respuesta</span>
+                                <p>La factorización completa es: <strong>$1799096585 = 5 \cdot 11 \cdot 13 \cdot 1481 \cdot 1699$</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-box">
+                        <div class="question-title">2. (a) Determinar si 13 es raíz primitiva módulo 241. (b) Calcular $15^{1043572} \pmod{359}$</div>
+                        <div class="question-body">
+                            <p><strong>Parte (a): Test de raíz primitiva para $a=13$ mod $p=241$</strong></p>
+                            <p>1. Factorizamos $p-1 = 240 = 2^4 \cdot 3 \cdot 5$. Los factores primos son $\{2, 3, 5\}$.</p>
+                            <p>2. Evaluamos la condición $13^{\frac{240}{q_i}} \not\equiv 1 \pmod{241}$ para cada primo:</p>
+                            <ul class="list-unstyled">
+                                <li>Para $q_1 = 2$: calculamos $13^{120} \pmod{241}$. Por criterio de Euler, esto equivale al símbolo de Legendre $\left(\frac{13}{241}\right)$.
+                                    <br>Por reciprocidad cuadrática: $\left(\frac{13}{241}\right) = \left(\frac{241}{13}\right) = \left(\frac{7}{13}\right) = \left(\frac{13}{7}\right) = \left(\frac{6}{7}\right) = \left(\frac{-1}{7}\right) = -1$ (ya que $7 \equiv 3 \pmod 4$).
+                                    <br>Entonces, $13^{120} \equiv -1 \equiv 240 \pmod{241} \not\equiv 1$. (Cumple).
+                                </li>
+                                <li>Para $q_2 = 3$: calculamos $13^{80} \pmod{241}$. Usando exponenciación rápida:
+                                    <br>$13^2 = 169 \equiv -72$.
+                                    <br>$13^4 \equiv (-72)^2 = 5184 \equiv 123$.
+                                    <br>$13^8 \equiv 123^2 = 15129 \equiv 187 \equiv -54$.
+                                    <br>$13^{16} \equiv (-54)^2 = 2916 \equiv 24$.
+                                    <br>$13^{32} \equiv 24^2 = 576 \equiv 94$.
+                                    <br>$13^{64} \equiv 94^2 = 8836 \equiv 160 \equiv -81$.
+                                    <br>$13^{80} = 13^{64} \cdot 13^{16} \equiv -81 \cdot 24 = -1944 \equiv \mathbf{225} \pmod{241} \not\equiv 1$. (Cumple).
+                                </li>
+                                <li>Para $q_3 = 5$: calculamos $13^{48} \pmod{241}$.
+                                    <br>$13^{48} = 13^{32} \cdot 13^{16} \equiv 94 \cdot 24 = 2256 \equiv \mathbf{87} \pmod{241} \not\equiv 1$. (Cumple).
+                                </li>
+                            </ul>
+                            <p>Dado que ninguna potencia da $1 \pmod{241}$, 13 <strong>es</strong> raíz primitiva.</p>
+                            
+                            <p style="margin-top:1.5rem;"><strong>Parte (b): Calcular $15^{1043572} \pmod{359}$</strong></p>
+                            <p>1. El módulo $p = 359$ es primo. Por el Pequeño Teorema de Fermat, $15^{358} \equiv 1 \pmod{359}$.</p>
+                            <p>2. Reducimos el exponente módulo $358$:
+                                <br>$1043572 \pmod{358} = \mathbf{2}$.
+                            </p>
+                            <p>3. Entonces: $15^{1043572} \equiv 15^2 \equiv \mathbf{225} \pmod{359}$.</p>
+                            
+                            <div class="question-solution">
+                                <span class="sol-tag">Respuesta</span>
+                                <p>(a) 13 <strong>es</strong> raíz primitiva módulo 241.</p>
+                                <p>(b) $15^{1043572} \equiv \mathbf{225} \pmod{359}$.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-box">
+                        <div class="question-title">3. Teoría: (a) Encriptación RSA de Roberto a Claudia. (b) Soluciones de Diofántica. (c) Teorema de Existencia de Raíces Primitivas. (d) Utilidad de Diffie-Hellman. (e) Teorema Fundamental.</div>
+                        <div class="question-body">
+                            <ul class="list-unstyled">
+                                <li><strong>(a) RSA:</strong> Para enviarle un mensaje $m$ a Claudia, se utiliza su clave pública $(n, e)$. El mensaje cifrado se calcula como $c = m^e \pmod n$.
+                                </li>
+                                <li><strong>(b) Diofántica $aX+bY=c$:</strong> La opción correcta es <strong>"Puede ser que no tenga solución, o que tenga infinitas soluciones"</strong>.
+                                </li>
+                                <li><strong>(c) Teorema de Existencia de Raíces Primitivas:</strong> Para todo número primo $p$, existe al menos una raíz primitiva $g$ tal que $ord_p(g) = p - 1$. La cantidad exacta de tales raíces es $\phi(p-1)$.
+                                </li>
+                                <li><strong>(d) Algoritmo Diffie-Hellman:</strong> Sirve para <strong>"Acordar una clave, que después será utilizada en un sistema de encriptación simétrico"</strong>. No se utiliza para encriptar mensajes directamente.
+                                </li>
+                                <li><strong>(e) Teorema Fundamental de la Aritmética:</strong> Todo número natural mayor a 1 se expresa de forma única como producto de factores primos.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-box">
+                        <div class="question-title">4. Resolver las siguientes Ecuaciones Diofánticas Lineales con restricciones ($X > 10, Y > -20$): (a) $48X + 112Y = 50$ y (b) $112X + 210Y = 42$</div>
+                        <div class="question-body">
+                            <p><strong>Parte (a): $48X + 112Y = 50$</strong></p>
+                            <p>1. Calculamos el MCD de $a=48$ y $b=112$ usando restas sucesivas o Euclides:
+                                <br>$(112:48) = (48:64) = (48:16) = 16$.
+                                <br>2. Evaluamos divisibilidad: ¿$16$ divide a $50$? No.
+                                <br>Por lo tanto, la ecuación diofántica <strong>no tiene soluciones enteras</strong>.
+                            </p>
+
+                            <p style="margin-top:1.5rem;"><strong>Parte (b): $112X + 210Y = 42$</strong></p>
+                            <p>1. Calculamos el MCD de $a=112$ y $b=210$ usando la tabla de Euclides:</p>
+                            <table class="euclid-table">
+                                <thead>
+                                    <tr>
+                                        <th>$r$</th>
+                                        <th>$x$</th>
+                                        <th>$y$</th>
+                                        <th>$q$</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>210</td><td>0</td><td>1</td><td>-</td></tr>
+                                    <tr><td>112</td><td>1</td><td>0</td><td>1</td></tr>
+                                    <tr><td>98</td><td>-1</td><td>1</td><td>1</td></tr>
+                                    <tr><td>14</td><td>2</td><td>-1</td><td>7</td></tr>
+                                    <tr><td>0</td><td>-</td><td>-</td><td>-</td></tr>
+                                </tbody>
+                            </table>
+                            <p>El $d = (112:210) = 14$.
+                                <br>2. Verificamos divisibilidad: ¿$14$ divide a $42$? Sí ($42 / 14 = 3$). Tiene infinitas soluciones.
+                                <br>3. Relación del MCD: $112(2) + 210(-1) = 14$.
+                                <br>Multiplicando por $3$:
+                                <br>$112(6) + 210(-3) = 42$.
+                                <br>Solución particular: $x_0 = 6$, $y_0 = -3$.
+                            </p>
+                            <p>4. Soluciones generales:
+                                <br>$X = 6 + \frac{210}{14}t = 6 + 15t$.
+                                <br>$Y = -3 - \frac{112}{14}t = -3 - 8t$.
+                            </p>
+                            <p>5. Aplicamos restricciones $X > 10$ y $Y > -20$:</p>
+                            <div class="math-block">
+                                $6 + 15t > 10 \implies 15t > 4 \implies t > 0.267 \implies \mathbf{t \ge 1}$<br>
+                                $-3 - 8t > -20 \implies 8t < 17 \implies t < 2.125 \implies \mathbf{t \le 2}$
+                            </div>
+                            <p>Los únicos valores enteros posibles para $t$ son $\{1, 2\}$. Calculamos las soluciones:</p>
+                            <ul class="list-unstyled">
+                                <li>Para $t=1$: $X = 6 + 15 = \mathbf{21}$, $Y = -3 - 8 = \mathbf{-11}$.
+                                    <br>Verificación: $112(21) + 210(-11) = 2352 - 2310 = 42$ (Correcto).
+                                </li>
+                                <li>Para $t=2$: $X = 6 + 30 = \mathbf{36}$, $Y = -3 - 16 = \mathbf{-19}$.
+                                    <br>Verificación: $112(36) + 210(-19) = 4032 - 3990 = 42$ (Correcto).
+                                </li>
+                            </ul>
+                            
+                            <div class="question-solution">
+                                <span class="sol-tag">Respuesta</span>
+                                <p>(a) $48X + 112Y = 50$ <strong>no tiene solución</strong>.</p>
+                                <p>(b) Las soluciones posibles bajo las condiciones dadas son: <strong>$(21, -11)$</strong> y <strong>$(36, -19)$</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exam 3 content -->
+            <div id="exam3" class="exam-content">
+                <div class="card">
+                    <h3 class="card-title">Examen Matemática Aplicada a la Criptografía - 30/06/2025</h3>
+                    
+                    <!-- Question 1 -->
+                    <div class="question-box">
+                        <div class="question-title">1. Factorizar completamente el número 2.140.227.551</div>
+                        <div class="question-body">
+                            <p><strong>Paso 1: Extracción de divisores primos obvios</strong></p>
+                            <ul class="list-unstyled">
+                                <li>Probamos divisibilidad por 7:
+                                    <br>$2140227551 / 7 = \mathbf{305746793}$.
+                                </li>
+                                <li>Probamos divisibilidad por 11:
+                                    <br>$305746793 / 11 = \mathbf{27795163}$.
+                                    <br>$27795163 / 11 = \mathbf{2526833}$.
+                                </li>
+                            </ul>
+                            <p>El número se reduce a: $2140227551 = 7 \cdot 11^2 \cdot 2526833$.</p>
+                            
+                            <p style="margin-top:1rem;"><strong>Paso 2: Aplicación del método de Fermat a $n = 2526833$</strong></p>
+                            <p>Calculamos $\sqrt{2526833} \approx 1589.60 \implies x$ inicial $= 1590$.</p>
+                            <table class="fermat-table">
+                                <thead>
+                                    <tr>
+                                        <th>$x$</th>
+                                        <th>$x^2 - n$</th>
+                                        <th>¿Es cuadrado perfecto?</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1590</td>
+                                        <td>$1590^2 - 2526833 = 2528100 - 2526833 = 1267$</td>
+                                        <td>No</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1591</td>
+                                        <td>$1591^2 - 2526833 = 2531281 - 2526833 = 4448$</td>
+                                        <td>No</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1592</td>
+                                        <td>$1592^2 - 2526833 = 2534464 - 2526833 = 7631$</td>
+                                        <td>No</td>
+                                    </tr>
+                                    <tr>
+                                        <td>1593</td>
+                                        <td>$1593^2 - 2526833 = 2537649 - 2526833 = \mathbf{10816}$</td>
+                                        <td><strong>SÍ</strong> ($104^2 = 10816$)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <p>Obtenemos $x = 1593$ e $y = 104$. Los factores son:</p>
+                            <ul class="list-unstyled">
+                                <li>$a = x - y = 1593 - 104 = \mathbf{1489}$</li>
+                                <li>$b = x + y = 1593 + 104 = \mathbf{1697}$</li>
+                            </ul>
+                            <p>Tanto 1489 como 1697 son primos (no admiten divisores menores a sus raíces $\approx 38.5$ y $\approx 41.1$).</p>
+                            
+                            <div class="question-solution">
+                                <span class="sol-tag">Respuesta</span>
+                                <p>La factorización completa es: <strong>$2140227551 = 7 \cdot 11^2 \cdot 1489 \cdot 1697$</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-box">
+                        <div class="question-title">2. (a) Determinar si 19 es raíz primitiva módulo 241. (b) Calcular $14^{1120864} \pmod{181}$</div>
+                        <div class="question-body">
+                            <p><strong>Parte (a): Test de raíz primitiva para $a=19$ mod $p=241$</strong></p>
+                            <p>1. Factores primos de $p-1 = 240$ son $\{2, 3, 5\}$.</p>
+                            <p>2. Evaluamos la condición $19^{\frac{240}{q_i}} \not\equiv 1 \pmod{241}$:</p>
+                            <ul class="list-unstyled">
+                                <li>Para $q_1 = 2$: calculamos $19^{120} \pmod{241}$. Por criterio de Euler, esto equivale al símbolo de Legendre $\left(\frac{19}{241}\right)$.
+                                    <br>$\left(\frac{19}{241}\right) = \left(\frac{241}{19}\right) = \left(\frac{13}{19}\right) = \left(\frac{19}{13}\right) = \left(\frac{6}{13}\right) = \left(\frac{2}{13}\right)\left(\frac{3}{13}\right) = (-1)\left(\frac{13}{3}\right) = -1\left(\frac{1}{3}\right) = -1$.
+                                    <br>Entonces, $19^{120} \equiv -1 \equiv 240 \pmod{241} \not\equiv 1$. (Cumple).
+                                </li>
+                                <li>Para $q_2 = 3$: calculamos $19^{80} \pmod{241}$.
+                                    <br>$19^2 = 361 \equiv 120$.
+                                    <br>$19^4 \equiv 120^2 = 14400 \equiv 181 \equiv -60$.
+                                    <br>$19^8 \equiv (-60)^2 = 3600 \equiv 226 \equiv -15$.
+                                    <br>$19^{16} \equiv (-15)^2 = 225 \equiv -16$.
+                                    <br>$19^{32} \equiv (-16)^2 = 256 \equiv 15$.
+                                    <br>$19^{64} \equiv 15^2 = 225 \equiv -16$.
+                                    <br>$19^{80} = 19^{64} \cdot 19^{16} \equiv -16 \cdot -16 = 256 \equiv \mathbf{15} \pmod{241} \not\equiv 1$. (Cumple).
+                                </li>
+                                <li>Para $q_3 = 5$: calculamos $19^{48} \pmod{241}$.
+                                    <br>$19^{48} = 19^{32} \cdot 19^{16} \equiv 15 \cdot -16 = -240 \equiv \mathbf{1} \pmod{241}$.
+                                </li>
+                            </ul>
+                            <p>Dado que $19^{48} \equiv 1 \pmod{241}$, el test falla. El número 19 <strong>no es</strong> raíz primitiva.</p>
+                            
+                            <p style="margin-top:1.5rem;"><strong>Parte (b): Calcular $14^{1120864} \pmod{181}$</strong></p>
+                            <p>1. El módulo $p = 181$ es primo. Por el Pequeño Teorema de Fermat, $14^{180} \equiv 1 \pmod{181}$.</p>
+                            <p>2. Reducimos el exponente módulo $180$:
+                                <br>$1120864 \pmod{180} = \mathbf{4}$.
+                            </p>
+                            <p>3. Entonces: $14^{1120864} \equiv 14^4 \equiv (14^2)^2 \equiv 196^2 \pmod{181}$.
+                                <br>Como $196 \equiv 15 \pmod{181}$, nos queda:
+                                <br>$15^2 = \mathbf{225} \equiv \mathbf{44} \pmod{181}$.
+                            </p>
+                            
+                            <div class="question-solution">
+                                <span class="sol-tag">Respuesta</span>
+                                <p>(a) 19 <strong>no es</strong> raíz primitiva módulo 241 ya que $19^{48} \equiv 1 \pmod{241}$.</p>
+                                <p>(b) $14^{1120864} \equiv \mathbf{44} \pmod{181}$.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-box">
+                        <div class="question-title">3. Teoría: (a) Desencriptar RSA de Gustavo. (b) Primalidad determinística vs probabilística. (c) Fórmula de raíces primitivas. (d) Utilidad de Diffie-Hellman. (e) Existencia de raíces primitivas.</div>
+                        <div class="question-body">
+                            <ul class="list-unstyled">
+                                <li><strong>(a) Desencriptar RSA:</strong> Gustavo recibe el mensaje cifrado $x$.
+                                    <br>- Cómo descifra: Calcula el mensaje original $m = x^d \pmod n$ utilizando su clave privada $d$.
+                                    <br>- Por qué sólo él puede hacerlo: Porque la clave privada $d$ depende directamente de la factorización de $n = p \cdot q$. Dado que factorizar un número compuesto muy grande es un problema matemático extremadamente complejo que toma miles de años de cómputo, nadie más puede calcular $d$ a partir de la clave pública $(n,e)$.
+                                </li>
+                                <li><strong>(b) Primalidad determinística vs probabilística:</strong>
+                                    <br>- <i>Determinísticos:</i> Dan una respuesta binaria con 100% de certeza mediante cálculos de divisores (fuerza bruta, Wilson, AKS). Son muy lentos para números grandes.
+                                    <br>- <i>Probabilísticos:</i> Evalúan si se cumple una propiedad matemática que todos los primos satisfacen (Fermat, Rabin-Miller). Si no la cumple, el número es compuesto (100% certeza). Si la cumple, es probablemente primo. Repitiendo el test con diferentes bases se reduce la probabilidad de error a niveles despreciables. Son rápidos e indispensables en la práctica criptográfica.
+                                </li>
+                                <li><strong>(c) Fórmula de raíces primitivas:</strong> No existe una fórmula directa para encontrar las raíces primitivas mod $p$. Para elegirlas, se toma una base aleatoria $g$ y se valida usando el criterio de los factores primos de $p-1$. Si no sirve, se descarta y se prueba con otra. Dado que hay $\phi(p-1)$ raíces, se encuentra una muy rápidamente.
+                                </li>
+                                <li><strong>(d) Utilidad de Diffie-Hellman:</strong> Sirve para <strong>"Acordar una clave, que después será utilizada en un sistema de encriptación simétrico"</strong>.
+                                </li>
+                                <li><strong>(e) Existencia de raíces primitivas:</strong> Para todo primo $p$ existe al menos una raíz primitiva, y hay exactamente $\phi(p-1)$ de ellas.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Question 4 -->
+                    <div class="question-box">
+                        <div class="question-title">4. Resolver las siguientes Ecuaciones Diofánticas Lineales con restricciones ($X < 200, Y < -200$): (a) $960X + 492Y = 60$ y (b) $960X + 460Y = 50$</div>
+                        <div class="question-body">
+                            <p><strong>Parte (a): $960X + 492Y = 60$</strong></p>
+                            <p>1. Calculamos el MCD de $a=960$ y $b=492$ usando la tabla de Euclides:</p>
+                            <table class="euclid-table">
+                                <thead>
+                                    <tr>
+                                        <th>$r$</th>
+                                        <th>$x$</th>
+                                        <th>$y$</th>
+                                        <th>$q$</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr><td>960</td><td>1</td><td>0</td><td>-</td></tr>
+                                    <tr><td>492</td><td>0</td><td>1</td><td>1</td></tr>
+                                    <tr><td>468</td><td>1</td><td>-1</td><td>1</td></tr>
+                                    <tr><td>24</td><td>-1</td><td>2</td><td>19</td></tr>
+                                    <tr><td>12</td><td>20</td><td>-39</td><td>2</td></tr>
+                                    <tr><td>0</td><td>-</td><td>-</td><td>-</td></tr>
+                                </tbody>
+                            </table>
+                            <p>El $d = (960:492) = 12$.
+                                <br>2. Verificamos divisibilidad: ¿$12$ divide a $60$? Sí ($60 / 12 = 5$).
+                                <br>3. Combinación lineal: $960(20) + 492(-39) = 12$.
+                                <br>Multiplicando por $5$:
+                                <br>$960(100) + 492(-195) = 60$.
+                                <br>Solución particular: $x_0 = 100$, $y_0 = -195$.
+                            </p>
+                            <p>4. Soluciones generales:
+                                <br>$X = 100 + \frac{492}{12}t = 100 + 41t$.
+                                <br>$Y = -195 - \frac{960}{12}t = -195 - 80t$.
+                            </p>
+                            <p>5. Aplicamos restricciones $X < 200$ y $Y < -200$:</p>
+                            <div class="math-block">
+                                $100 + 41t < 200 \implies 41t < 100 \implies t < 2.44 \implies \mathbf{t \le 2}$<br>
+                                $-195 - 80t < -200 \implies 80t > 5 \implies t > 0.0625 \implies \mathbf{t \ge 1}$
+                            </div>
+                            <p>Los valores enteros aceptables para $t$ son $\{1, 2\}$. Calculamos las soluciones:</p>
+                            <ul class="list-unstyled">
+                                <li>Para $t=1$: $X = 100 + 41 = \mathbf{141}$, $Y = -195 - 80 = \mathbf{-275}$.
+                                    <br>Verificación: $960(141) + 492(-275) = 135360 - 135300 = 60$ (Correcto).
+                                </li>
+                                <li>Para $t=2$: $X = 100 + 82 = \mathbf{182}$, $Y = -195 - 160 = \mathbf{-355}$.
+                                    <br>Verificación: $960(182) + 492(-355) = 174720 - 174660 = 60$ (Correcto).
+                                </li>
+                            </ul>
+
+                            <p style="margin-top:1.5rem;"><strong>Parte (b): $960X + 460Y = 50$</strong></p>
+                            <p>1. Calculamos el MCD de $a=960$ y $b=460$:
+                                <br>$d = (960:460) = (40:460) = 20$.
+                                <br>2. Verificamos divisibilidad: ¿$20$ divide a $50$? No.
+                                <br>Por lo tanto, la ecuación diofántica <strong>no tiene soluciones enteras</strong>.
+                            </p>
+                            
+                            <div class="question-solution">
+                                <span class="sol-tag">Respuesta</span>
+                                <p>(a) Las soluciones posibles bajo las condiciones dadas son: <strong>$(141, -275)$</strong> y <strong>$(182, -355)$</strong>.</p>
+                                <p>(b) $960X + 460Y = 50$ <strong>no tiene solución</strong>.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: CALCULATORS -->
+        <div id="calc-view" class="view-content">
+            <div class="section-header">
+                <h1>Calculadoras Algorítmicas Interactivas</h1>
+                <p>Comprueba resultados y visualiza el desarrollo matemático paso a paso en tiempo real.</p>
+            </div>
+
+            <div class="calc-grid">
+                <!-- Euclidean Extended -->
+                <div class="card">
+                    <h2 class="card-title">1. Calculadora de Euclides Extendido</h2>
+                    <p style="margin-bottom:1rem; color:var(--text-muted); font-size:0.9rem;">
+                        Ingresa dos enteros para calcular su MCD y representarlo como combinación lineal.
+                    </p>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Número A</label>
+                        <input type="number" id="euclid-a" class="calc-input" value="342">
+                    </div>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Número B</label>
+                        <input type="number" id="euclid-b" class="calc-input" value="630">
+                    </div>
+                    <button class="btn-calc" onclick="runEuclid()">Calcular</button>
+                    
+                    <div id="euclid-result" class="calc-result">
+                        <div class="calc-result-title">Resultados y Combinación Lineal:</div>
+                        <div id="euclid-summary" style="margin-bottom:1rem; font-weight:500;"></div>
+                        <div style="overflow-x:auto;">
+                            <table id="euclid-res-table" class="euclid-table">
+                                <thead>
+                                    <tr>
+                                        <th>$r$</th>
+                                        <th>$x$</th>
+                                        <th>$y$</th>
+                                        <th>$q$</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fermat Factorization -->
+                <div class="card">
+                    <h2 class="card-title">2. Factorizador de Fermat</h2>
+                    <p style="margin-bottom:1rem; color:var(--text-muted); font-size:0.9rem;">
+                        Ingresa un número compuesto impar para descomponerlo en diferencia de cuadrados.
+                    </p>
+                    <div class="calc-input-group">
+                        <label class="calc-label">Número Impar (n)</label>
+                        <input type="number" id="fermat-n" class="calc-input" value="1219331">
+                    </div>
+                    <button class="btn-calc" onclick="runFermat()">Calcular</button>
+                    
+                    <div id="fermat-result" class="calc-result">
+                        <div class="calc-result-title">Resultados de la Factorización:</div>
+                        <div id="fermat-summary" style="margin-bottom:1rem; font-weight:500;"></div>
+                        <div style="overflow-x:auto;">
+                            <table id="fermat-res-table" class="fermat-table">
+                                <thead>
+                                    <tr>
+                                        <th>$x$</th>
+                                        <th>$x^2 - n$</th>
+                                        <th>¿Cuadrado Perfecto?</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- JS FOR INTERACTIVITY -->
+    <script>
+        // Switch between major navigation views (SPA tabs)
+        function switchView(viewId, element) {
+            // Hide all views
+            const views = document.querySelectorAll('.view-content');
+            views.forEach(v => v.classList.remove('active'));
+
+            // Show selected view
+            const activeView = document.getElementById(viewId);
+            if (activeView) activeView.classList.add('active');
+
+            // Set nav active state
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Toggle collapsible timeline sections
+        function toggleCollapse(divId) {
+            const el = document.getElementById(divId);
+            if (el) {
+                el.classList.toggle('active');
+            }
+        }
+
+        // Switch between different exam contents
+        function switchExam(examId, element) {
+            const contents = document.querySelectorAll('.exam-content');
+            contents.forEach(c => c.classList.remove('active'));
+
+            const activeContent = document.getElementById(examId);
+            if (activeContent) activeContent.classList.add('active');
+
+            const tabs = document.querySelectorAll('.exam-tab');
+            tabs.forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+        }
+
+        // Interactive Euclid calculator logic
+        function runEuclid() {
+            const inputA = parseInt(document.getElementById('euclid-a').value);
+            const inputB = parseInt(document.getElementById('euclid-b').value);
+
+            if (isNaN(inputA) || isNaN(inputB) || inputA <= 0 || inputB <= 0) {
+                alert("Por favor ingrese números naturales positivos.");
+                return;
+            }
+
+            const large = Math.max(inputA, inputB);
+            const small = Math.min(inputA, inputB);
+            const isBiggerB = inputB > inputA;
+
+            // Initial rows
+            let r_prev2 = {r: large, x: isBiggerB ? 0 : 1, y: isBiggerB ? 1 : 0, q: null};
+            let r_prev1 = {r: small, x: isBiggerB ? 1 : 0, y: isBiggerB ? 0 : 1, q: null};
+
+            let tableData = [r_prev2, r_prev1];
+
+            while (true) {
+                let q = Math.floor(r_prev2.r / r_prev1.r);
+                let r = r_prev2.r % r_prev1.r;
+
+                // update previous row's q
+                tableData[tableData.length - 1].q = q;
+
+                if (r === 0) {
+                    tableData.push({r: 0, x: null, y: null, q: null});
+                    break;
+                }
+
+                let x = r_prev2.x - r_prev1.x * q;
+                let y = r_prev2.y - r_prev1.y * q;
+
+                let newRow = {r: r, x: x, y: y, q: null};
+                tableData.push(newRow);
+
+                r_prev2 = r_prev1;
+                r_prev1 = newRow;
+            }
+
+            const gcdVal = tableData[tableData.length - 2].r;
+            const xVal = tableData[tableData.length - 2].x;
+            const yVal = tableData[tableData.length - 2].y;
+
+            // Render table
+            const tbody = document.querySelector('#euclid-res-table tbody');
+            tbody.innerHTML = '';
+
+            tableData.forEach(row => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.r}</td>
+                    <td>${row.x !== null ? row.x : '-'}</td>
+                    <td>${row.y !== null ? row.y : '-'}</td>
+                    <td>${row.q !== null ? row.q : '-'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Render Summary
+            const summaryDiv = document.getElementById('euclid-summary');
+            summaryDiv.innerHTML = `MCD (${inputA} : ${inputB}) = <span style="color:var(--secondary); font-weight:700;">${gcdVal}</span>
+            <br>Combinación Lineal: <span style="color:var(--primary); font-weight:600;">${gcdVal} = ${inputA} \cdot (${xVal}) + ${inputB} \cdot (${yVal})</span>`;
+
+            document.getElementById('euclid-result').style.display = 'block';
+        }
+
+        // Interactive Fermat calculator logic
+        function runFermat() {
+            const n = parseInt(document.getElementById('fermat-n').value);
+
+            if (isNaN(n) || n <= 1 || n % 2 === 0) {
+                alert("Por favor ingrese un número compuesto impar mayor a 1.");
+                return;
+            }
+
+            let startX = Math.floor(Math.sqrt(n));
+            if (startX * startX < n) {
+                startX += 1;
+            }
+
+            let tableData = [];
+            let found = false;
+            let x = startX;
+            let finalX = 0, finalY = 0;
+
+            for (let k = 0; k < 25; k++) {
+                let y2 = x*x - n;
+                let y = Math.floor(Math.sqrt(y2));
+                let isSquare = (y*y === y2);
+
+                tableData.push({x: x, y2: y2, isSquare: isSquare, y: y});
+
+                if (isSquare) {
+                    found = true;
+                    finalX = x;
+                    finalY = y;
+                    break;
+                }
+                x += 1;
+            }
+
+            // Render table
+            const tbody = document.querySelector('#fermat-res-table tbody');
+            tbody.innerHTML = '';
+
+            tableData.forEach(row => {
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${row.x}</td>
+                    <td>${row.x}² - ${n} = ${row.y2}</td>
+                    <td>${row.isSquare ? `<span style="color:var(--secondary); font-weight:600;">SÍ (y = ${row.y})</span>` : 'No'}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            // Render Summary
+            const summaryDiv = document.getElementById('fermat-summary');
+            if (found) {
+                let factorA = finalX - finalY;
+                let factorB = finalX + finalY;
+                summaryDiv.innerHTML = `Factorización Exitosa:
+                <br>x = ${finalX}, y = ${finalY} (ya que ${finalX}² - ${finalY}² = ${n})
+                <br>Factores: (${finalX} - ${finalY}) \cdot (${finalX} + ${finalY}) = <span style="color:var(--secondary); font-weight:700;">${factorA} \cdot ${factorB} = ${n}</span>`;
+            } else {
+                summaryDiv.innerHTML = `<span style="color:var(--accent);">No se halló un cuadrado perfecto en los primeros 25 pasos. El número podría ser primo o requiere más pasos de cálculo.</span>`;
+            }
+
+            document.getElementById('fermat-result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
