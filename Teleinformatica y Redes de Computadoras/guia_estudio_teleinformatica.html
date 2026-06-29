@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía de Estudio - Teleinformática y Redes de Computadoras (CONEAU)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0b0f19;
+            --bg-secondary: #111827;
+            --bg-card: #1f2937;
+            --bg-card-hover: #374151;
+            --accent-cyan: #00f2fe;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-green: #10b981;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --border-color: #374151;
+            --sidebar-width: 320px;
+            --radius: 12px;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+            --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-card: #f1f5f9;
+            --bg-card-hover: #e2e8f0;
+            --accent-cyan: #0284c7;
+            --accent-blue: #2563eb;
+            --accent-purple: #7c3aed;
+            --accent-green: #059669;
+            --accent-orange: #d97706;
+            --accent-red: #dc2626;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --text-muted: #94a3b8;
+            --border-color: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            line-height: 1.6;
+        }
+
+        /* Sidebar Styling */
+        sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            z-index: 10;
+        }
+
+        .brand-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: linear-gradient(135deg, rgba(0, 242, 254, 0.05), rgba(139, 92, 246, 0.05));
+        }
+
+        .brand-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .search-box {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            outline: none;
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 242, 254, 0.15);
+        }
+
+        .nav-menu {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .nav-section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 12px 12px 6px 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-bottom: 4px;
+            transition: var(--transition);
+        }
+
+        .nav-item:hover {
+            background-color: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(90deg, rgba(0, 242, 254, 0.15), transparent);
+            color: var(--accent-cyan);
+            font-weight: 600;
+            border-left: 3px solid var(--accent-cyan);
+        }
+
+        .badge {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background-color: var(--bg-card-hover);
+            color: var(--text-secondary);
+        }
+
+        .nav-item.active .badge {
+            background-color: var(--accent-cyan);
+            color: #000;
+            font-weight: 700;
+        }
+
+        /* Progress Footer */
+        .sidebar-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+        }
+
+        .progress-container {
+            margin-bottom: 12px;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .progress-bar-bg {
+            height: 6px;
+            background-color: var(--bg-card);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-blue));
+            transition: width 0.4s ease;
+        }
+
+        .theme-toggle-btn {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+
+        .theme-toggle-btn:hover {
+            background-color: var(--bg-card);
+        }
+
+        /* Main Area */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            background-color: var(--bg-primary);
+        }
+
+        header {
+            padding: 20px 32px;
+            background-color: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title-area h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .header-title-area p {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .content-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        .unit-tab {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .unit-tab.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Components styling */
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: rgba(0, 242, 254, 0.1);
+            color: var(--accent-cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .topic-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px;
+            transition: var(--transition);
+        }
+
+        .topic-card:hover {
+            border-color: var(--accent-cyan);
+            transform: translateY(-2px);
+        }
+
+        .topic-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--accent-cyan);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .concept-list {
+            list-style: none;
+            margin-top: 12px;
+        }
+
+        .concept-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .concept-list li::before {
+            content: "•";
+            position: absolute;
+            left: 6px;
+            color: var(--accent-blue);
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .formula-box {
+            background-color: var(--bg-primary);
+            border: 1px dashed var(--accent-blue);
+            border-radius: 8px;
+            padding: 14px;
+            margin: 14px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--accent-cyan);
+        }
+
+        .highlight-box {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 4px solid var(--accent-green);
+            padding: 14px 18px;
+            border-radius: 4px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+
+        .warning-box {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 4px solid var(--accent-orange);
+            padding: 14px 18px;
+            border-radius: 4px;
+            margin: 16px 0;
+            font-size: 0.9rem;
+        }
+
+        /* Interactive Quiz & Calculator */
+        .quiz-option {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .quiz-option:hover {
+            background-color: var(--bg-card-hover);
+            border-color: var(--accent-blue);
+        }
+
+        .quiz-option.correct {
+            background-color: rgba(16, 185, 129, 0.2);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .quiz-option.incorrect {
+            background-color: rgba(239, 68, 68, 0.2);
+            border-color: var(--accent-red);
+            color: var(--accent-red);
+        }
+
+        .calc-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .calc-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .calc-group input, .calc-group select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .btn-calc {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            grid-column: 1 / -1;
+        }
+
+        .btn-calc:hover {
+            opacity: 0.9;
+        }
+
+        .calc-result {
+            margin-top: 16px;
+            padding: 16px;
+            background-color: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--accent-cyan);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--accent-cyan);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.875rem;
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: var(--bg-card);
+            color: var(--accent-cyan);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: rgba(255,255,255,0.02);
+        }
+
+        .mark-complete-btn {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mark-complete-btn:hover {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .mark-complete-btn.completed {
+            background-color: rgba(16, 185, 129, 0.15);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        @media (max-width: 900px) {
+            body { flex-direction: column; }
+            sidebar { width: 100%; height: auto; }
+            main { height: auto; overflow: visible; }
+        }
+    </style>
+</head>
+<body>
+    <sidebar>
+        <div class="brand-header">
+            <div class="brand-title">🌐 TELEINFORMATICA</div>
+            <div class="brand-subtitle">Guía de Repaso CONEAU - FIE</div>
+        </div>
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-input" placeholder="🔍 Buscar temas o protocolos..." oninput="filterTopics()">
+        </div>
+        <div class="nav-menu" id="navMenu">
+            <div class="nav-section-label">Unidades Temáticas</div>
+            <div class="nav-item active" onclick="switchTab('u1')" data-unit="u1">
+                <span>U1: Intro & Canal</span>
+                <span class="badge" id="badge-u1">0%</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('u2')" data-unit="u2">
+                <span>U2: Arquitectura & HDLC</span>
+                <span class="badge" id="badge-u2">0%</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('u3')" data-unit="u3">
+                <span>U3: Redes WAN & X.25</span>
+                <span class="badge" id="badge-u3">0%</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('u4')" data-unit="u4">
+                <span>U4: Frame Relay & PPP</span>
+                <span class="badge" id="badge-u4">0%</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('u5')" data-unit="u5">
+                <span>U5: Redes LAN & Wi-Fi</span>
+                <span class="badge" id="badge-u5">0%</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('u6')" data-unit="u6">
+                <span>U6: Familia TCP/IP</span>
+                <span class="badge" id="badge-u6">0%</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('u7')" data-unit="u7">
+                <span>U7: IP, ICMP & VoIP</span>
+                <span class="badge" id="badge-u7">0%</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('u8')" data-unit="u8">
+                <span>U8: Enrutamiento & Security</span>
+                <span class="badge" id="badge-u8">0%</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('u9')" data-unit="u9">
+                <span>U9: ATM & MPLS</span>
+                <span class="badge" id="badge-u9">0%</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('u10')" data-unit="u10">
+                <span>U10: Optica, PCM & 5G</span>
+                <span class="badge" id="badge-u10">0%</span>
+            </div>
+            <div class="nav-section-label">Laboratorios & Herramientas</div>
+            <div class="nav-item" onclick="switchTab('tps')" data-unit="tps">
+                <span>🛠️ Trabajos Prácticos (1-9)</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('calcs')" data-unit="calcs">
+                <span>🧮 Calculadoras de Red</span>
+            </div>
+            <div class="nav-item" onclick="switchTab('quiz')" data-unit="quiz">
+                <span>📝 Auto-Evaluación / Quiz</span>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="progress-container">
+                <div class="progress-header">
+                    <span>Progreso Global</span>
+                    <span id="globalProgressText">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="globalProgressBar"></div>
+                </div>
+            </div>
+            <button class="theme-toggle-btn" onclick="toggleTheme()">
+                <span id="themeIcon">🌙</span> <span id="themeText">Modo Oscuro</span>
+            </button>
+        </div>
+    </sidebar>
+    <main>
+        <header>
+            <div class="header-title-area">
+                <h1 id="tabTitle">Unidad Temática N° 1: Introducción a las Redes</h1>
+                <p id="tabSubtitle">Conceptos básicos de teleinformática, capacidad de canal y técnicas de transmisión.</p>
+            </div>
+            <button class="mark-complete-btn" id="currentCompleteBtn" onclick="toggleCurrentCompleted()">
+                <span>✓</span> <span id="completeBtnText">Marcar como repasado</span>
+            </button>
+        </header>
+        <div class="content-body" id="contentBody">
+
+<!-- UNIDAD 1 -->
+<div class="unit-tab active" id="tab-u1">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">01</div>
+            <div class="card-title">Conceptos Fundamentales de Teleinformática</div>
+        </div>
+        <p>La teleinformática combina las telecomunicaciones y la informática para posibilitar la transmisión automatizada de datos a distancia entre sistemas de computación.</p>
+        
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">Clasificación por Alcance <span>LAN / WAN</span></div>
+                <ul class="concept-list">
+                    <li><strong>LAN (Local Area Network):</strong> Cobertura limitada (edificio/campus). Altas tasas de transferencia (100Mbps a 10Gbps+), bajas tasas de error, propiedad privada del medio.</li>
+                    <li><strong>MAN (Metropolitan Area Network):</strong> Cobertura urbana/ciudad (ej. Metro Ethernet). Alta velocidad interconectando LANs.</li>
+                    <li><strong>WAN (Wide Area Network):</strong> Cobertura regional, nacional o global. Opera sobre infraestructura pública/proveedores de servicios (ISP, Telecom).</li>
+                    <li><strong>GAN (Global Area Network):</strong> Cobertura satelital e intercontinental global.</li>
+                </ul>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Topologías de Red <span>Física vs Lógica</span></div>
+                <ul class="concept-list">
+                    <li><strong>Bus:</strong> Todos los nodos comparten un único canal coaxial. Requiere terminadores. Susceptible a colisiones y cortes de cable.</li>
+                    <li><strong>Estrella:</strong> Nodos conectados a un punto central (Switch/Hub). Fácil diagnóstico y aislamiento de fallas.</li>
+                    <li><strong>Anillo:</strong> Conexión punto a punto circular. Paso de testigo (Token Ring). Evita colisiones pero un corte interrumpe el anillo.</li>
+                    <li><strong>Malla (Mesh):</strong> Conexiones redundantes. Malla total exige \( N(N-1)/2 \) enlaces. Máxima tolerancia a fallos.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">⚡</div>
+            <div class="card-title">Modos de Transmisión & Modulación</div>
+        </div>
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">Sincronismo y Modos</div>
+                <ul class="concept-list">
+                    <li><strong>Serie vs Paralelo:</strong> Serie envía bit a bit por un canal. Paralelo envía varios bits simultáneos (limitado por desalineación temporal a corta distancia).</li>
+                    <li><strong>Sincrónica vs Asincrónica:</strong> Asincrónica transmite carácter por carácter delimitado por bits de <em>Start ('0')</em> y <em>Stop ('1')</em>. Sincrónica transmite bloques continuos con señal de reloj compartida.</li>
+                    <li><strong>Banda Base vs Banda Ancha:</strong> Banda base transmite impulsos digitales directos sin moduladora (ej. Manchester). Banda ancha o modulada usa portadora senoidal.</li>
+                </ul>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Velocidad y Modulación</div>
+                <p>La velocidad de modulación mide el número de cambios de estado eléctrico por segundo (Baudios), mientras que la de transmisión mide la velocidad efectiva de información (bps).</p>
+                <div class="formula-box">
+                    <strong>Relación Fundamental:</strong><br>
+                    \( V_t = V_m 	imes \log_2(M) \) [bps]<br>
+                    Donde \( V_m \) es la velocidad en Baudios y \( M \) es el número de estados posibles del símbolo.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">📐</div>
+            <div class="card-title">Capacidad de Canal & Perturbaciones</div>
+        </div>
+        <p>El rendimiento teórico máximo de transmisión está limitado por las leyes físicas de la onda y el ruido de la línea.</p>
+        
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">Criterio de Nyquist (Canal Ideal)</div>
+                <p>Aplica a canales libres de ruido térmico, limitados únicamente por el ancho de banda \( B \).</p>
+                <div class="formula-box">
+                    \( C = 2 \cdot B \cdot \log_2(M) \) [bps]
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Teorema de Shannon-Hartley (Canal Real)</div>
+                <p>Considera la presencia de ruido blanco térmico gaussiano y fija el límite teórico insuperable.</p>
+                <div class="formula-box">
+                    \( C = B \cdot \log_2\left(1 + rac{S}{N}ight) \) [bps]<br>
+                    \( SNR_{dB} = 10 \log_{10}(S/N) \)
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>Detección y Corrección de Errores:</strong>
+            <ul>
+                <li><strong>Paridad (LRC/VRC):</strong> Bit de paridad simple detecta errores impares. Paridad cruzada detecta bloques.</li>
+                <li><strong>CRC (Cyclic Redundancy Check):</strong> Basado en división polinomial en módulo 2. Extremadamente eficaz para errores en ráfaga en tramas de datos.</li>
+                <li><strong>Código Hamming:</strong> Introduce bits de verificación en posiciones potencia de 2 (\(1, 2, 4, 8...\)). Permite corregir 1 bit erróneo y detectar 2.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- UNIDAD 2 -->
+<div class="unit-tab" id="tab-u2">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">02</div>
+            <div class="card-title">Arquitectura de Redes & Protocolo HDLC</div>
+        </div>
+        <p>Análisis comparativo de los modelos estratificados y profundización en la capa de enlace de datos.</p>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">Modelo OSI vs TCP/IP</div>
+                <table>
+                    <thead>
+                        <tr><th>Capa OSI</th><th>Función Principal</th><th>PDU</th><th>Equivalente TCP/IP</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>7. Aplicación</td><td>Interfaz con el usuario/servicios</td><td>Datos</td><td rowspan="3">Aplicación</td></tr>
+                        <tr><td>6. Presentación</td><td>Cifrado, compresión, formato</td><td>Datos</td></tr>
+                        <tr><td>5. Sesión</td><td>Diálogo y control de sesión</td><td>Datos</td></tr>
+                        <tr><td>4. Transporte</td><td>Conexión extremo a extremo, flujo</td><td>Segmento/Datagrama</td><td>Transporte</td></tr>
+                        <tr><td>3. Red</td><td>Direccionamiento lógico, ruteo</td><td>Paquete/Datagrama</td><td>Internet</td></tr>
+                        <tr><td>2. Enlace</td><td>Control acceso al medio, tramas</td><td>Trama (Frame)</td><td rowspan="2">Acceso a Red</td></tr>
+                        <tr><td>1. Física</td><td>Transmisión de bits en medio físico</td><td>Bits</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Protocolos orientados a Bit vs Carácter</div>
+                <ul class="concept-list">
+                    <li><strong>Orientados al Carácter (ej. BSC):</strong> Usan secuencias de caracteres de control (STX, ETX, DLE) para estructurar datos. Sufren de ambigüedad si el dato contiene el carácter de control (requiere carácter de escape).</li>
+                    <li><strong>Orientados al Bit (ej. HDLC):</strong> Delimitan tramas mediante banderas de bits patrón fijo (<code>01111110</code>). Usan transparencia mediante <em>Bit Stuffing</em> (inserción de un '0' tras cinco '1's consecutivos).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">🛡️</div>
+            <div class="card-title">Estudio En Profundidad: Protocolo HDLC</div>
+        </div>
+        <p>HDLC (High-level Data Link Control) es la base estándar de la capa de enlace para redes WAN e ISDN (LAPB, LAPD).</p>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">Estructura de la Trama HDLC</div>
+                <div class="formula-box" style="white-space: pre; font-family: monospace;">
+[ Flag ] [ Dirección ] [ Control ] [ Datos / Payload ] [ FCS / CRC ] [ Flag ]
+ 8 bits     8/16 bits   8/16 bits     Variable          16/32 bits  8 bits
+01111110                                                        01111110
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Tipos de Tramas HDLC</div>
+                <ul class="concept-list">
+                    <li><strong>Tramas I (Información):</strong> Transportan datos de capa superior. Incluyen números de secuencia de envío N(S) y recepción N(R) para ventana deslizante.</li>
+                    <li><strong>Tramas S (Supervisión):</strong> Control de flujo y errores.
+                        <ul>
+                            <li><code>RR</code> (Receive Ready): Acepta tramas y pide N(R).</li>
+                            <li><code>RNR</code> (Receive Not Ready): Pide N(R) pero frena envío (congestión).</li>
+                            <li><code>REJ</code> (Reject): Rechazo Go-Back-N desde N(R).</li>
+                            <li><code>SREJ</code> (Selective Reject): Pide retransmisión selectiva.</li>
+                        </ul>
+                    </li>
+                    <li><strong>Tramas U (No numeradas):</strong> Gestión del enlace (<code>SABM</code> para establecer modo asincrónico balanceado, <code>DISC</code> para desconectar, <code>UA</code> para confirmación no numerada).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UNIDAD 3 -->
+<div class="unit-tab" id="tab-u3">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">03</div>
+            <div class="card-title">Protocolos de Redes WAN (Parte I): Conmutación & X.25</div>
+        </div>
+        <p>Las redes WAN conectan equipos distribuidos geográficamente mediante técnicas de conmutación de recursos.</p>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">Técnicas de Conmutación</div>
+                <ul class="concept-list">
+                    <li><strong>Conmutación de Circuitos:</strong> Establece un camino físico dedicado durante la llamada (ej. Telefonía fija PSTN). Garantiza ancho de banda pero ineficiente para datos ráfaga. Conmutación por División de Espacio (matrices de cruce) y Tiempo (TDM switching).</li>
+                    <li><strong>Conmutación de Mensajes:</strong> Almacenamiento y reenvío (Store-and-Forward) del mensaje entero en nodos intermedios. Almacenamiento elevado.</li>
+                    <li><strong>Conmutación de Paquetes:</strong> Fragmenta mensajes en paquetes con cabecera. Aprovechamiento estadístico del canal. Se divide en <em>Modo Datagrama</em> (ruteo independiente sin conexión) y <em>Circuito Virtual</em> (camino lógico previo).</li>
+                </ul>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">El Estándar ITU-T X.25</div>
+                <p>Primer protocolo estándar internacional para redes de conmutación de paquetes sobre líneas de cobre ruidosas.</p>
+                <ul class="concept-list">
+                    <li><strong>Arquitectura de 3 Niveles:</strong> Nivel 1 (Físico: X.21/V.35), Nivel 2 (Enlace: LAPB - derivado de HDLC), Nivel 3 (Red: PLP - Packet Layer Protocol).</li>
+                    <li><strong>Canales Lógicos & Circuitos Virtuales:</strong> Asigna identificadores de canal lógico (LCN/LCI). Soporta Circuitos Virtuales Permanentes (PVC) y Conmutados (SVC).</li>
+                    <li><strong>Limitaciones:</strong> Realiza control de flujo y corrección de errores salto a salto en cada nodo de la red WAN. Alta latencia y sobrecarga sobre enlaces digitales modernos confiables, propiciando la transición a Frame Relay.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UNIDAD 4 -->
+<div class="unit-tab" id="tab-u4">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">04</div>
+            <div class="card-title">Protocolos WAN (Parte II): Frame Relay & PPP</div>
+        </div>
+        <p>Evolución hacia conmutación rápida de tramas y protocolos de enlace punto a punto.</p>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">Frame Relay & Circuitos DLCI</div>
+                <ul class="concept-list">
+                    <li><strong>Principio:</strong> Elimina el control de errores y flujo hop-by-hop de X.25. Transfiere la responsabilidad de retransmisión a las capas finales (TCP). Opera en Capas 1 y 2.</li>
+                    <li><strong>DLCI (Data Link Connection Identifier):</strong> Identificador de 10 bits en la cabecera de la trama que direcciona localmente el circuito virtual en el puerto del switch.</li>
+                </ul>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Control de Congestión & Parámetros</div>
+                <ul class="concept-list">
+                    <li><strong>FECN (Forward Explicit Congestion Notification):</strong> Notifica al receptor que existe congestión en la ruta.</li>
+                    <li><strong>BECN (Backward Explicit Congestion Notification):</strong> Notifica al emisor para que reduzca la tasa de transmisión.</li>
+                    <li><strong>DE (Discard Eligibility):</strong> Bit que marca la trama para ser descartada primero si los nodos se congestionan.</li>
+                </ul>
+                <div class="formula-box">
+                    <strong>Parámetros de Tráfico:</strong><br>
+                    • <code>Access Rate</code>: Velocidad física de la línea.<br>
+                    • <code>CIR</code> (Committed Info Rate): Ancho de banda garantizado por contrato.<br>
+                    • <code>Bc</code>: Ráfaga comprometida en el tiempo \( T_c \). (\( CIR = B_c / T_c \)).<br>
+                    • <code>Be</code>: Ráfaga en exceso (marcada con bit DE=1).
+                </div>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>Protocolo PPP (Point-to-Point Protocol):</strong>
+            Estándar para enlaces punto a punto seriales. Consta de <code>LCP</code> (Link Control Protocol) para negociar y probar el enlace físico y autenticación (PAP / CHAP), y <code>NCP</code> (Network Control Protocols, ej. IPCP) para configurar protocolos de capa de red superior.
+        </div>
+    </div>
+</div>
+
+<!-- UNIDAD 5 -->
+<div class="unit-tab" id="tab-u5">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">05</div>
+            <div class="card-title">Redes de Área Local (LAN) & Wi-Fi</div>
+        </div>
+        <p>Tecnologías de acceso al medio compartido y conmutado para entornos corporativos y domésticos.</p>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">Ethernet IEEE 802.3 & CSMA/CD</div>
+                <ul class="concept-list">
+                    <li><strong>CSMA/CD:</strong> Acceso Múltiple por Detección de Portadora y Detección de Colisiones. Si el medio está libre transmite; si detecta colisión envía señal de <em>Jamming</em> y aplica algoritmo de <em>Retroceso Exponencial Binario</em>.</li>
+                    <li><strong>HUB vs Switch:</strong> El HUB opera en Capa 1 (un solo dominio de colisión y difusión). El Switch opera en Capa 2 usando la tabla MAC (CAM), ofreciendo microsegmentación: cada puerto es un dominio de colisión independiente.</li>
+                </ul>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Cableado Estructurado ANSI/TIA/EIA-568</div>
+                <ul class="concept-list">
+                    <li>Norma estándar para el diseño e instalación de cableado en edificios.</li>
+                    <li><strong>Esquemas de Ponchado RJ-45:</strong> T568A (Blanco-Verde, Verde, Blanco-Naranja...) y T568B (Blanco-Naranja, Naranja, Blanco-Verde...).</li>
+                    <li>Un cable con ambas puntas iguales es <em>Directo (Straight-through)</em>; con puntas distintas es <em>Cruzado (Crossover)</em>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="topic-grid" style="margin-top:20px;">
+            <div class="topic-card">
+                <div class="topic-title">Wi-Fi (IEEE 802.11) & CSMA/CA</div>
+                <p>En medios inalámbricos no es posible detectar colisiones mientras se transmite. Se usa <strong>CSMA/CA (Collision Avoidance)</strong> mediante tramas de reserva <code>RTS/CTS</code> (Request to Send / Clear to Send) para evitar problemas de nodo oculto.</p>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Seguridad LAN & VLANs (802.1Q)</div>
+                <p>Las <strong>VLANs</strong> segmentan lógicamente los dominios de difusión. Enlaces troncales usan etiqueta <code>IEEE 802.1Q</code> (4 bytes adicionales). Ataques comunes: <em>ARP Spoofing</em> (mitigado con DAI) y <em>MAC Flooding</em> (mitigado con Port Security).</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UNIDAD 6 -->
+<div class="unit-tab" id="tab-u6">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">06</div>
+            <div class="card-title">La Familia de Protocolos TCP/IP</div>
+        </div>
+        <p>La pila de protocolos fundamental sobre la que se estructura la red global Internet.</p>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">UDP vs TCP (Capa de Transporte)</div>
+                <table>
+                    <thead>
+                        <tr><th>Característica</th><th>UDP (User Datagram Protocol)</th><th>TCP (Transmission Control Protocol)</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>Orientación</td><td>No orientado a conexión</td><td>Orientado a conexión (Handshake 3 vías)</td></tr>
+                        <tr><td>Fiabilidad</td><td>No confiable (sin ACK/retransmisión)</td><td>Confiable (ACKs, temporizadores, checksum)</td></tr>
+                        <tr><td>Ordenación</td><td>Sin garantía de orden</td><td>Entrega los datos estrictamente ordenados</td></tr>
+                        <tr><td>Cabecera</td><td>8 bytes (mínima)</td><td>20 a 60 bytes (compleja)</td></tr>
+                        <tr><td>Uso típico</td><td>Streaming, VoIP, DNS, DHCP</td><td>HTTP/HTTPS, SMTP, FTP, SSH</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Mecanismos Internos de TCP</div>
+                <ul class="concept-list">
+                    <li><strong>Handshake 3 Vías:</strong> <code>SYN</code> -> <code>SYN-ACK</code> -> <code>ACK</code> para sincronizar números de secuencia iniciales (ISN).</li>
+                    <li><strong>Control de Flujo:</strong> Mecanismo de <em>Ventana Deslizante (Sliding Window)</em>. El receptor anuncia su <code>Window Size</code> disponible para evitar saturación de su buffer.</li>
+                    <li><strong>Control de Congestión:</strong> Algoritmos <em>Slow Start</em> (crecimiento exponencial de la ventana de congestión cwnd) y <em>Congestion Avoidance</em> (crecimiento lineal aditivo).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UNIDAD 7 -->
+<div class="unit-tab" id="tab-u7">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">07</div>
+            <div class="card-title">Datagramas IP, Soporte & Voz sobre IP (VoIP)</div>
+        </div>
+        <p>El protocolo IP constituye el pilar no orientado a conexión de la capa de red (Internet).</p>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">Protocolo IP & Direccionamiento</div>
+                <ul class="concept-list">
+                    <li><strong>IPv4 vs IPv6:</strong> IPv4 usa 32 bits (4.3 mil millones de direcciones). IPv6 usa 128 bits, cabecera fija de 40 bytes sin checksum ni fragmentación en routers intermedios. Autoconfiguración SLAAC e IPSec nativo.</li>
+                    <li><strong>Subnetting & VLSM:</strong> Segmentación mediante máscaras de subred. VLSM (Variable Length Subnet Mask) permite maximizar la eficiencia asignando máscaras adaptadas al tamaño de cada subred. CIDR elimina las clases rígidas A/B/C.</li>
+                </ul>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Protocolos Auxiliares (ARP / ICMP)</div>
+                <ul class="concept-list">
+                    <li><strong>ARP (Address Resolution Protocol):</strong> Resuelve direcciones IP lógicas a direcciones MAC físicas mediante broadcast de solicitud (<em>ARP Request</em>) y respuesta unicast (<em>ARP Reply</em>).</li>
+                    <li><strong>ICMP (Internet Control Message Protocol):</strong> Transporte de mensajes de control y error (Ping usa <code>Echo Request Type 8</code> y <code>Echo Reply Type 0</code>; Traceroute usa <code>Time Exceeded Type 11</code> por TTL decrecido a 0).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box" style="margin-top:20px;">
+            <strong>Voz sobre IP (VoIP):</strong>
+            Convergencia de señalización telefónica en redes de datos. Soporta los estándares <code>ITU-T H.323</code> (Gateway, Gatekeeper, MCU) y <code>SIP</code> (Session Initiation Protocol, RFC 3261). La voz analógica se digitaliza con códecs (ej. G.711 a 64kbps o G.729 a 8kbps) y se encuadra en paquetes RTP/RTCP sobre UDP.
+        </div>
+    </div>
+</div>
+
+<!-- UNIDAD 8 -->
+<div class="unit-tab" id="tab-u8">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">08</div>
+            <div class="card-title">Enrutamiento en Redes WAN & Seguridad</div>
+        </div>
+        <p>Algoritmos de determinación de rutas y mecanismos defensivos de infraestructura de red.</p>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">Protocolos de Enrutamiento (IGP vs EGP)</div>
+                <ul class="concept-list">
+                    <li><strong>Vector de Distancia (Distance Vector - ej. RIP):</strong> Algoritmo Bellman-Ford. Transmite la tabla completa a vecinos periódicamente. Métrica en saltos (máx 15). Problema de <em>conteo al infinito</em> (mitigado con Split Horizon y Holddown Timers).</li>
+                    <li><strong>Estado de Enlace (Link State - ej. OSPF):</strong> Algoritmo Dijkstra. Cada router construye la topología completa mediante anuncios LSA. Métrica basada en costo/ancho de banda. Organizado en áreas jerárquicas (Backbone Área 0).</li>
+                    <li><strong>Exterior Gateway Protocol (EGP - ej. BGP-4):</strong> Enrutamiento entre Sistemas Autónomos (AS). Protocolo Vector de Ruta (Path Vector). Basado en políticas y atributos de selección (AS-Path, Local Pref, MED).</li>
+                </ul>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Seguridad de Red: Firewalls & VPNs</div>
+                <ul class="concept-list">
+                    <li><strong>Firewalls:</strong> Filtrado estático de paquetes (Capa 3/4), Inspección de Estado / <em>Stateful Inspection</em> (mantiene tabla de conexiones de estado), Proxy de Aplicación (Capa 7).</li>
+                    <li><strong>VPN (Virtual Private Network):</strong> Tunelización y cifrado sobre red pública.
+                        <ul>
+                            <li><code>IPSec</code>: Opera en Capa 3. Consta de <code>AH</code> (autenticación e integridad) y <code>ESP</code> (confidencialidad/cifrado y autenticación). Modos Transporte y Túnel. Gestión de claves IKE.</li>
+                            <li><code>SSL/TLS VPN</code>: Opera en Capa de Aplicación/Transporte, accesible vía navegador web.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UNIDAD 9 -->
+<div class="unit-tab" id="tab-u9">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">09</div>
+            <div class="card-title">Protocolos de Última Generación: ATM & MPLS</div>
+        </div>
+        <p>Tecnologías de conmutación de ultra alta velocidad desarrolladas para la integración multiservicio (voz, datos, video).</p>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">ATM (Asynchronous Transfer Mode)</div>
+                <ul class="concept-list">
+                    <li><strong>Celdas de 53 Bytes:</strong> Tamaño fijo pequeño (5 bytes de cabecera, 48 bytes de carga útil) para garantizar retardos mínimos e isócronos en voz y video.</li>
+                    <li><strong>Identificadores VPI / VCI:</strong> Conmutación orientada a conexión mediante identificadores de Camino Virtual (VPI) y Canal Virtual (VCI).</li>
+                    <li><strong>Capas AAL (ATM Adaptation Layer):</strong> AAL1 (emulación de circuitos), AAL2 (voz comprimida), AAL5 (SEAL, transporte eficiente de datagramas IP). Transmisión de IP con CLIP (RFC 1577) y LANE (LAN Emulation).</li>
+                </ul>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">MPLS (Multiprotocol Label Switching)</div>
+                <p>Evolución que combina la velocidad de la conmutación de capa 2 con la flexibilidad del enrutamiento de capa 3.</p>
+                <ul class="concept-list">
+                    <li><strong>Shim Header (Etiqueta de 32 bits):</strong> Insertada entre la cabecera de enlace y la de red (Label 20 bits, TC 3 bits, S 1 bit, TTL 8 bits).</li>
+                    <li><strong>Componentes:</strong> <code>LER</code> (Label Edge Router - añade/retira etiquetas en los extremos), <code>LSR</code> (Label Switching Router - conmuta paquetes en el núcleo basándose únicamente en la etiqueta LFIB), <code>LSP</code> (Label Switched Path).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UNIDAD 10 -->
+<div class="unit-tab" id="tab-u10">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">10</div>
+            <div class="card-title">Transmisión de Última Generación, Óptica & 5G</div>
+        </div>
+        <p>Jerarquías digitales de transporte, redes troncales de fibra óptica y comunicaciones móviles de quinta generación.</p>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">PCM & Jerarquías Digitales (PDH / SDH)</div>
+                <ul class="concept-list">
+                    <li><strong>PCM (Pulse Code Modulation):</strong> Digitalización en 3 pasos: Muestreo (Teorema de Nyquist \( f_s \ge 2 f_{max} \)), Cuantificación y Codificación binaria (64 kbps por canal de voz).</li>
+                    <li><strong>PDH (Plesiócrona):</strong> Estándar E1 (2.048 Mbps, 32 canales TDM). Dificultad para extraer canales individuales sin desmultiplexar toda la jerarquía.</li>
+                    <li><strong>SDH / SONET (Sincrónica):</strong> Reloj atómico global de red. Módulo STM-1 (155.52 Mbps). Permite extracción directa de canales (Add/Drop) y arquitecturas en anillo autorregenerables.</li>
+                </ul>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">Redes Ópticas DWDM & Bucle Local</div>
+                <ul class="concept-list">
+                    <li><strong>DWDM (Dense WDM):</strong> Multiplexa múltiples longitudes de onda (colores de luz) en un solo hilo de fibra monomodo. Uso de amplificadores ópticos directos EDFA y conmutadores ópticos OXC/ROADM.</li>
+                    <li><strong>Bucle Local (Local Loop):</strong> Evolución del par de cobre con xDSL (ADSL/VDSL) y fibra al hogar FTTH (GPON - Gigabit Passive Optical Network).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box" style="margin-top:20px;">
+            <strong>Comunicaciones Móviles 5G NR:</strong>
+            Evolución hacia redes móviles ultrarrápidas sustentadas en 3 pilares:
+            <ul>
+                <li><code>eMBB</code> (Enhanced Mobile Broadband): Velocidades de varios Gbps para streaming 4K/VR.</li>
+                <li><code>URLLC</code> (Ultra-Reliable Low-Latency Communication): Latencias menores a 1 ms para vehículos autónomos y telemedicina.</li>
+                <li><code>mMTC</code> (Massive Machine-Type Communication): Millones de sensores IoT conectados por km². Tecnologías clave: <em>Network Slicing</em> (segmentación virtual de red) y <em>Beamforming</em>.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- TRABAJOS PRACTICOS -->
+<div class="unit-tab" id="tab-tps">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">🛠️</div>
+            <div class="card-title">Guía de Trabajos Prácticos de Laboratorio (TP 1 a 9)</div>
+        </div>
+        <p>Resumen metodológico y guía de resolución para los trabajos prácticos de laboratorio Criptolab.</p>
+
+        <div class="topic-grid">
+            <div class="topic-card">
+                <div class="topic-title">TP 1: Cableado Estructurado & Diseño LAN</div>
+                <p>Diseño de plano físico. Selección de categorías UTP (Cat 6). Armado de conectores RJ-45 aplicando norma ANSI/TIA/EIA-568B. Certificación con comprobador de continuidad de pares.</p>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">TP 2: Configuración de Switches LAN</div>
+                <p>Configuración básica IOS Cisco. Creación de VLANs (<code>vlan 10</code>, <code>vlan 20</code>), asignación de puertos en acceso (<code>switchport mode access</code>) y enlaces troncales (<code>switchport mode trunk</code>) con 802.1Q.</p>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">TP 3: Análisis de Tramas Ethernet (Wireshark)</div>
+                <p>Captura de tramas en medio conmutado/promiscuo. Filtros <code>eth.addr == MAC</code>. Inspección de preámbulo, MAC destino/origen y campo EtherType (0x0800 para IPv4, 0x0806 para ARP).</p>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">TP 4: Captura y Análisis de Tráfico IP</div>
+                <p>Análisis de datagramas IP en Wireshark. Filtros <code>ip.src</code> e <code>ip.dst</code>. Verificación de versión IPv4, Header Length, TTL decrementado por routers y campo Protocolo (6 TCP, 17 UDP).</p>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">TP 5: Asignación de Direcciones IPv4 WAN</div>
+                <p>Resolución de problemas de direccionamiento. Cálculo de subredes con VLSM para optimizar direcciones en enlaces punto a punto (/30 o /31) y subredes LAN. Configuración de rutas estáticas.</p>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">TP 6: Análisis de Datagramas UDP</div>
+                <p>Captura de tráfico UDP (DNS Query/Response, DHCP). Inspección de la cabecera reducida de 8 bytes: puertos origen/destino, longitud y verificación de Checksum opcional/obligatorio.</p>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">TP 7: Análisis de Segmentos TCP</div>
+                <p>Captura de la negociación 3-way handshake (SYN, SYN-ACK, ACK). Seguimiento de números de secuencia (Seq) y confirmación (Ack). Análisis del control de flujo mediante el campo Window Size.</p>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">TP 8: Cálculo de Enlaces Frame Relay</div>
+                <p>Resolución de ejercicios de dimensiones de tráfico WAN. Cálculo de velocidad de acceso, relación entre CIR, Bc, Be y tiempo Tc. Evaluación de descarte de ráfagas con bit DE.</p>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-title">TP 9: Protocolos de Enrutamiento WAN</div>
+                <p>Configuración y análisis de convergencia en routers de laboratorio. Implementación de RIPv2 y OSPF. Comandos de diagnóstico: <code>show ip route</code>, <code>show ip ospf neighbor</code> y <code>traceroute</code>.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CALCULADORAS -->
+<div class="unit-tab" id="tab-calcs">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">🧮</div>
+            <div class="card-title">Calculadora de Capacidad de Canal (Shannon-Hartley)</div>
+        </div>
+        <p>Calcula el límite teórico insuperable de tasa de transmisión de datos sobre un canal con ruido térmico.</p>
+        <div class="calc-form">
+            <div class="calc-group">
+                <label>Ancho de Banda B (Hz)</label>
+                <input type="number" id="shannonB" value="3100" placeholder="Ej. 3100 para canal telefónico">
+            </div>
+            <div class="calc-group">
+                <label>Relación Señal/Ruido SNR (dB)</label>
+                <input type="number" id="shannonSNR" value="30" placeholder="Ej. 30 dB">
+            </div>
+            <button class="btn-calc" onclick="calcShannon()">Calcular Capacidad C (bps)</button>
+        </div>
+        <div class="calc-result" id="shannonResult">Resultado: Ingrese valores y presione calcular.</div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">🌐</div>
+            <div class="card-title">Calculadora de Subnetting IPv4</div>
+        </div>
+        <p>Obtén la máscara decimal, dirección de red, broadcast y rango de hosts útiles para cualquier IP/CIDR.</p>
+        <div class="calc-form">
+            <div class="calc-group">
+                <label>Dirección IP</label>
+                <input type="text" id="subIP" value="192.168.1.50" placeholder="192.168.1.1">
+            </div>
+            <div class="calc-group">
+                <label>Prefijo CIDR ( /8 a /30 )</label>
+                <input type="number" id="subCIDR" value="24" min="8" max="30">
+            </div>
+            <button class="btn-calc" onclick="calcSubnet()">Calcular Subred</button>
+        </div>
+        <div class="calc-result" id="subnetResult">Resultado: Ingrese IP y máscara para calcular.</div>
+    </div>
+</div>
+
+<!-- QUIZ -->
+<div class="unit-tab" id="tab-quiz">
+    <div class="card">
+        <div class="card-header">
+            <div class="card-icon">📝</div>
+            <div class="card-title">Auto-Evaluación Rápida de Repaso</div>
+        </div>
+        <p>Pon a prueba tus conocimientos antes del examen final. Selecciona la opción correcta en cada pregunta.</p>
+
+        <div style="margin-top:20px;">
+            <div class="topic-card" style="margin-bottom:20px;">
+                <div class="topic-title">Pregunta 1: Teoremas de Canal</div>
+                <p style="margin-bottom:12px; font-size:0.95rem;">¿Qué fórmula utilizarías para calcular la capacidad máxima de un canal real que presenta ruido térmico gaussiano?</p>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">A) C = 2 * B * log2(M) [Teorema de Nyquist]</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true)">B) C = B * log2(1 + S/N) [Teorema de Shannon-Hartley]</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">C) Vt = Vm * log2(M) [Relación de modulación]</div>
+            </div>
+
+            <div class="topic-card" style="margin-bottom:20px;">
+                <div class="topic-title">Pregunta 2: Protocolo HDLC</div>
+                <p style="margin-bottom:12px; font-size:0.95rem;">En el protocolo HDLC, ¿cómo se logra la transparencia de datos para evitar que el payload sea confundido con la bandera de delimitación (01111110)?</p>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">A) Usando el carácter de escape DLE.</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true)">B) Mediante la técnica de Bit Stuffing (inserción de un '0' tras cinco '1's consecutivos).</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">C) Cifrando la cabecera de la trama con algoritmos simétricos.</div>
+            </div>
+
+            <div class="topic-card" style="margin-bottom:20px;">
+                <div class="topic-title">Pregunta 3: Frame Relay</div>
+                <p style="margin-bottom:12px; font-size:0.95rem;">En una red Frame Relay, si los switches intermedios detectan congestión en el sentido en que viajan las tramas, ¿qué bit activan en el encabezado?</p>
+                <div class="quiz-option" onclick="checkQuiz(this, true)">A) Bit FECN (Forward Explicit Congestion Notification)</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">B) Bit BECN (Backward Explicit Congestion Notification)</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">C) Bit DE (Discard Eligibility)</div>
+            </div>
+
+            <div class="topic-card" style="margin-bottom:20px;">
+                <div class="topic-title">Pregunta 4: Protocolos de Transporte</div>
+                <p style="margin-bottom:12px; font-size:0.95rem;">¿Cuál de las siguientes afirmaciones respecto al protocolo TCP es CORRECTA?</p>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">A) Es no orientado a conexión y posee una cabecera fija de 8 bytes.</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true)">B) Realiza control de flujo mediante ventana deslizante y garantiza entrega ordenada confiable.</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">C) No realiza retransmisiones para evitar retrasar tráfico en tiempo real.</div>
+            </div>
+
+            <div class="topic-card" style="margin-bottom:20px;">
+                <div class="topic-title">Pregunta 5: Tecnologías Móviles & Transporte</div>
+                <p style="margin-bottom:12px; font-size:0.95rem;">¿Qué pilar de 5G NR está específicamente diseñado para ofrecer latencias ultrabajas (menores a 1 ms) en aplicaciones críticas como autos autónomos?</p>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">A) eMBB (Enhanced Mobile Broadband)</div>
+                <div class="quiz-option" onclick="checkQuiz(this, true)">B) URLLC (Ultra-Reliable Low-Latency Communication)</div>
+                <div class="quiz-option" onclick="checkQuiz(this, false)">C) mMTC (Massive Machine-Type Communication)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+</main>
+
+<script>
+    const state = {
+        currentTab: 'u1',
+        theme: 'dark',
+        completedUnits: {}
+    };
+
+    const tabMetaData = {
+        'u1': { title: 'Unidad Temática N° 1: Introducción a las Redes', sub: 'Conceptos básicos de teleinformática, capacidad de canal y técnicas de transmisión.' },
+        'u2': { title: 'Unidad Temática N° 2: Arquitectura de Redes', sub: 'Modelos de capas OSI vs TCP/IP y análisis profundo del protocolo HDLC.' },
+        'u3': { title: 'Unidad Temática N° 3: Protocolos WAN I', sub: 'Técnicas de conmutación de circuitos, mensajes y paquetes. Protocolo X.25.' },
+        'u4': { title: 'Unidad Temática N° 4: Protocolos WAN II', sub: 'Frame Relay, parámetros de tráfico CIR/Bc/Be y protocolo PPP.' },
+        'u5': { title: 'Unidad Temática N° 5: Redes de Área Local (LAN)', sub: 'Ethernet CSMA/CD, Switches vs Hubs, Cableado Estructurado, Wi-Fi y VLANs 802.1Q.' },
+        'u6': { title: 'Unidad Temática N° 6: La Familia TCP/IP', sub: 'Capa de transporte TCP vs UDP, Handshake 3-way, control de flujo y congestión.' },
+        'u7': { title: 'Unidad Temática N° 7: IP & Voz sobre IP', sub: 'Datagramas IPv4/IPv6, Subnetting, VLSM, ARP, ICMP y telefonía IP (H.323/SIP).' },
+        'u8': { title: 'Unidad Temática N° 8: Enrutamiento & Seguridad', sub: 'Algoritmos IGP (RIP, OSPF), EGP (BGP-4), Firewalls y VPNs (IPSec/SSL).' },
+        'u9': { title: 'Unidad Temática N° 9: ATM & MPLS', sub: 'Celdas ATM de 53 bytes, rutas virtuales VPI/VCI y conmutación de etiquetas MPLS.' },
+        'u10': { title: 'Unidad Temática N° 10: Transmisión Óptica & 5G', sub: 'PCM, multiplexación PDH/SDH, fibras ópticas DWDM y redes móviles 5G NR.' },
+        'tps': { title: 'Trabajos Prácticos de Laboratorio', sub: 'Guía metodológica para la resolución de las prácticas 1 a 9.' },
+        'calcs': { title: 'Calculadoras Interactivas de Red', sub: 'Herramientas de cálculo para Capacidad Shannon y Subnetting IPv4.' },
+        'quiz': { title: 'Auto-Evaluación de Conocimientos', sub: 'Preguntas de opción múltiple con retroalimentación inmediata.' }
+    };
+
+    function init() {
+        loadState();
+        switchTab(state.currentTab);
+        updateProgressUI();
+    }
+
+    function switchTab(tabId) {
+        state.currentTab = tabId;
+        document.querySelectorAll('.unit-tab').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+        const targetTab = document.getElementById('tab-' + tabId);
+        if (targetTab) targetTab.classList.add('active');
+
+        const navItem = document.querySelector(`.nav-item[data-unit="${tabId}"]`);
+        if (navItem) navItem.classList.add('active');
+
+        const meta = tabMetaData[tabId] || { title: 'Teleinformática', sub: 'Guía de repaso' };
+        document.getElementById('tabTitle').innerText = meta.title;
+        document.getElementById('tabSubtitle').innerText = meta.sub;
+
+        const completeBtn = document.getElementById('currentCompleteBtn');
+        if (tabId.startsWith('u')) {
+            completeBtn.style.display = 'inline-flex';
+            const isComp = !!state.completedUnits[tabId];
+            completeBtn.classList.toggle('completed', isComp);
+            document.getElementById('completeBtnText').innerText = isComp ? 'Tema Repasado ✓' : 'Marcar como repasado';
+        } else {
+            completeBtn.style.display = 'none';
+        }
+        saveState();
+    }
+
+    function toggleCurrentCompleted() {
+        const tabId = state.currentTab;
+        if (!tabId.startsWith('u')) return;
+        state.completedUnits[tabId] = !state.completedUnits[tabId];
+        switchTab(tabId);
+        updateProgressUI();
+    }
+
+    function updateProgressUI() {
+        let count = 0;
+        for (let i = 1; i <= 10; i++) {
+            const u = 'u' + i;
+            const badge = document.getElementById('badge-' + u);
+            if (state.completedUnits[u]) {
+                count++;
+                if (badge) badge.innerText = '100%';
+            } else {
+                if (badge) badge.innerText = '0%';
+            }
+        }
+        const pct = Math.round((count / 10) * 100);
+        document.getElementById('globalProgressText').innerText = pct + '%';
+        document.getElementById('globalProgressBar').style.width = pct + '%';
+    }
+
+    function toggleTheme() {
+        state.theme = state.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', state.theme);
+        document.getElementById('themeIcon').innerText = state.theme === 'dark' ? '🌙' : '☀️';
+        document.getElementById('themeText').innerText = state.theme === 'dark' ? 'Modo Oscuro' : 'Modo Claro';
+        saveState();
+    }
+
+    function filterTopics() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('.topic-card').forEach(card => {
+            const text = card.innerText.toLowerCase();
+            card.style.display = text.includes(query) ? 'block' : 'none';
+        });
+    }
+
+    function calcShannon() {
+        const B = parseFloat(document.getElementById('shannonB').value);
+        const snrDb = parseFloat(document.getElementById('shannonSNR').value);
+        if (isNaN(B) || isNaN(snrDb)) {
+            document.getElementById('shannonResult').innerText = 'Error: Ingrese números válidos.';
+            return;
+        }
+        const snrLinear = Math.pow(10, snrDb / 10);
+        const C = B * Math.log2(1 + snrLinear);
+        const kbps = (C / 1000).toFixed(2);
+        document.getElementById('shannonResult').innerHTML = 
+            `<strong>Capacidad Máxima (C):</strong> ${Math.round(C).toLocaleString()} bps (${kbps} kbps)<br>` +
+            `<small>Calculado para B=${B} Hz y SNR lineal=${snrLinear.toFixed(2)}</small>`;
+    }
+
+    function calcSubnet() {
+        const ip = document.getElementById('subIP').value.trim();
+        const cidr = parseInt(document.getElementById('subCIDR').value);
+        if (!ip || isNaN(cidr) || cidr < 8 || cidr > 30) {
+            document.getElementById('subnetResult').innerText = 'Error: IP o CIDR inválido.';
+            return;
+        }
+        const maskInt = (0xFFFFFFFF << (32 - cidr)) >>> 0;
+        const maskStr = [(maskInt>>>24)&255, (maskInt>>>16)&255, (maskInt>>>8)&255, maskInt&255].join('.');
+        
+        const ipParts = ip.split('.').map(Number);
+        if (ipParts.length !== 4 || ipParts.some(p => isNaN(p) || p < 0 || p > 255)) {
+            document.getElementById('subnetResult').innerText = 'Error: Formato IP inválido.';
+            return;
+        }
+        const ipInt = ((ipParts[0]<<24) | (ipParts[1]<<16) | (ipParts[2]<<8) | ipParts[3]) >>> 0;
+        const netInt = (ipInt & maskInt) >>> 0;
+        const broadInt = (netInt | (~maskInt >>> 0)) >>> 0;
+
+        const netStr = [(netInt>>>24)&255, (netInt>>>16)&255, (netInt>>>8)&255, netInt&255].join('.');
+        const broadStr = [(broadInt>>>24)&255, (broadInt>>>16)&255, (broadInt>>>8)&255, broadInt&255].join('.');
+        const hosts = Math.pow(2, 32 - cidr) - 2;
+
+        document.getElementById('subnetResult').innerHTML = 
+            `<strong>Máscara:</strong> ${maskStr} (/${cidr})<br>` +
+            `<strong>Dirección de Red:</strong> ${netStr}<br>` +
+            `<strong>Dirección de Broadcast:</strong> ${broadStr}<br>` +
+            `<strong>Hosts Útiles:</strong> ${hosts.toLocaleString()}`;
+    }
+
+    function checkQuiz(opt, isCorrect) {
+        const parent = opt.parentElement;
+        parent.querySelectorAll('.quiz-option').forEach(el => el.classList.remove('correct', 'incorrect'));
+        if (isCorrect) {
+            opt.classList.add('correct');
+        } else {
+            opt.classList.add('incorrect');
+        }
+    }
+
+    function saveState() {
+        localStorage.setItem('teleinfo_guide_state', JSON.stringify(state));
+    }
+
+    function loadState() {
+        try {
+            const saved = localStorage.getItem('teleinfo_guide_state');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (parsed.currentTab) state.currentTab = parsed.currentTab;
+                if (parsed.theme) state.theme = parsed.theme;
+                if (parsed.completedUnits) state.completedUnits = parsed.completedUnits;
+            }
+        } catch(e) {}
+        if (state.theme === 'light') {
+            document.documentElement.setAttribute('data-theme', 'light');
+            document.getElementById('themeIcon').innerText = '☀️';
+            document.getElementById('themeText').innerText = 'Modo Claro';
+        }
+    }
+
+    window.onload = init;
+</script>
+</body>
+</html>

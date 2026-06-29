@@ -10,6 +10,10 @@ import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import readline from 'readline/promises';
+import { exec } from 'child_process';
+import { promisify } from 'util';
+
+const execAsync = promisify(exec);
 
 // Define __dirname and __filename for ES Modules
 const __filename = fileURLToPath(import.meta.url);
@@ -41,7 +45,6 @@ ${colors.bright}Uso:${colors.reset}
 
 ${colors.bright}Opciones:${colors.reset}
   --config <path>     Ruta al archivo de configuración JSON (por defecto: config.json)
-  --model <name>      Sobrescribe el modelo de Ollama (ej. llama3, mistral, gemma2)
   --topic "<topic>"   Sobrescribe la temática del debate
   --turns <number>    Cantidad de turnos. Pon 0 para modo continuo infinito. (por defecto: config.json)
   --output <file>     Sobrescribe el nombre del archivo de salida
@@ -60,8 +63,6 @@ function parseArgs(args) {
       parsed.help = true;
     } else if (arg === '--config' && args[i + 1]) {
       parsed.config = args[++i];
-    } else if (arg === '--model' && args[i + 1]) {
-      parsed.model = args[++i];
     } else if (arg === '--topic' && args[i + 1]) {
       parsed.topic = args[++i];
     } else if (arg === '--turns' && args[i + 1]) {
@@ -131,6 +132,51 @@ async function checkOllama(url, modelName) {
   }
 }
 
+// Function to process agent actions (Tool Calling)
+async function processAgentActions(agentName, text) {
+  let executedSomething = false;
+  let actionResults = `Resultados del entorno para ${agentName}:\n`;
+
+  // Parse <write_file path="...">...</write_file>
+  const writeRegex = /<write_file\s+path="([^"]+)">([\s\S]*?)<\/write_file>/g;
+  let match;
+  while ((match = writeRegex.exec(text)) !== null) {
+    const filePath = match[1];
+    const content = match[2];
+    try {
+      await fs.writeFile(filePath, content, 'utf8');
+      console.log(`${colors.green}✔ ${agentName} creó/escribió el archivo: ${filePath}${colors.reset}`);
+      actionResults += `[write_file] Éxito al escribir ${filePath}\n`;
+      executedSomething = true;
+    } catch (err) {
+      console.error(`${colors.red}✘ Error al escribir ${filePath}:${colors.reset}`, err.message);
+      actionResults += `[write_file] Error al escribir ${filePath}: ${err.message}\n`;
+      executedSomething = true;
+    }
+  }
+
+  // Parse <execute_command>...</execute_command>
+  const execRegex = /<execute_command>([\s\S]*?)<\/execute_command>/g;
+  while ((match = execRegex.exec(text)) !== null) {
+    const command = match[1].trim();
+    console.log(`${colors.yellow}► Ejecutando comando de ${agentName}: ${command}${colors.reset}`);
+    try {
+      const { stdout, stderr } = await execAsync(command, { timeout: 30000 });
+      console.log(`${colors.dim}${stdout}${colors.reset}`);
+      if (stderr) console.error(`${colors.red}${stderr}${colors.reset}`);
+      
+      actionResults += `[execute_command] Comando: ${command}\nSTDOUT:\n${stdout}\nSTDERR:\n${stderr}\n`;
+      executedSomething = true;
+    } catch (err) {
+      console.error(`${colors.red}✘ Fallo la ejecución:${colors.reset} ${err.message}`);
+      actionResults += `[execute_command] Error ejecutando '${command}': ${err.message}\nSTDOUT:\n${err.stdout || ''}\nSTDERR:\n${err.stderr || ''}\n`;
+      executedSomething = true;
+    }
+  }
+
+  return { executedSomething, actionResults };
+}
+
 async function main() {
   const cliArgs = parseArgs(process.argv.slice(2));
 
@@ -156,49 +202,46 @@ async function main() {
   }
 
   // Override config parameters with CLI arguments if present
-  const model = cliArgs.model || config.model;
-  const ollamaUrl = config.ollamaUrl || 'http://localhost:11434';
   const topic = cliArgs.topic || config.topic;
   const maxTurns = cliArgs.turns !== undefined ? cliArgs.turns : (config.maxTurns !== undefined ? config.maxTurns : 0);
   const outputFile = cliArgs.output || config.outputFile || 'historial_interaccion.md';
   const temperature = config.temperature !== undefined ? config.temperature : 0.7;
   const delayMs = cliArgs.delay !== undefined ? cliArgs.delay : (config.delay !== undefined ? config.delay : 1500);
 
+  const agentA = config.agentA;
+  const agentB = config.agentB;
+
   console.log(`\n${colors.bright}Parámetros de la simulación:${colors.reset}`);
-  console.log(`  ${colors.bold}Modelo:${colors.reset} ${colors.green}✔ ${model}${colors.reset}`);
-  console.log(`  ${colors.bold}Servidor Ollama:${colors.reset} ${ollamaUrl}`);
+  console.log(`  ${colors.bold}Modelo Agente A:${colors.reset} ${colors.green}✔ ${agentA.model}${colors.reset} (${agentA.ollamaUrl})`);
+  console.log(`  ${colors.bold}Modelo Agente B:${colors.reset} ${colors.green}✔ ${agentB.model}${colors.reset} (${agentB.ollamaUrl})`);
   console.log(`  ${colors.bold}Turnos:${colors.reset} ${maxTurns === 0 ? colors.cyan + 'Continuo (Infinito)' : maxTurns}`);
   console.log(`  ${colors.bold}Archivo de salida:${colors.reset} ${outputFile}`);
   console.log(`  ${colors.bold}Modo interactivo:${colors.reset} ${cliArgs.interactive ? '\x1b[32mActivado\x1b[0m' : colors.dim + 'Desactivado'}`);
   console.log(`  ${colors.bold}Temática:${colors.reset} "${colors.yellow}${topic}${colors.reset}"`);
 
   // Verify Ollama connection and check if the model is loaded
-  console.log(`\n${colors.cyan}Verificando conexión con Ollama...${colors.reset}`);
-  const ollamaStatus = await checkOllama(ollamaUrl, model);
-
-  if (!ollamaStatus.online) {
-    console.error(`${colors.red}${colors.bright}¡ERROR DE CONEXIÓN!${colors.reset}`);
-    console.error(`${colors.red}No se pudo conectar con Ollama en ${ollamaUrl}.${colors.reset}`);
-    console.error(`${colors.yellow}Por favor, asegúrate de que el servicio de Ollama está ejecutándose.${colors.reset}`);
-    process.exit(1);
+  console.log(`\n${colors.cyan}Verificando conexiones con Ollama...${colors.reset}`);
+  
+  async function verifyAgentEndpoint(agentKey, agentConfig) {
+    const status = await checkOllama(agentConfig.ollamaUrl, agentConfig.model);
+    if (!status.online) {
+      console.error(`${colors.red}${colors.bright}¡ERROR DE CONEXIÓN (${agentKey})!${colors.reset}`);
+      console.error(`${colors.red}No se pudo conectar con Ollama en ${agentConfig.ollamaUrl}.${colors.reset}`);
+      process.exit(1);
+    }
+    console.log(`\x1b[32m✔ Conexión establecida con Ollama para ${agentKey} (${agentConfig.ollamaUrl}).${colors.reset}`);
+    
+    if (!status.exists) {
+      console.log(`${colors.yellow}⚠ ADVERTENCIA: El modelo '${agentConfig.model}' no se encuentra en ${agentConfig.ollamaUrl}.${colors.reset}`);
+    } else {
+      console.log(`\x1b[32m✔ El modelo '${agentConfig.model}' está listo en ${agentConfig.ollamaUrl}.${colors.reset}`);
+    }
   }
 
-  console.log(`\x1b[32m✔ Conexión establecida con Ollama.${colors.reset}`);
+  await verifyAgentEndpoint('Agente A', agentA);
+  await verifyAgentEndpoint('Agente B', agentB);
 
-  if (!ollamaStatus.exists) {
-    console.log(`\n${colors.yellow}${colors.bright}⚠ ADVERTENCIA: Modelo no detectado${colors.reset}`);
-    console.log(`${colors.yellow}El modelo '${model}' no se encuentra en la lista de modelos descargados localmente.${colors.reset}`);
-    console.log(`${colors.dim}Modelos encontrados:${colors.reset} ${ollamaStatus.models.join(', ') || 'Ninguno'}`);
-    console.log(`${colors.yellow}Si Ollama no lo tiene descargado, la llamada fallará. Te sugerimos ejecutar: ${colors.reset}${colors.bright}ollama pull ${model}${colors.reset}\n`);
-    console.log(`${colors.dim}Intentando continuar de todas formas...${colors.reset}\n`);
-  } else {
-    console.log(`\x1b[32m✔ El modelo '${model}' está listo en la instancia local de Ollama.${colors.reset}\n`);
-  }
-
-  const agentA = config.agentA;
-  const agentB = config.agentB;
-
-  console.log(`${colors.cyan}${colors.bright}Configuración de Agentes:${colors.reset}`);
+  console.log(`\n${colors.cyan}${colors.bright}Configuración de Agentes:${colors.reset}`);
   console.log(`  ${colors.bgBlue}${colors.white} Agente A: ${agentA.name} ${colors.reset}`);
   console.log(`    ${colors.dim}System Prompt: ${agentA.systemPrompt}${colors.reset}`);
   console.log(`  ${colors.bgMagenta}${colors.white} Agente B: ${agentB.name} ${colors.reset}`);
@@ -208,7 +251,7 @@ async function main() {
   const fullOutputPath = path.resolve(__dirname, outputFile);
   const headerMarkdown = `# Registro de Interacción: ${agentA.name} ⬌ ${agentB.name}
 **Fecha:** ${new Date().toLocaleString()}
-**Modelo de Ollama:** \`${model}\`
+**Modelos:** ${agentA.name} (\`${agentA.model}\`) vs ${agentB.name} (\`${agentB.model}\`)
 **Temática:** ${topic}
 
 ## Configuración de los Agentes
@@ -305,35 +348,52 @@ async function main() {
     if (!conversationActive) break;
 
     // --- AGENTE A ---
-    console.log(`${colors.cyan}[Generando respuesta de ${agentA.name}... (Ollama)]${colors.reset}`);
-    
-    let promptA;
-    if (turn === 1) {
-      promptA = `Comencemos nuestra discusión de investigación sobre el tema: "${topic}". Introduce tu primera propuesta, tesis o pregunta para iniciar la interacción.`;
-    } else {
-      promptA = `${agentB.name} respondió:\n\n"${lastResponse}"\n\nAnaliza su postura, responde con base en tu perfil y continúa aportando valor y conocimiento nuevo al debate.`;
-    }
+    let agentA_acting = true;
+    let loopCountA = 0;
+    while (agentA_acting && loopCountA < 3 && conversationActive) {
+      loopCountA++;
+      console.log(`${colors.cyan}[Generando respuesta de ${agentA.name}... (Ollama)]${colors.reset}`);
+      
+      if (loopCountA === 1) {
+        let promptA;
+        if (turn === 1) {
+          promptA = `Comencemos nuestra discusión de investigación sobre el tema: "${topic}". Introduce tu primera propuesta, tesis o pregunta para iniciar la interacción.`;
+        } else {
+          promptA = `${agentB.name} respondió:\n\n"${lastResponse}"\n\nAnaliza su postura, responde con base en tu perfil y continúa aportando valor y conocimiento nuevo al debate.`;
+        }
 
-    if (userIntervention) {
-      promptA = `El usuario/moderador ha intervenido con la siguiente directiva o pregunta:\n\n"${userIntervention}"\n\nTeniendo esto en cuenta y la respuesta previa de ${agentB.name}, responde y avanza el debate.`;
-      userIntervention = ""; // Reset
-    }
+        if (userIntervention) {
+          promptA = `El usuario/moderador ha intervenido con la siguiente directiva o pregunta:\n\n"${userIntervention}"\n\nTeniendo esto en cuenta y la respuesta previa de ${agentB.name}, responde y avanza el debate.`;
+          userIntervention = ""; // Reset
+        }
 
-    historyA.push({ role: 'user', content: promptA });
+        historyA.push({ role: 'user', content: promptA });
+      }
 
-    try {
-      const responseA = await callOllamaChat(ollamaUrl, model, historyA, temperature);
-      lastResponse = responseA;
-      historyA.push({ role: 'assistant', content: responseA });
+      try {
+        const responseA = await callOllamaChat(agentA.ollamaUrl, agentA.model, historyA, temperature);
+        lastResponse = responseA;
+        historyA.push({ role: 'assistant', content: responseA });
 
-      console.log(`\n${colors.cyan}${colors.bright}${agentA.name}:${colors.reset}`);
-      console.log(`${colors.cyan}${responseA}${colors.reset}\n`);
+        console.log(`\n${colors.cyan}${colors.bright}${agentA.name}:${colors.reset}`);
+        console.log(`${colors.cyan}${responseA}${colors.reset}\n`);
 
-      const turnMarkdownA = `### Turno ${turn} - ${agentA.name}\n\n${responseA}\n\n---\n\n`;
-      await fs.appendFile(fullOutputPath, turnMarkdownA, 'utf8');
-    } catch (error) {
-      console.error(`\n${colors.red}Error al obtener respuesta de ${agentA.name}:${colors.reset}`, error.message);
-      break;
+        const turnMarkdownA = `### Turno ${turn}.${loopCountA} - ${agentA.name}\n\n${responseA}\n\n---\n\n`;
+        await fs.appendFile(fullOutputPath, turnMarkdownA, 'utf8');
+
+        // Check for tools execution
+        const { executedSomething, actionResults } = await processAgentActions(agentA.name, responseA);
+        if (executedSomething) {
+          historyA.push({ role: 'user', content: `(Sistema de Ejecución):\n${actionResults}\nAnaliza los resultados. Si hay errores, corrígelos usando las herramientas de nuevo. Si fue exitoso, continúa tu argumento final o pasa el turno.` });
+          console.log(`${colors.dim}>> Retroalimentación enviada al ${agentA.name}... iterando (Intento ${loopCountA}/3)${colors.reset}`);
+        } else {
+          agentA_acting = false; // finished acting
+        }
+      } catch (error) {
+        console.error(`\n${colors.red}Error al obtener respuesta de ${agentA.name}:${colors.reset}`, error.message);
+        conversationActive = false;
+        break;
+      }
     }
 
     if (!conversationActive) break;
@@ -362,35 +422,52 @@ async function main() {
     if (!conversationActive) break;
 
     // --- AGENTE B ---
-    console.log(`${colors.magenta}[Generando respuesta de ${agentB.name}... (Ollama)]${colors.reset}`);
-    
-    let promptB;
-    if (turn === 1) {
-      promptB = `Aquí está la propuesta inicial de ${agentA.name} sobre el tema "${topic}":\n\n"${lastResponse}"\n\nAnaliza esta propuesta, evalúa sus implicaciones prácticas, complementa con tus conocimientos y finaliza con una nueva perspectiva o pregunta para continuar el debate.`;
-    } else {
-      promptB = `${agentA.name} respondió:\n\n"${lastResponse}"\n\nAnaliza su postura, responde con base en tu perfil y continúa aportando valor y conocimiento nuevo al debate.`;
-    }
+    let agentB_acting = true;
+    let loopCountB = 0;
+    while (agentB_acting && loopCountB < 3 && conversationActive) {
+      loopCountB++;
+      console.log(`${colors.magenta}[Generando respuesta de ${agentB.name}... (Ollama)]${colors.reset}`);
+      
+      if (loopCountB === 1) {
+        let promptB;
+        if (turn === 1) {
+          promptB = `Aquí está la propuesta inicial de ${agentA.name} sobre el tema "${topic}":\n\n"${lastResponse}"\n\nAnaliza esta propuesta, evalúa sus implicaciones prácticas, complementa con tus conocimientos y finaliza con una nueva perspectiva o pregunta para continuar el debate.`;
+        } else {
+          promptB = `${agentA.name} respondió:\n\n"${lastResponse}"\n\nAnaliza su postura, responde con base en tu perfil y continúa aportando valor y conocimiento nuevo al debate.`;
+        }
 
-    if (userIntervention) {
-      promptB = `El usuario/moderador ha intervenido con la siguiente directiva o pregunta:\n\n"${userIntervention}"\n\nTeniendo esto en cuenta y la respuesta previa de ${agentA.name}, responde y avanza el debate.`;
-      userIntervention = ""; // Reset
-    }
+        if (userIntervention) {
+          promptB = `El usuario/moderador ha intervenido con la siguiente directiva o pregunta:\n\n"${userIntervention}"\n\nTeniendo esto en cuenta y la respuesta previa de ${agentA.name}, responde y avanza el debate.`;
+          userIntervention = ""; // Reset
+        }
 
-    historyB.push({ role: 'user', content: promptB });
+        historyB.push({ role: 'user', content: promptB });
+      }
 
-    try {
-      const responseB = await callOllamaChat(ollamaUrl, model, historyB, temperature);
-      lastResponse = responseB;
-      historyB.push({ role: 'assistant', content: responseB });
+      try {
+        const responseB = await callOllamaChat(agentB.ollamaUrl, agentB.model, historyB, temperature);
+        lastResponse = responseB;
+        historyB.push({ role: 'assistant', content: responseB });
 
-      console.log(`\n${colors.magenta}${colors.bright}${agentB.name}:${colors.reset}`);
-      console.log(`${colors.magenta}${responseB}${colors.reset}\n`);
+        console.log(`\n${colors.magenta}${colors.bright}${agentB.name}:${colors.reset}`);
+        console.log(`${colors.magenta}${responseB}${colors.reset}\n`);
 
-      const turnMarkdownB = `### Turno ${turn} - ${agentB.name}\n\n${responseB}\n\n---\n\n`;
-      await fs.appendFile(fullOutputPath, turnMarkdownB, 'utf8');
-    } catch (error) {
-      console.error(`\n${colors.red}Error al obtener respuesta de ${agentB.name}:${colors.reset}`, error.message);
-      break;
+        const turnMarkdownB = `### Turno ${turn}.${loopCountB} - ${agentB.name}\n\n${responseB}\n\n---\n\n`;
+        await fs.appendFile(fullOutputPath, turnMarkdownB, 'utf8');
+
+        // Check for tools execution
+        const { executedSomething, actionResults } = await processAgentActions(agentB.name, responseB);
+        if (executedSomething) {
+          historyB.push({ role: 'user', content: `(Sistema de Ejecución):\n${actionResults}\nAnaliza los resultados. Si hay errores, corrígelos usando las herramientas de nuevo. Si fue exitoso, continúa tu argumento final o pasa el turno.` });
+          console.log(`${colors.dim}>> Retroalimentación enviada al ${agentB.name}... iterando (Intento ${loopCountB}/3)${colors.reset}`);
+        } else {
+          agentB_acting = false; // finished acting
+        }
+      } catch (error) {
+        console.error(`\n${colors.red}Error al obtener respuesta de ${agentB.name}:${colors.reset}`, error.message);
+        conversationActive = false;
+        break;
+      }
     }
 
     if (!conversationActive) break;
@@ -453,7 +530,7 @@ Genera un informe final de síntesis estructurado en español que contenga:
     ];
 
     try {
-      const synthesisResult = await callOllamaChat(ollamaUrl, model, synthesisPrompt, 0.4);
+      const synthesisResult = await callOllamaChat(agentA.ollamaUrl, agentA.model, synthesisPrompt, 0.4);
 
       console.log(`\n\x1b[32m${colors.bright}Síntesis de Conocimiento Generado:${colors.reset}`);
       console.log(`${colors.white}${synthesisResult}${colors.reset}\n`);
