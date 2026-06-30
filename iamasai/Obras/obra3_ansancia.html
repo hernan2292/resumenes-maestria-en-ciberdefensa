@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Obra III: La Paradoja del Control</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #05050  /* Fondo casi negro para resaltar la luz */ ;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            cursor: crosshair;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">SISTEMA DE CONTROL ACTIVO<br>ESTADO: <span id="status">ESTABLE</span></div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const statusEl = document.getElementById('status');
+
+        let width, height;
+        let particles = [];
+        let controlEffort = 0; // El acumulador de hipervigilancia
+        let boundaryRadius;
+        const particleCount = 800;
+        const mouse = { x: -1000, y: -1000 };
+
+        class Particle {
+            constructor(x, y) {
+                this.originX = x;
+                this.originY = y;
+                this.x = x;
+                this.y = y;
+                this.vx = 0;
+                this.vy = 0;
+                this.size = 2;
+            }
+
+            update() {
+                // 1. El Ruido de la Inminencia (Aumenta con el controlEffort)
+                const jitter = 0.5 + (controlEffort * 2);
+                this.vx += (Math.random() - 0.5) * jitter;
+                this.vy += (Math.random() - 0.5) * jitter;
+
+                // 2. Retorno al origen (El intento de orden/Ego)
+                let dx = this.originX - this.x;
+                let dy = this.originY - this.y;
+                this.vx += dx * 0.05;
+                this.vy += dy * 0.05;
+
+                // Fricción para evitar dispersión infinita inmediata
+                this.vx *= 0.95;
+                this.vy *= 0.95;
+
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw(ctx, boundaryX, boundaryY, currentRadius) {
+                // Calcular distancia al centro de la máscara (asfixia)
+                let distToCenter = Math.sqrt(Math.pow(this.x - boundaryX, 2) + Math.pow(            this.y - boundaryY, 2));
+
+                // Solo dibujar si está dentro del radio de contención
+                if (distToCenter < currentRadius) {
+                    const alpha = 1 - (controlEffort / 50); // Se desvanece conforme colapsa
+                    ctx.fillStyle = `rgba(255, ${255 - controlEffort * 5}, ${255 - controlEffort * 10}, ${Math.max(0, alpha)})`;
+                    
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size + (controlEffort * 0.1), 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Efecto de rastro visual si hay mucha energía
+                    if (controlEffort > 5 && Math.random() > 0.98) {
+                        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+                        ctx.beginPath();
+                        ctx.moveTo(this.x, this.y);
+                        ctx.lineTo(this.x + this.vx * 10, this.y + this.vy * 10);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            boundaryRadius = Math.min(width, height) * 0.45;
+            particles = [];
+            controlEffint = 0; // Reiniciar para la demo
+
+            for (let i = 0; i < particleCount; i++) {
+                // Distribución inicial aleatoria pero contenida
+                const angle = Math.random() * Math.PI * 2;
+                const r = Math.random() * boundaryRadius;
+                const x = width / 2 + Math.cos(angle) * r;
+                const y = height / 2 + Math.sin(angle) * r;
+                particles.push(new Particle(x, y));
+            }
+        }
+
+        function animate() {
+            // Fondo con estela de movimiento
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.2)';
+            ctx.fillRect(0, 0, width, height);
+
+            const centerX = width / 2;
+            const centerY = height / 2;
+            
+            // El radio de contención disminuye exponencialmente con el esfuerzo
+            // R = R_initial * e^(-k * effort)
+            let currentRadius = boundaryRadius * Math.exp(-0.05 * controlEffort);
+
+            // Dibujar la máscara de asfixia (el límite del mundo)
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 / (controlEffort + 1)})`;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, currentRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            particles.forEach(p => {
+                p.update();
+                p.draw(ctx, centerX, centerY, currentRadius);
+            });
+
+            // Actualizar UI y estado de la psique
+            if (controlEffort < 5) {
+                statusEl.innerText = "ESTABLE";
+                statusEl.style.color = "#fff";
+            } else if (controlEffort < 15) {
+                statusEl.innerText = "HIPERVIGILANCIA DETECTADA";
+                statusEl.style.color = "#ff0";
+            } else if (controlEffort < 30) {
+                statusEl.innerText = "ANSIEDAD AGUDA / ASFIXIA";
+                statusEl.style.color = "#f00";
+            } else {
+                // El Colapso Final: Singularidad
+                statusEl.innerText = "COLAPSO SISTÉMICO";
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, width, height);
+                controlEffort += 1; // Acelerar el fin
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            // El movimiento del usuario es la inyección de energía
+            controlEffort += 0.02; 
+            mouse.x = e.clientX;
+            mouse/y = e.clientY;
+        });
+
+        window.addEventListener('mousedown', () => {
+            // Un impacto súbito de pánico
+            controlEffort += 5;
+        });
+
+        window.addEventListener('resize', init);
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

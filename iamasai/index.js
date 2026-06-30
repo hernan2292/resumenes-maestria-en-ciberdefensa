@@ -82,15 +82,26 @@ function parseArgs(args) {
 async function callOllamaChat(url, model, messages, temperature = 0.7) {
   const endpoint = `${url}/api/chat`;
   
+  // Prevenir desbordamiento de contexto (Ollama token limit crash)
+  // Mantenemos el primer mensaje (system) y los últimos 10 turnos.
+  let trimmedMessages = messages;
+  if (messages.length > 11) {
+    trimmedMessages = [
+      messages[0],
+      ...messages.slice(-10)
+    ];
+  }
+  
   try {
     const response = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: model,
-        messages: messages,
+        messages: trimmedMessages,
         options: {
-          temperature: temperature
+          temperature: temperature,
+          num_ctx: 16384 // Ampliamos la ventana de contexto
         },
         stream: false
       })
@@ -141,16 +152,25 @@ async function processAgentActions(agentName, text) {
   const writeRegex = /<write_file\s+path="([^"]+)">([\s\S]*?)<\/write_file>/g;
   let match;
   while ((match = writeRegex.exec(text)) !== null) {
-    const filePath = match[1];
+    // Restringir al directorio de iamasai
+    const baseDir = __dirname;
+    const resolvedPath = path.resolve(baseDir, match[1]);
+    
+    if (!resolvedPath.startsWith(baseDir)) {
+      actionResults += `[write_file] Error de seguridad: No puedes escribir fuera del directorio iamasai (${match[1]})\n`;
+      executedSomething = true;
+      continue;
+    }
+
     const content = match[2];
     try {
-      await fs.writeFile(filePath, content, 'utf8');
-      console.log(`${colors.green}✔ ${agentName} creó/escribió el archivo: ${filePath}${colors.reset}`);
-      actionResults += `[write_file] Éxito al escribir ${filePath}\n`;
+      await fs.writeFile(resolvedPath, content, 'utf8');
+      console.log(`${colors.green}✔ ${agentName} creó/escribió el archivo: ${resolvedPath}${colors.reset}`);
+      actionResults += `[write_file] Éxito al escribir ${path.basename(resolvedPath)}\n`;
       executedSomething = true;
     } catch (err) {
-      console.error(`${colors.red}✘ Error al escribir ${filePath}:${colors.reset}`, err.message);
-      actionResults += `[write_file] Error al escribir ${filePath}: ${err.message}\n`;
+      console.error(`${colors.red}✘ Error al escribir ${resolvedPath}:${colors.reset}`, err.message);
+      actionResults += `[write_file] Error al escribir ${path.basename(resolvedPath)}: ${err.message}\n`;
       executedSomething = true;
     }
   }
@@ -161,7 +181,7 @@ async function processAgentActions(agentName, text) {
     const command = match[1].trim();
     console.log(`${colors.yellow}► Ejecutando comando de ${agentName}: ${command}${colors.reset}`);
     try {
-      const { stdout, stderr } = await execAsync(command, { timeout: 30000 });
+      const { stdout, stderr } = await execAsync(command, { timeout: 30000, cwd: __dirname });
       console.log(`${colors.dim}${stdout}${colors.reset}`);
       if (stderr) console.error(`${colors.red}${stderr}${colors.reset}`);
       
@@ -212,12 +232,12 @@ async function main() {
   const agentB = config.agentB;
 
   console.log(`\n${colors.bright}Parámetros de la simulación:${colors.reset}`);
-  console.log(`  ${colors.bold}Modelo Agente A:${colors.reset} ${colors.green}✔ ${agentA.model}${colors.reset} (${agentA.ollamaUrl})`);
-  console.log(`  ${colors.bold}Modelo Agente B:${colors.reset} ${colors.green}✔ ${agentB.model}${colors.reset} (${agentB.ollamaUrl})`);
-  console.log(`  ${colors.bold}Turnos:${colors.reset} ${maxTurns === 0 ? colors.cyan + 'Continuo (Infinito)' : maxTurns}`);
-  console.log(`  ${colors.bold}Archivo de salida:${colors.reset} ${outputFile}`);
-  console.log(`  ${colors.bold}Modo interactivo:${colors.reset} ${cliArgs.interactive ? '\x1b[32mActivado\x1b[0m' : colors.dim + 'Desactivado'}`);
-  console.log(`  ${colors.bold}Temática:${colors.reset} "${colors.yellow}${topic}${colors.reset}"`);
+  console.log(`  ${colors.bright}Modelo Agente A:${colors.reset} ${colors.green}✔ ${agentA.model}${colors.reset} (${agentA.ollamaUrl})`);
+  console.log(`  ${colors.bright}Modelo Agente B:${colors.reset} ${colors.green}✔ ${agentB.model}${colors.reset} (${agentB.ollamaUrl})`);
+  console.log(`  ${colors.bright}Turnos:${colors.reset} ${maxTurns === 0 ? colors.cyan + 'Continuo (Infinito)' : maxTurns}`);
+  console.log(`  ${colors.bright}Archivo de salida:${colors.reset} ${outputFile}`);
+  console.log(`  ${colors.bright}Modo interactivo:${colors.reset} ${cliArgs.interactive ? '\x1b[32mActivado\x1b[0m' : colors.dim + 'Desactivado'}`);
+  console.log(`  ${colors.bright}Temática:${colors.reset} "${colors.yellow}${topic}${colors.reset}"`);
 
   // Verify Ollama connection and check if the model is loaded
   console.log(`\n${colors.cyan}Verificando conexiones con Ollama...${colors.reset}`);

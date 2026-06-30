@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Obra IV: La Integración de la Fractura</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a05;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            cursor: crosshair;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 215, 0, 0.6);
+            pointer-events: none;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">ESTADO: RECONSTRUCCIÓN ACTIVA<br>MÉTODO: KINTSUGI DIGITAL</div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        const cols = 30;
+        const rows = 25;
+        const mouse = { x: -1000, y: -1000, active: false };
+
+        class Particle {
+            constructor(ox, oy) {
+                this.originX = ox;
+                this.originY = oy;
+                
+                const traumaStrength = 60 + Math.random() * 120;
+                const angle = Math.random() * Math.PI * 2;
+                this.traumaX = ox + Math.cos(angle) * traumaStrength;
+                this.traumaY = oy + Math.sin(angle) * traumaStrength;
+
+                this.x = this.traumaX;
+                this.y = this.traumaY;
+                
+                this.vx = 0;
+                this.vy = 0;
+                this.size = 1.5;
+            }
+
+            update() {
+                let dx = this.traumaX - this.x;
+                let dy = this.traumaY - this.y;
+                
+                this.vx += dx * 0.02;
+                this.vy += dy * 0.02;
+
+                if (mouse.active) {
+                    let mdx = mouse.x - this.x;
+                    let mdy = mouse.y - this.y;
+                    let dist = Math.sqrt(mdx*mdx + mdy*mdy);
+                    if (dist < 120) {
+                        this.vx += mdx * 0.05;
+                        this.vy += mdy * 0.05;
+                    }
+                }
+
+                this.vx *= 0.85;
+                this.vy *= 0.85;
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw(ctx) {
+                ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+
+            const spacingX = width / (cols + 1);
+            const spacingY = height / (rows + 1);
+
+            for (let i = 1; i <= cols; i++) {
+                for (let j = 1; j <= rows; j++) {
+                    particles.push(new Particle(i * spacingX, j * spacingY));
+                }
+            }
+                }
+
+        function drawKintsugi() {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const p1 = particles[i];
+                    const p2 = particles[j];
+                    
+                    const dx = p1.x - p2.x;
+                    const dy = p1.y - p2.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < 70) {
+                        const origDx = p1.originX - p2.originX;
+                        const origDy = p1.originY - p2.originY;
+                        const origDist = Math.sqrt(origDx * origDx + origDy * origDy);
+                        
+                        const fracture = Math.abs(dist - origDist);
+
+                        if (fracture > 15) {
+                            const alpha = Math.max(0, 1 - (dist / 70)) * Math.min(1, fracture / 40);
+                            ctx.strokeStyle = `rgba(255, 215, 0, ${alpha * 0.8})`;
+                            ctx.lineWidth = 0.5 + (fracture * 0.03);
+                            ctx.beginPath();
+                            ctx.moveTo(p1.x, p1.y);
+                            ctx.lineTo(p2.x, p2.y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(10, 10, 5, 0.3)';
+            ctx.fillRect(0, 0, width, height);
+
+            drawKintsugi();
+
+            particles.forEach(p => {
+                p.update();
+                p.draw(ctx);
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouse.active = true;
+        });
+
+        window.addEventListener('mousedown', () => mouse.active = true);
+        window.addEventListener('mouseup', () => mouse.active = false);
+        window.addEventListener('resize', init);
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

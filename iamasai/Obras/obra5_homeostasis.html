@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF">
+    <meta charset="UTF-8">
+    <title>Obra V: La Homeostasis Final</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050a0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            cursor: crosshair;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(150, 200, 255, 0.4);
+            pointer-events: none;
+            font-size: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">ESTADO: SINCRONÍA ALCANZADA<br>MODO: AUTOPOIESIS</div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        const particleCount = 1200;
+        const mouse = { x: -1000, y: -1000, active: false };
+        let time = 0;
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = 0;
+                this.vy = 0;
+                this.history = [];
+                this.maxHistory = 5;
+                this.size = Math.random() * 1.5 + 0.5;
+                // Color base: azul profundo a cian etéreo
+                const hue = 200 + Math.random() * 40;
+                this.colorBase = `hsla(${hue}, 70%, 70%`; 
+            }
+
+            update(flowField, breathing) {
+                const angle = flowField(this.x, this.y, time);
+                const force = 0.5 + breathing * 0.5;
+
+                this.vx += Math.cos(angle) * force;
+                this.vy += Math.sin(angle) * force;
+
+                if (mouse.active) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    if (dist < 150) {
+                        const resonance = (150 - dist) / 150;
+                        // El movimiento es una perturbación de fase, no un empuje
+                        this.vx += Math.cos(angle + Math.PI/2) * resonance * 0.6;
+                        this.vy += Math.sin(angle + Math.PI/2) * resonance * 0.6;
+                    }
+                }
+
+                this.vx *= 0.95;
+                this.vy *= 0.95;
+                this.x += this.vx;
+                this.y += this.vy;
+
+                this.history.push({x: this.x, y: this.y});
+                if (this.history.length > this.maxHistory) this.history.shift();
+
+                if (this.x < -50 || this.x > width + 50 || this.y < -50 || this.y > height + 50) {
+                    this.reset();
+                }
+            }
+
+            draw(ctx, breathing) {
+                const alpha = 0.1 + (breathing * 0.4);
+                ctx.beginPath();
+                ctx.strokeStyle = `${this.colorBase}, ${alpha})`;
+                ctx.lineWidth = this.size;
+                ctx.lineCap = 'round';
+
+                if (this.history.length > 1) {
+                    ctx.moveTo(this.history[0].x, this.history[0].y);
+                    for (let i = 1; i < this.history.length; i++) {
+                        ctx.lineTo(this.currentX(i), this.currentY(i));
+                    }
+                }
+                ctx.stroke();
+            }
+
+            // Helper para acceder al historial en el draw sin errores de scope
+            currentX(i) { return this.history[i].x; }
+            currentY(i) { return this.history[i].y; }
+        }
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function getFlowAngle(x, y, t) {
+            const scale = 0.003;
+            const v1 = Math.sin(x * scale + t);
+            const v2 = Math.cos(y * scale - t * 0.7);
+            const v3 = Math.sin((x + y) * scale * 0.5 + t * 0.3);
+            return v1 + v2 + v3;
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(5, 10, 15, 0.15)';
+            ctx.fillRect(0, 0, width, height);
+
+            time += 0.004;
+            const breathing = (Math.sin(time * 1.5) + 1) / 2;
+
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update(getFlowAngle, breathing);
+                particles[i].draw(ctx, breathing);
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+            mouse.active = true;
+        });
+
+        window.addEventListener('mousedown', () => mouse.active = true);
+        window.addEventListener('mouseup', () => mouse.active = false);
+        window.addEventListener('resize', init);
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

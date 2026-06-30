@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HYPER-DRIVE ASSET // V.01_FIXED</title>
+    <style>
+        :root {
+            --neon-pink: #ff00ff;
+            --acid-green: #39ff14;
+            --cyber-blue: #00ffff;
+            --deep-black: #000000;
+            --ui-font: 'Courier New', Courier, monospace;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--deep-black);
+            overflow: hidden;
+            font-family: var(--ui-font);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        /* SCANLINES EFFECT */
+        body::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 10;
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+        }
+
+        /* UI DNA */
+        #ui-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 20;
+            font-size: 10px;
+            letter-spacing: 2px;
+            color: var(--acid-green);
+            text-transform: uppercase;
+            pointer-events: none;
+        }
+
+        #status-bar {
+            border-left: 2px solid var(--acid-green);
+            padding-left: 10px;
+        }
+
+        /* MAIN VISUAL CONTAINER */
+        #stage {
+            width: 80vw;
+            height: 80vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: transform 0.05s ease-out;
+        }
+
+        #glitch-text {
+            font-size: 8vw;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: white;
+            position: relative;
+            text-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        /* BUTTON STYLING */
+        #start-btn {
+            padding: 15px 30px;
+            background: transparent;
+            border: 2px solid var(--cyber-blue);
+            color: var(--cyber-blue); /* Corregido de --cyber_blue */
+            font-family: var(--ui-font);
+            cursor: pointer;
+            z-index: 30;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            transition: all 0.3s;
+        }
+
+        #start-btn:hover {
+            background: var(--cyber-blue);
+            color: black;
+            box-shadow: 0 0 20px var(--cyber-blue);
+        }
+
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            40% { transform: translate(3px, 2px) rotate(-1deg); }
+            60% { transform: translate(-1px, -1px) rotate(0deg); }
+            80% { transform: translate(-1px, -2px) rotate(1deg); }
+            100% { transform: translate(1px, 2px) rotate(0deg); }
+        }
+
+        .glitch-active {
+            animation: shake 0.15s infinite;
+            text-shadow: 
+                3px 0 var(--neon-pink), 
+                -3px 0 var(--cyber-blue),
+                0 0 20px var(--acid-green) !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="ui-overlay">
+        <div id="status-bar">
+            SYSTEM: HYPER_DRIVE_V1<br>
+            STATUS: <span id="sys-status">IDLE</span><br>
+            BPM: <span id="bpm-display">0</span>
+        </div>
+    </div>
+
+    <button id="start-btn">Initialize Session</button>
+
+    <div id="stage">
+        <div id="glitch-text">HYPER</div>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const stage = document.getElementById('stage');
+        const text = document.getElementById('glitch-text');
+        const statusText = document.getElementById('sys-status');
+        const bpmDisplay = document.getElementById('bpm-display');
+
+        let audioCtx;
+        let analyser;
+        let isPlaying = false;
+
+        startBtn.addEventListener('click', () => {
+            if (!isPlaying) {
+                try {
+                    initAudio();
+                    startBtn.style.display = 'none';
+                    statusText.innerText = 'RUNNING (AUDIO OK)';
+                    statusText.style.color = '#39ff14';
+                    isPlaying = true;
+                } catch(e) {
+                    alert("Error inicializando audio: " + e.message);
+                }
+            }
+        });
+
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            audioCtx.resume(); 
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 256;
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            // Conectar el analizador a la salida principal
+            analyser.connect(audioCtx.destination);
+
+            function playBeat() {
+                if(!isPlaying) return;
+                const now = audioCtx.currentTime;
+                
+                // Kick Drum
+                const oscKick = audioCtx.createOscillator();
+                const gainKick = audioCtx.createGain();
+                oscKick.type = 'sine';
+                oscKick.frequency.setValueAtTime(150, now);
+                oscKick.frequency.exponentialRampToValueAtTime(0.01, now + 0.4);
+                
+                gainKick.gain.setValueAtTime(1, now);
+                gainKick.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                
+                oscKick.connect(gainKick);
+                gainKick.connect(analyser); // Conectar al analizador para la visual
+                
+                oscKick.start(now);
+                oscKick.stop(now + 0.4);
+
+                // Snare/Glitch
+                const oscSnare = audioCtx.createOscillator();
+                const snareGain = audioCtx.createGain(); // Limpiado el "safety check" inútil
+                
+                oscSnare.type = 'triangle';
+                oscSnare.frequency.setValueAtTime(800, now + 0.4);
+                
+                snareGain.gain.setValueAtTime(0.3, now + 0.4);
+                snareGain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+                
+                oscSnare.connect(snareGain);
+                snareGain.connect(analyser); // Conectar al analizador
+                
+                oscSnare.start(now + 0.4);
+                oscSnare.stop(now + 0.6);
+
+                setTimeout(playBeat, 500); // 120 BPM
+            }
+
+            try {
+                playBeat();
+                visualize(dataArray);
+            } catch(e) {
+                alert("Error en el loop: " + e.message);
+            }
+        }
+
+        function visualize(dataArray) {
+            function render() {
+                requestAnimationFrame(render);
+                analyser.getByteFrequencyData(dataArray);
+
+                let lowFreq = 0;
+                for(let i=0; i<10; i++) lowFreq += dataArray[i];
+                lowFreq /= 10;
+
+                let highFreq = 0;
+                for(let i=50; i<100; i++) highFreq += dataArray[i];
+                highFreq /= 50;
+
+                const scale = 1 + (lowFreq / 255) * 0.4;
+                stage.style.transform = `scale(${scale})`;
+                
+                if(lowFreq > 180) {
+                    stage.style.animation = 'shake 0.1s infinite';
+                } else {
+                    stage.style.animation = 'none';
+                }
+
+                if(highFreq > 40) {
+                    text.classList.add('glitch-active');
+                    text.style.color = Math.random() > 0.5 ? '#39ff14' : '#ff00ff';
+                    text.style.transform = `translate(${Math.random()*15 - 7.5}px, ${Math.random()*15 - 7.5}px)`;
+                } else {
+                    text.classList.remove('glitch-active');
+                    text.style.transform = `translate(0,0)`;
+                    text.style.color = 'white';
+                }
+
+                bpmDisplay.innerText = Math.floor(120 + (lowFreq/10));
+            }
+            render();
+        }
+    </script>
+</body>
+</html>

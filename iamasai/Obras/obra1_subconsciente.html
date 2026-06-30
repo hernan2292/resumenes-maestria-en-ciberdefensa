@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obra 1: El Abismo de lo No-Dicho</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: none;
+        }
+        canvas {
+            display: block;
+            filter: contrast(1.2) brightness(1.2);
+        }
+        #ui {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.3);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">Estado: Subconsciente Latente | Mecanismo: Represión Activa</div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const ui = document.getElementById('array'); // Placeholder for logic
+
+        let width, height;
+        let particles = [];
+        const particleCount = 800;
+        const mouse = { x: -1000, y: -1000, vx: 0, vy: 0, lastX: 0, lastY: 0 };
+        let repressionLevel = 0; // 0 to 1 (1 is maximum blur/opacity loss)
+
+        class Particle {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 1.5 + 0.5;
+                this.color = `rgba(150, 180, 200, ${Math.random() * 0.3 + 0.1})`;
+                this.history = [];
+            }
+
+            update() {
+                // Flow field movement (simulated noise)
+                const angle = Math.atan2(this.y - height/2, this.x - width/2) + Math.PI/2;
+                this.vx += Math.cos(angle) * 0.01;
+                this.vy += Math.sin(angle) * 0.01;
+
+                // Interaction with mouse (Exhumation)
+                const dx = mouse.x - this.x;
+                const dy = mouse.y - this.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                const force = 100 / (dist + 20);
+
+                if (dist < 150) {
+                    const angleForce = Math.atan2(dy, dx);
+                    // The mouse acts as a kinetic vector, pushing particles away
+                    this.vx -= Math.cos(angleForce) * force * (1 + mouse.vx * 0.5);
+                    this.vy -= Math.sin(angleForce) * force * (1 + mouse.vy * 0.5);
+                }
+
+                // Friction/Damping
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Boundary wrap
+                if (this.x < 0) this.x = width;
+                if (this.x > width) this.x = 0;
+                if (this.y < 0) this.y = height;
+                if (this.y > height) this.y = 0;
+
+                // Repression effect: particles fade or become harder to see when repression is high
+                this.currentOpacity = Math.max(0, (Math.random() * 0.3 + 0.1) - (repressionLevel * 0.4));
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(180, 210, 230, ${this.currentOpacity})`;
+                ctx.fill();
+            }
+        }
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            // The "Memory" effect: partial clear instead of full clear
+            ctx.fillStyle = `rgba(0, 0, 0, ${0.1 + (repressionLevel * 0.2)})`;
+            ctx.fillRect(0, 0, width, height);
+
+            // Calculate mouse velocity for Repression mechanism
+            mouse.vx = mouse.x - mouse.lastX;
+            mouse.vy = mouse.y - mouse.lastY;
+            const speed = Math.sqrt(mouse.vx * mouse.vx + mouse.vy * mouse.vy);
+            
+            // Smooth transition for Repression (The Ego's defense)
+            if (speed > 15) {
+                repressionLevel += 0.05; // Rapidly closing the mind
+            } else {
+                repressionLevel *= 0.97; // Slowly reintegrating/opening
+            }
+            
+            // Apply visual blur via CSS filter if repression is high
+            canvas.style.filter = `blur(${repressionLevel * 15}px) contrast(${1 + repressionLevel})`;
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            // Draw the "Exhumation" light (the cursor's presence)
+            const gradient = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 150);
+            gradient.addColorStop(0, `rgba(255, 255, 255, ${0.15 * (1 - repressionLevel)})`);
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, width, height);
+
+            // Update last mouse position
+            mouse.lastX = mouse.x;
+            mouse.lastY = mouse.y;
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('resize', resize);
+
+        // Initialize
+        resize();
+        animate();
+    </script>
+</body>
+</html>
+</script>

@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VOID ASSET // V.01</title>
+    * <style>
+        :root {
+            --deep-black: #050505;
+            --pure-white: #ffffff;
+            --muted-gray: #444444;
+            --ui-font: 'Times New Roman', serif; /* Elegancia clásica */
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--deep-black);
+            overflow: hidden;
+            font-family: var(--ui-font);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--pure-white);
+        }
+
+        /* GRAIN/NOISE OVERLAY */
+        #grain {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Noise_Texture.png');
+            opacity: 0.08;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* UI DNA - Signature Element (Minimalist Version) */
+        #ui-overlay {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            z-index: 20;
+            font-size: 9px;
+            letter-spacing: 4px;
+            color: var(--muted-gray);
+            text-transform: uppercase;
+            pointer-events: none;
+            text-align: right;
+        }
+
+        /* MAIN VISUAL CONTAINER */
+        #stage {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        #void-text {
+            font-size: 5vw;
+            font-weight: 100;
+            letter-spacing: 25px;
+            text-transform: uppercase;
+            color: var(--pure-white);
+            opacity: 0.8;
+            filter: blur(0.5px);
+        }
+
+        /* BUTTON STYLING */
+        #start-btn {
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid var(--muted-gray);
+            color: var(--pure-white);
+            font-family: var(--ui-font);
+            cursor: pointer;
+            z-index: 30;
+            letter-spacing: 5px;
+            transition: all 1s ease;
+        }
+
+        #start-btn:hover {
+            background: var(--pure-white);
+            color: var(--deep-black);
+        }
+
+        /* ANIMATIONS */
+        @keyframes pulse-slow {
+            0% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+            100% { opacity: 0.3; }
+        }
+
+        .pulsing {
+            animation: pulse-slow 4s infinite ease-in-out;
+        }
+
+    </array>
+    </style>
+</head>
+<body>
+
+    <div id="grain"></div>
+
+    <div id="ui-overlay">
+        <div id="status-bar">
+            COLLECTION: VOID_EDITION<br>
+            STATE: <span id="sys-status">STANDBY</span><br>
+            FREQ: <span id="freq-display">0</span>Hz
+        </div>
+    </div>
+
+    <button id="start-btn">ENTER THE VOID</button>
+
+    <div id="stage">
+        <div id="void-text" class="pulsing">VOID</div>
+    </div>
+
+    <script>
+        const startBtn = document.getElementById('start-btn');
+        const stage = document.getElementById('stage');
+        const text = document.getElementById('void-text');
+        const statusText = document.getElementById('sys-status');
+        const freqDisplay = document.getElementById('freq-display');
+
+        let audioCtx;
+        let analyser;
+        let isPlaying = false;
+
+        startBtn.addEventListener('click', () => {
+            if (!isPlaying) {
+                try {
+                    initAudio();
+                    startBtn.style.opacity = '0';
+                    setTimeout(() => startBtn.style.display = 'none', 1000);
+                    statusText.innerText = 'ACTIVE (AUDIO OK)';
+                    statusText.style.color = '#ffffff';
+                    isPlaying = true;
+                } catch(e) {
+                    alert("Error inicializando audio: " + e.message);
+                }
+            }
+        });
+
+        function initAudio() {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            audioCtx.resume(); // Forzar el inicio en navegadores estrictos
+            analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 128; // Smaller FFT for smoother, heavier bass focus
+            const bufferLength = analyser.frequencyBinCount;
+            const dataArray = new Uint8Array(bufferLength);
+
+            // --- DARK TRAP ENGINE (The "Atmosphere") ---
+            function playBeat() {
+                if(!isPlaying) return;
+                const now = audioCtx.currentTime;
+                
+                // Heavy 808 Bass (Very Low Frequency)
+                const osc808 = audioCtx.createOscillator();
+                const gain808 = audioCtx.createGain();
+                osc808.type = 'sine';
+                osc808.frequency.setValueAtTime(55, now); // A1 note - Deep bass
+                osc808.frequency.exponentialRampToValueAtTime(30, now + 1.5);
+                gain808.gain.setValueAtTime(0.8, now);
+                gain808.gain.exponentialRampToValueAtTime(0.01, now + 1.5);
+                osc808.connect(gain808);
+                gain808.connect(analyser);
+                gain808.connect(audioCtx.destination);
+                osc808.start(now);
+                osc808.stop(now + 1.5);
+
+                // Ambient Pad (Slow, Ethereal)
+                const oscPad = audioCtx.createOscillator();
+                const gainPad = audioCtx.createGain();
+                oscPad.type = 'triangle';
+                oscPad.frequency.setValueAtTime(220, now); 
+                gainPad.gain.setValueAtTime(0, now);
+                gainPad.gain.linearRampToValueAtTime(0.1, now + 2);
+                gainPad.gain.linearRampToValueAtTime(0, now + 4);
+                oscPad.connect(gainPad);
+                gainPad.connect(analyser);
+                gainPad.connect(audioCtx.destination);
+                oscPad.start(now);
+                oscPad.stop(now + 4);
+
+                // Schedule next beat (Very slow - 70 BPM)
+                setTimeout(playBeat, 2500); 
+            }
+
+            analyser.connect(audioCtx.destination);
+            playBeat();
+            visualize(dataArray);
+        }
+
+        function visualize(dataArray) {
+            function render() {
+                requestAnimationFrame(render);
+                analyser.getByteFrequencyData(dataArray);
+
+                // 1. Analyze Sub-Bass (Very Low Frequencies)
+                let subBass = 0;
+                for(let i=0; i<5; i++) subBass += dataArray[i];
+                subBass /= 5;
+
+                // --- VISUAL MAPPING ---
+
+                // BASS -> Slow, cinematic scale pulse
+                const scale = 1 + (subBass / 255) * 0.15;
+                stage.style.transform = `scale(${scale})`;
+                
+                // Sub-bass triggers a slight blur/glow effect
+                if(subBass > 180) {
+                    text.style.filter = 'blur(2px)';
+                    text.style.letterSpacing = '30px';
+                } else {
+                    text.style.filter = 'blur(0.5px)';
+                    text.style.letterSpacing = '25px';
+                }
+
+                // Update UI Frequency Display
+                freqDisplay.innerText = Math.floor(subBass * 2);
+            }
+            render();
+        }
+    </script>
+</body>
+</html>

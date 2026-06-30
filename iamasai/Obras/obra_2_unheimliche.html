@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Obra II: El Umbral de lo Unheimliche</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #0a0a0a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        canvas {
+            cursor: none; /* El cursor real desaparece para que la interacción sea puramente visual */
+        }
+        #ui {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+            pointer-events: none;
+            letter-spacing: 4px;
+            font-size: 10px;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">La observación desfigura la realidad<br>Acércate para revelar / Aléjate para preservar</div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        const spacing = 20; // Densidad de la rejilla (Ego)
+        const mouse = { x: -1000, y: -10/0, active: false };
+        let distortionStrength = 0;
+
+        class Particle {
+            constructor(x, y) {
+                this.originX = x;
+                this.originY = y;
+                this.x = x;
+                this.y = y;
+                this.vx = 0;
+                this.vy = 0;
+                this.size = 1.5;
+            }
+
+            update(mX, mY) {
+                let dx = mX - this.x;
+                let dy = mY - this.y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                let maxDist = 150;
+
+                if (dist < maxDist) {
+                    // El Atractor: Succión hacia el cursor (Seducción)
+                    let force = (maxDist - dist) / maxDist;
+                    let angle = Math.atan2(dy, dx);
+                    
+                    // Fuerza de atracción (la trampa)
+                    this.vx += Math.cos(angle) * force * 2;
+                    this.vy += Math.sin(angle) * force * 2;
+
+                    // La Distorsión (Lo Uncanny/Siniestro)
+                    // Aumentamos la fuerza de distorsión global basada en la proximidad
+                    distortionStrength = Math.max(distortionStrength, force);
+                }
+
+                // Retorno a la estructura original (Ego intentando mantener el orden)
+                let homeDx = this.originX - this.x;
+                let homeDy = this.originY - this.y;
+                this.vx += homeDx * 0.05;
+                this.vy += homeDy * 0.05;
+
+                // Fricción
+                this.vx *= 0.9;
+                this.vy *= 0.9;
+
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw(ctx, mX, mY) {
+                let dx = mX - this.x;
+                let dy = mY - this.y;
+                let dist = Math.sqrt(dx * dx + dy * dy);
+                let maxDist = 150;
+
+                // Si estamos cerca del usuario, aplicamos Aberración Cromática (El error en la realidad)
+                if (dist < maxDist && distortionStrength > 0.2) {
+                    let offset = (maxDist - dist) * 0.15;
+                    
+                    // Dibujamos los tres canales por separado para crear el efecto "glitch"
+                    ctx.fillStyle = 'rgba(255, 0, 0, 0.8)'; // Red channel
+                    ctx.fillRect(this.x + offset, this.y, this.size, this.size);
+                    
+                    ctx.fillStyle = 'rgba(0, 255, 0, 0.8)'; // Green channel
+                    ctx.fillRect(this.x - offset/2, this.y, this.size, this.size);
+                    
+                    ctx.fillStyle = 'rgba(0, 0, 255, 0.8)'; // Blue channel
+                    ctx.fillRect(this.x - offset, this.y, this.size, this.size);
+                } else {
+                    // Estado Familiar: Color suave y coherente
+                    ctx.fillStyle = `rgba(200, 210, 255, 0.6)`;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+        }
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            particles = [];
+            
+            // Crear la rejilla (La estructura del Ego)
+            for (let x = spacing; x < width; x += spacing) {
+                for (let y = spacing; y < height; y += spacing) {
+                    particles.push(new Particle(x, y));
+                }
+
+                // Pequeño offset para que no sea una cuadrícula perfecta de "computadora" 
+                // sino algo casi orgánico
+                x += (Math.random() - 0.5) * 5; 
+            }
+        }
+
+        function animate() {
+            // Fondo oscuro, dejando rastro leve
+            ctx.fillStyle = 'rgba(10, 10, 10, 0.2)';
+            ctx.fillRect(0, 0, width, height);
+
+            // El "aura" del cursor (La presencia que perturba)
+            let grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, 150);
+            grad.addColorStop(0, 'rgba(255, 255, 255, 0.05)');
+            grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, width, height);
+
+            particles.forEach(p => {
+                p.update(mouse.x, mouse.y);
+                p.draw(ctx, mouse.x, mouse.y);
+            });
+
+            // El residuo de la distorsión disminuye lentamente cuando el mouse se aleja
+            distortionStrength *= 0.98;
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('resize', init);
+
+        init();
+        animate();
+    </script>
+</body>
+</html>

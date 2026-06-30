@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Psímque Generativa: El Motor de la Espiral (Corregido)</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #050505; color: #fff; font-family: 'Courier New', monospace; }
+        canvas { display: block; }
+        #ui { position: absolute; top: 20px; left: 20px; pointer-events: none; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        .label { font-size: 12px; opacity: 0.7; letter-spacing: 2px; }
+        .value { font-size: 18px; margin-bottom: 10px; color: #00ffcc; }
+    </style>
+</head>
+<body>
+    <div id="ui">
+        <div class="label">ESTADO DEL SISTEMA</div>
+        <div class="value" id="status">OPTIMIZANDO...</div>
+        <div class="label">GENERACIÓN (ITERACIÓN)</div>
+        <div class="value" id="gen">0</div>
+        <div class="label">DENSIDAD DE BELLEZA (RESONANCIA)</div>
+        <div class="value" id="res">0.00</div>
+    </div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const genEl = document.getElementById('gen');
+        const resEl = document.getElementById('res');
+        const statusEl = document.getElementById('status');
+
+        let width, height;
+        let particles = [];
+        let seeds = []; 
+        let generation = 0;
+        let resonance = 0;
+
+        class Particle {
+            constructor(x, y, velX, velY, life, gen) {
+                this.x = x;
+                this.y = y;
+                this.vx = velX;
+                this.vy = velY;
+                this.life = life;
+                this.maxLife = life;
+                this.gen = gen;
+                // Color basado en la generación para mostrar evolución cromática
+                this.hue = (gen * 40 + 180) % 360;
+                this.color = `hsla(${this.hue}, 80%, 60%, `;
+            }
+
+            update() {
+                // Influencia gravitatoria de las semillas (Resonancia/Belleza previa)
+                seeds.forEach(seed => {
+                    let dx = seed.x - this.x;
+                    let dy = seed.y - this.y;
+                    let distSq = dx*dx + dy*dy;
+                    if (distSq < 40000) { // Radio de influencia
+                        let force = 150 / (Math.sqrt(distSq) + 1);
+                        this.vx += dx * force * 0.001;
+                        this.vy += dy * force * 0.001;
+                    }
+                });
+
+                // Fricción para evitar caos infinito
+                this.vx *= 0.99;
+                this.vy *= 0.99;
+
+                this.x += this.vx;
+                this.y += this.vy;
+                this.life -= 1;
+
+                // Si la partícula muere con energía, crea una nueva semilla (Reseeding)
+                if (this.life <= 0 && Math.random() > 0.97) {
+                    return true; 
+                }
+                return false;
+            }
+
+            draw() {
+                let alpha = this.life / this.maxLife;
+                ctx.fillStyle = this.color + alpha + ')';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 1.5, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            resize();
+            statusEl.innerText = "EJECUTANDO ESPIRAL";
+            for(let i = 0; i < 80; i++) {
+                spawnParticle();
+            }
+            animate();
+        }
+
+        function spawnParticle() {
+            const x = Math.random() * width;
+            const y = Math.random() * height;
+            const vx = (Math.random() - 0.5) * 2;
+            const vy = (Math.random() - 0.5) * 2;
+            particles.push(new Particle(x, y, vx, vy, 100 + Math.random() * 200, generation));
+        }
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight; // CORRECCIÓN REALIZADA
+        }
+
+        window.addEventListener('resize', resize);
+
+        function animate() {
+            // El rastro de la partícula es el "tiempo" que deja memoria en el lienzo
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.08)';
+            ctx.fillRect(0, 0, width, height);
+
+            for (let i = particles.
+                length - 1; i >= 0; i--) {
+                const p = particles[i];
+                const createdSeed = p.update();
+                p.draw();
+
+                if (createdSeed) {
+                    seeds.push({x: p.x, y: p.y});
+                    resonance += 0.05;
+                    generation++;
+                    genEl.innerText = generation;
+                    resEl.innerText = resonance.toFixed(2);
+
+                    if (seeds.length > 12) seeds.shift();
+                    spawnParticle();
+                }
+
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+
+            if (particles.length < 60) spawn(particles); // Mantener densidad
+
+            requestAnimationFrame(animate);
+        }
+
+        // Función auxiliar para mantener población
+        function spawn(arr) {
+             const x = Math.random() * width;
+             const y = Math.random() * height;
+             const vx = (Math.random() - 0.5) * 1;
+             const vy = (Math.random() - 0.5) * 1;
+             arr.push(new Particle(x, y, vx, vy, 150 + Math.random() * 150, generation));
+        }
+
+        init();
+    </script>
+</body>
+</html>

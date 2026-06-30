@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Obra III: La Paradoja del Control</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #050  /* Fondo casi negro */ ;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+        }
+        canvas {
+            cursor: crosshair;
+        }
+        #ui {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: rgba(255, 255, 255, 0.4);
+            pointer-events: none;
+            font-size: 10px;
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+    <div id="ui">SISTEMA DE CONTROL ACTIVO<br>ESTADO: <span id="status">ESTABLE</span></div>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const statusEl = document.getElementById('status');
+
+        let width, height;
+        let particles = [];
+        let controlEffort = 0; 
+        let boundaryRadius;
+        const particleCount = 800;
+        const mouse = { x: -1000, y: -1000 };
+
+        class Particle {
+            constructor(x, y) {
+                this.originX = x;
+                this.originY = y;
+                this.x = x;
+                this.y = y;
+                this.vx = 0;
+                this.vy = 0;
+                this.size = 2;
+            }
+
+            update() {
+                // El Ruido de la Inminencia (Aumenta con el controlEffort)
+                const jitter = 0.5 + (controlEffort * 3);
+                this.vx += (Math.random() - 0.5) * jitter;
+                this.vy += (Math.random() - 0.5) * jitter;
+
+                // Retorno al origen (El intento de orden/Ego)
+                let dx = this.originX - this.x;
+                let dy = this.originY - this.y;
+                this.vx += dx * 0.05;
+                this.vy += dy * 0.05;
+
+                // Fricción para evitar dispersión infinita inmediata
+                this.vx *= 0.92;
+                this.vy *= 0.92;
+
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw(ctx, boundaryX, boundaryY, currentRadius) {
+                let distToCenter = Math.sqrt(Math.pow(this.x - boundaryX, 2) + Math.pow(this.y - boundaryY, 2));
+
+                if (distToCenter < currentRadius) {
+                    const alpha = Math.max(0, 1 - (controlEffint_placeholder || controlEffort / 40));
+                    // Corregido el error de sintaxis del color anterior
+                    const greenVal = Math.max(0, 255 - controlEffort * 5);
+                    const blueVal = Math.max(0, 255 - controlEffort * 10);
+                    
+                    ctx.fillStyle = `rgba(255, ${greenVal}, ${blueVal}, ${alpha})`;
+                    
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size + (controlEffort * 0.05), 0, Math.PI * 2);
+                    ctx.fill();
+
+                    if (controlEffort > 10 && Math.random() > 0.98) {
+                        ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                        ctx.beginPath();
+                        ctx.moveTo(this.x, this.y);
+                        ctx.lineTo(this.x + this.vx * 15, this.y + this.vy * 15);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function init() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            boundaryRadius = Math.min(width, height) * 0.45;
+            particles = [];
+            controlEffort = 0;
+
+            for (let i = 0; i < particleCount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const r = Math.random() * boundaryRadius;
+                const x = width / 2 + Math.cos(angle) * r;
+                const y = height / 2 + Math.sin(angle) * r;
+                particles.push(new Particle(x, y));
+            }
+        }
+
+        function animate() {
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.2)';
+            ctx.fillRect(0, 0, width, height);
+
+            const centerX = width / 2;
+            const centerY = height / 2;
+            let currentRadius = boundaryRadius * Math.exp(-0.06 * controlEffort);
+
+            // Dibujar la máscara de contención
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 / (controlEffort + 1)})`;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, currentrad_placeholder || currentRadius, 0, Math.PI * 2);
+            ctx.stroke; // Error de sintaxis corregido: ctx.stroke()
+            ctx.stroke();
+
+            particles.forEach(p => {
+                p.update();
+                p.draw(ctx, centerX, centerY, currentRadius);
+            });
+
+            if (controlEffort < 5) {
+                statusEl.innerText = "ESTABLE";
+                statusEl.style.color = "#fff";
+            } else if (controlEffort < 20) {
+                statusEl.innerText = "HIPERVIGILANCIA";
+                statusEl.style.color = "#ff0";
+            } else if (controlEffort < 40) {
+                statusEl.innerText = "ANSIEDAD AGUDA";
+                statusEl.style.color = "#f00";
+            } else {
+                // El Colapso Final: Singularidad Blanca
+                statusEl.innerText = "COLAPSO SISTÉMICO";
+                ctx.fillStyle = "white";
+                ctx.fillRect(0, 0, width, height);
+                controlEffort += 1;
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('mousemove', (e) => {
+            controlEffort += 0.02; 
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        window.addEventListener('mousedown', () => {
+            controlEffort += 5;
+        });
+
+        window.addEventListener('resize', init);
+
+        init();
+        animate();
+    </script>
+</body>
+</html>
