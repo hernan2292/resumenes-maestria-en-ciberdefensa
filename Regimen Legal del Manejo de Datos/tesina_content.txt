@@ -1,0 +1,971 @@
+FACULTAD DE INGENIER
+I
+A DEL EJ
+E
+RCITO
+MAESTR
+I
+A EN CIBERDEFENSA
+VAC
+I
+OS LEGALES Y SEGURIDAD JUR
+I
+DICA EN LOS SMART CONTRACTS APLICADOS AL REAL ESTATE LOCAL
+Trabajo Final de 
+Investigación
+ Integrador
+Materia: 
+Régimen
+ Legal del Manejo de Datos
+Docente: Prof. Dra. PhD Johanna Caterina Faliero
+Estudiante: Lic. 
+Hernán
+ Herrera
+A
+ño
+: 2026
+Abstract
+El presente trabajo final de investigación aborda la intersección entre la tecnología 
+blockchain
+, los contratos inteligentes (
+smart
+ 
+contracts
+) y el régimen de derechos reales en la República Argentina, focalizando el análisis en el sector del Real Estate local. La promesa tecnológica de la 
+tokenización
+ de activos inmobiliarios propone la democratización de las inversiones y la drástica reducción de costos transaccionales mediante la automatización y desintermediación. Sin embargo, estas ventajas colisionan frontalmente con las exigencias solemnes de escritura pública e inscripción registral prescriptas por el Código Civil y Comercial de la Nación, generando un escenario de profunda inseguridad jurídica para los adquirentes. A través de un análisis dogmático, normativo y comparado, se evalúa el valor probatorio de los 
+smart
+ 
+contracts
+ en el proceso civil local y su tipicidad penal frente a la estafa informática. Finalmente, se esboza una propuesta regulatoria integradora que amalgama la función notarial y registral con la inmutabilidad de los registros distribuidos.
+Palabras clave:
+ Smart 
+Contracts
+, 
+Blockchain
+, Real Estate, 
+Tokenización
+, Derechos Reales, Seguridad Jurídica, Valor Probatorio, Estafa Informática.
+Índice
+Parte General
+5
+Introducción
+5
+Planteo de la Problemática de Trabajo
+5
+Hipótesis de Trabajo Propuesta
+6
+Objetivos Generales y Específicos
+7
+Resumen del Estado Actual de la Materia
+8
+Desarrollo
+9
+Marco Teórico y Doctrinario
+9
+Marco Normológico y Legislativo
+10
+Estudio de Derecho Comparado
+12
+Casuística y Jurisprudencia Relevante
+13
+Marco e Impactos en lo Socioeconómico
+15
+Comprobación de Hipótesis de Trabajo
+16
+Propuesta de Reforma y Adecuación Regulatoria
+17
+Conclusión y Reflexiones Finales
+18
+Bibliografía
+20
+Parte General
+Introducción
+El advenimiento de la llamada tecnología de registros distribuidos (
+Distributed
+ Ledger 
+Technology
+ o DLT), cuyo exponente más paradigmático es la 
+blockchain
+, ha inaugurado una nueva era en el procesamiento, almacenamiento y transferencia de datos con valor económico. Concebida originalmente en 2008 como la infraestructura subyacente para el funcionamiento del Bitcoin, la 
+blockchain
+ ha trascendido su propósito inicial de medio de pago descentralizado para convertirse en una plataforma de cómputo de carácter global. Con el lanzamiento de Ethereum en 2015, se incorporó la capacidad de ejecutar scripts o programas autoejecutables directamente sobre el registro distribuido, dando nacimiento práctico a los denominados contratos inteligentes o 
+smart
+ 
+contracts
+.
+En el ámbito del Real Estate, la 
+tokenización
+ de activos inmobiliarios —entendida como la representación digital de derechos sobre un inmueble mediante tokens criptográficos únicos e inmutables— se presenta como una innovación disruptiva capaz de redefinir las reglas del mercado. La promesa de desintermediación, fraccionamiento del capital de inversión y liquidación casi instantánea contrasta, sin embargo, con los regímenes legales de orden público que estructuran la transmisión de la propiedad inmobiliaria en la República Argentina. 
+Este trabajo se propone explorar las tensiones lógicas y jurídicas que emergen cuando el dinamismo tecnológico de los 
+smart
+ 
+contracts
+ interactúa con el formalismo protector del derecho civil y penal argentino.
+Planteo de la Problemática de Trabajo
+La problemática central de esta investigación radica en la incompatibilidad ontológica existente entre el carácter descentralizado, pseudónimo y autoejecutable de los 
+smart
+ 
+contracts
+ y las exigencias de carácter formal y preventivo contempladas en el Código Civil y Comercial de la Nación (CCyCN) para la constitución o transmisión de derechos reales sobre bienes inmuebles. Mientras que en el paradigma 
+blockchain
+ se pregona que 
+“el código es la ley”
+ (
+code
+ 
+is
+ 
+law
+), en el ordenamiento jurídico argentino impera el principio de legalidad notarial y registral.
+El artículo 1017, inciso a), del CCyCN establece la escritura pública como formalidad solemne relativa para los contratos que tienen por objeto la adquisición, modificación o extinción de derechos reales sobre inmuebles. A su vez, el artículo 1893 del mismo cuerpo normativo dispone la obligatoriedad de la inscripción registral para su oponibilidad frente a terceros interesados de buena fe. 
+En la práctica comercial de la 
+tokenización
+ inmobiliaria local, los participantes operan bajo la premisa de que la adquisición de un token equivale a la propiedad de una fracción del inmueble. Sin embargo, estas transacciones 
+on-chain
+ carecen de oponibilidad real y no califican como títulos suficientes en los términos del artículo 1892 del CCyCN. 
+Esta desalineación engendra un vacío de seguridad jurídica sustancial: ante la ocurrencia de un incumplimiento, un hackeo del protocolo o la detección de un fraude de tipo "
+rug
+ 
+pull
+", los adquirentes se hallan desprovistos de las acciones reales de dominio, quedando limitados a reclamar derechos de crédito de difícil ejecución contra intermediarios frecuentemente no identificados. A esto se añade la precaria validez probatoria de los registros de 
+blockchain
+ en el proceso civil argentino, donde son asimilados a meros instrumentos particulares no firmados (Art. 287 CCyCN), y las severas dificultades operativas para encuadrar la estafa informática en entornos pseudónimos ante la justicia penal.
+Hipótesis de Trabajo Propuesta
+La implementación de 
+smart
+ 
+contracts
+ para la 
+tokenización
+ de bienes inmuebles en la República Argentina genera una situación de inseguridad jurídica estructural debido a la incompatibilidad entre la 
+autoejecución
+ tecnológica del software en redes 
+blockchain
+ y los requisitos solemnes de escritura pública e inscripción registral impuestos por el Código Civil y Comercial de la Nación. 
+Esta discrepancia no solo priva a los adquirentes de la titularidad de derechos reales de dominio, constriñéndolos a precarias relaciones personales de crédito frente a estructuras intermedias (fideicomisos o sociedades), sino que además degrada la eficacia probatoria 
+de estas transacciones en sede judicial civil —al no cumplir con las exigencias del documento digital firmado bajo los estándares de la Ley 25.506— y neutraliza la eficacia de la tutela jurisdiccional penal frente a estafas informáticas y manipulaciones técnicas, debido a la dificultad de individualización subjetiva derivada de la arquitectura criptográfica y pseudónima del sistema.
+Objetivos Generales y Específicos
+Objetivo General:
+Evaluar y sistematizar la compatibilidad jurídica, civil y penal, de la utilización de 
+smart
+ 
+contracts
+ en procesos de 
+tokenización
+ de bienes inmuebles en la República Argentina, determinando sus efectos sobre la seguridad jurídica y la protección del inversor, con miras a formular bases de adecuación regulatoria.
+Objetivos Específicos:
+Analizar el encuadre normativo de los 
+smart
+ 
+contracts
+ a la luz de la teoría general del contrato y del régimen de derechos reales del Código Civil y Comercial de la Nación.
+Examinar las estructuras jurídicas indirectas (fideicomisos inmobiliarios y sociedades vehiculares) empleadas actualmente en el mercado local para sortear las rigideces del régimen registral tradicional.
+Determinar la eficacia probatoria de los contratos inteligentes y las transacciones 
+on-chain
+ en el proceso civil argentino, considerando la Ley de Firma Digital 
+N°
+ 25.506 y los artículos 287 y 319 del CCyCN.
+Analizar la tipicidad del delito de estafa informática (artículo 173, inciso 16, del Código Penal de la Nación) y deslindar las responsabilidades civiles y penales derivadas de fallas del código, manipulación de oráculos e incidentes de ciberseguridad.
+Relevar las tendencias en derecho comparado sobre el uso de tecnologías de registros distribuidos en materia registral y societaria.
+Elaborar una propuesta de adecuación reglamentaria que integre los 
+smart
+ 
+contracts
+ con la función del escribano público y los Registros de la Propiedad Inmueble.
+Resumen del Estado Actual de la Materia
+El tratamiento jurídico de los 
+smart
+ 
+contracts
+ y de la 
+tokenización
+ en la Argentina se encuentra en una etapa 
+incipiente,
+ pero de creciente debate doctrinario. Juristas destacados en el campo del derecho informático y del derecho civil coinciden en señalar la tensión insalvable que existe entre el automatismo digital y los requisitos solemnes del derecho inmobiliario.
+La Dra. Johanna Caterina Faliero ha destacado que la 
+tokenización
+ de activos en redes 
+blockchain
+ representa una desmaterialización extrema que desafía las fronteras tradicionales de la soberanía estatal y los esquemas clásicos de defensa del consumidor y manejo de datos personales. 
+Por su parte, la doctrina tradicional del derecho de obligaciones y contratos, siguiendo la línea trazada por autores como Ricardo Lorenzetti y Jorge Alterini, subraya que las plataformas DLT no pueden por sí mismas modificar los presupuestos esenciales del acto jurídico, tales como la manifestación libre del consentimiento y el control de legalidad notarial que previene el fraude en transacciones de alto impacto patrimonial. 
+A nivel registral, se observa un fuerte rechazo a admitir las transmisiones directas de derechos reales basadas en registros 
+blockchain
+ sin la presencia de un documento público en soporte papel o digital homologado con firma digital nacional. Esto obliga a las plataformas Fintech locales a valerse de rodeos instrumentales (derechos de participación fiduciaria u obligaciones negociables 
+tokenizadas
+), lo cual desnaturaliza el postulado central del ecosistema 
+blockchain
+: la eliminación de intermediarios innecesarios.
+Desarrollo
+Marco Teórico y Doctrinario
+El concepto de "
+smart
+ 
+contract
+" fue acuñado originalmente en 1994 por el criptógrafo e informático Nick Szabo, quien los describió como un protocolo de transacción computarizado que ejecuta los términos de un contrato. El ejemplo clásico provisto por Szabo fue el de una máquina expendedora de bebidas (vending machine): ante la introducción de la cantidad estipulada de dinero (input del usuario), la máquina ejecuta automáticamente la entrega del producto y del cambio correspondiente (output), sin intervención de terceros y bajo una regla lógica predeterminada.
+Técnicamente, un 
+smart
+ 
+contract
+ contemporáneo no es un contrato en el sentido jurídico de la palabra, sino un programa informático compilado e implementado en una 
+blockchain
+, que consta de un conjunto de variables, funciones y reglas lógicas del tipo 
+if-then
+ (si ocurre "A", entonces se ejecuta "B"). En redes como Ethereum o 
+Polygon
+, el código corre dentro de una máquina virtual descentralizada (EVM), garantizando que nadie pueda detener, alterar o censurar su ejecución una vez que ha sido desplegado en la red. El costo de procesar este código se abona mediante una tarifa denominada "gas", la cual fluctúa según la complejidad computacional de la operación y el nivel de congestión de la red.
+Para interactuar con el entorno físico externo, los 
+smart
+ 
+contracts
+ requieren de los denominados "oráculos" (
+oracles
+). Dado que una 
+blockchain
+ es un sistema cerrado que no puede realizar consultas externas por sí misma (para no romper el consenso determinista de los nodos), los oráculos actúan como agentes encargados de recopilar datos del mundo exterior (por ejemplo, el avance de una obra en construcción, la cotización del dólar o la validación del fallecimiento de una persona) y transmitirlos al 
+smart
+ 
+contract
+ para desencadenar la ejecución del código.
+Doctrinariamente, existe un arduo debate sobre la naturaleza jurídica de estos códigos informáticos. Un sector de la doctrina tecnológica propone que el 
+smart
+ 
+contract
+ es un contrato autónomo de naturaleza digital, donde el consentimiento se perfecciona mediante la firma criptográfica de las partes al interactuar con el contrato. Sin embargo, la doctrina jurídica mayoritaria sostiene que el 
+smart
+ 
+contract
+ es una mera herramienta de instrumentación y ejecución de un acuerdo de voluntades preexistente, el cual se rige por las reglas generales del derecho contractual civil. 
+El principal inconveniente de la máxima 
+“Code 
+is
+ Law”
+ es su rigidez absoluta frente a las vicisitudes contractuales habituales, tales como la imprevisión, la fuerza mayor, el error de las partes o la necesidad de renegociación, institutos todos protegidos por el derecho civil y que el rígido código de programación es incapaz de procesar de manera flexible.
+Marco Normológico y Legislativo
+El análisis 
+normológico
+ en la República Argentina exige confrontar la tecnología de los 
+smart
+ 
+contracts
+ con los principios rectores del Código Civil y Comercial de la Nación.
+En primer lugar, debemos analizar la manifestación del consentimiento. El artículo 971 del CCyCN establece que los contratos se concluyen con la recepción de la aceptación de una oferta o por una conducta de las partes que sea suficiente para demostrar la existencia de un acuerdo. Cuando un usuario interactúa con un 
+smart
+ 
+contract
+ enviando fondos desde su 
+wallet
+, realiza un comportamiento inequívoco que encuadra en la aceptación por comportamiento tácito o expreso por medios electrónicos. No obstante, surge la duda de si se cumple con el deber de información y el principio de buena fe en los contratos de consumo (Art. 1100 y ss.), ya que el código de un 
+smart
+ 
+contract
+ está escrito en lenguaje de programación (ej. 
+Solidity
+) que resulta incomprensible para el ciudadano promedio, configurando una asimetría de información extrema.
+En segundo lugar, se debe examinar la forma y la prueba del acto. El artículo 286 del CCyCN autoriza la utilización de cualquier medio para expresar la voluntad, y el artículo 287 distingue entre los instrumentos particulares firmados (instrumentos privados) y los no firmados. La Ley de Firma Digital 
+N°
+ 25.506 establece una diferencia fundamental en la Argentina:
+Firma Digital (Art. 2):
+ 
+Cuenta con una presunción iuris tantum de autoría e integridad, y requiere de un certificado digital emitido por un certificador licenciado por el Estado argentino.
+Firma Electrónica (Art. 5):
+ Carece de dicha presunción legal, y en caso de ser desconocida por su emisor, la carga de la prueba recae sobre quien la invoca.
+Las firmas criptográficas utilizadas en la 
+blockchain
+ se basan en criptografía de clave pública y clave privada. Dado que los proveedores de firmas o las plataformas descentralizadas de emisión de claves no cuentan con el licenciamiento del órgano de control nacional (como la ONTI), estas firmas 
+on-chain
+ son consideradas jurídicamente como 
+firmas electrónicas
+. Por ende, el 
+smart
+ 
+contract
+ se clasifica como un 
+instrumento particular no firmado
+ en los términos del artículo 287 del CCyCN. El artículo 319 dispone que el valor probatorio de estos instrumentos debe ser evaluado por el juez ponderando la congruencia entre lo sucedido y lo registrado, y la confiabilidad del sistema de información utilizado.
+En tercer lugar, y como obstáculo insalvable para la 
+tokenización
+ directa de Real Estate, se hallan los requisitos formales de los derechos reales. El artículo 1017, inciso a), del CCyCN es taxativo: deben ser otorgados por escritura pública los contratos que tienen por objeto la transmisión de derechos reales sobre inmuebles. La escritura pública es un instrumento público realizado ante un Escribano de Registro. La transmisión inmobiliaria requiere, asimismo, 
+título suficiente y modo suficiente
+ (la tradición posesoria, Art. 1892) más la inscripción registral (Art. 1893) para su publicidad y oponibilidad. 
+Una transacción puramente digital en la 
+blockchain
+, donde un token representa un inmueble, carece de escritura pública y de inscripción registral válida ante los Registros de la Propiedad locales. En consecuencia, bajo el derecho argentino vigente, el adquirente del token nunca adquiere el derecho real de dominio o condominio sobre el inmueble físico, sino que obtiene un simple derecho personal o de crédito.
+Estudio de Derecho Comparado
+El análisis del derecho comparado nos permite evaluar cómo otras jurisdicciones han abordado la regulación de los 
+smart
+ 
+contracts
+ y la 
+tokenización
+.
+En los 
+Estados Unidos, diversos estados han adoptado leyes proactivas para reconocer la validez de las transacciones basadas en 
+blockchain
+. El estado de Arizona fue pionero en 2017 al modificar su
+ 
+Arizona Electronic 
+Transactions
+ 
+Act
+ para establecer que los 
+smart
+ 
+contracts
+ y las firmas criptográficas basadas en 
+blockchain
+ son plenamente válidos y exigibles como contratos electrónicos. Asimismo, Vermont y Delaware modificaron sus leyes de sociedades y de prueba para permitir la conservación de registros societarios y la emisión de acciones directamente en registros distribuidos. 
+Sin embargo, a nivel federal, la SEC (
+Securities
+ and Exchange 
+Commission
+) mantiene una postura estricta, considerando que la mayoría de los tokens que representan inversiones inmobiliarias fraccionadas califican como contratos de inversión (
+securities
+) bajo 
+la prueba
+ de 
+Howey
+, lo que impone costosos registros de oferta pública.
+En 
+España
+, el marco normativo está influenciado por el Reglamento (UE) 
+N°
+ 910/2014 relativo a la identificación electrónica y los servicios de confianza para las transacciones electrónicas (
+eIDAS
+). Si bien se reconoce la validez contractual de los medios electrónicos, la transmisión de inmuebles requiere de forma obligatoria el otorgamiento de escritura pública notarial y la inscripción en el Registro de la Propiedad para gozar de la protección de la fe pública registral. 
+El Colegio de Registradores de España ha llevado adelante proyectos piloto para evaluar el uso de DLT, pero siempre bajo un esquema híbrido donde la 
+blockchain
+ actúa como un registro auxiliar o canal de transmisión de datos, reservando el control de legalidad 
+preventivo y la calificación de validez jurídica exclusivamente en manos del Registrador y del Notario.
+En la 
+Unión Europea
+, la reciente entrada en vigor del Reglamento para el Mercado de 
+Criptoactivos
+ (
+MiCA
+, Reglamento UE 2023/1114) ha venido a ordenar el ecosistema de los tokens y proveedores de servicios, aunque excluye expresamente de su ámbito a los tokens que representan derechos reales sobre bienes físicos tradicionales como los inmuebles, los cuales siguen regulados por los derechos nacionales de cada Estado miembro.
+Este relevamiento comparado nos demuestra que ninguna jurisdicción de tradición jurídica continental europea o civilista ha reemplazado la fe pública institucionalizada del notario o del registrador por un algoritmo computacional. Por el contrario, las tendencias exitosas apuntan a la digitalización e integración de la tecnología DLT como soporte y no como sustituto de la autoridad estatal.
+Casuística y Jurisprudencia Relevante
+La exploración de casos reales e hipótesis de conflicto judicial pone de manifiesto la vulnerabilidad operativa del paradigma 
+“Code 
+is
+ Law”
+.
+El precedente histórico más relevante en la materia es el caso de 
+The DAO
+ en 2016. The DAO era una organización autónoma descentralizada construida sobre Ethereum con el propósito de funcionar como un fondo de inversión autogestionado mediante 
+smart
+ 
+contracts
+. Un atacante identificó una falla lógica en la función de retiro del código informático (una vulnerabilidad de reentrada) que le permitió desviar aproximadamente un tercio de los fondos de la organización (unos 50 millones de dólares en 
+ether
+ de la época) hacia una estructura bajo su control. 
+El atacante publicó una carta abierta argumentando que su acción era legítima, dado que el código del contrato era la única regla aplicable y este permitía dicha ejecución (
+"Code 
+is
+ Law"
+). Ante la catástrofe financiera, la comunidad de Ethereum optó por realizar una bifurcación dura (
+hard
+ 
+fork
+), alterando de forma excepcional el registro histórico de la 
+blockchain
+ para devolver los fondos a los inversores. 
+Este evento demostró de forma palmaria que el automatismo tecnológico no puede prescindir del factor humano y de las nociones básicas de justicia y equidad que informan al derecho.
+En el 
+ámbito nacional argentino
+, no existen aún fallos específicos de la Corte Suprema sobre la 
+tokenización
+ de Real Estate, pero sí contamos con jurisprudencia que perfila el valor de la prueba electrónica y la persecución de delitos informáticos. En casos relativos a estafas bancarias electrónicas (phishing y manipulación de datos bancarios), los tribunales civiles y comerciales han aplicado rigurosamente el principio de la carga de la prueba dinámica. 
+En materia penal, la estafa informática está tipificada en el artículo 173, inciso 16, del Código Penal de la Nación, incorporado por la Ley 26.388 de Delitos Informáticos. Dicho artículo sanciona a quien defraude mediante cualquier manipulación informática que altere datos. 
+El principal escollo detectado en la práctica procesal penal es la identificación del sujeto activo en casos de fraudes basados en 
+DeFi
+ (Finanzas Descentralizadas) o 
+tokenización
+. Al no existir un intermediario centralizado que realice la verificación de identidad (
+Know 
+Your
+ 
+Customer
+ o KYC), las direcciones de las 
+wallets
+ utilizadas por los estafadores permanecen en el anonimato. La jurisprudencia penal local ha señalado que la imposibilidad de vincular de manera indubitable una dirección criptográfica con una persona humana —en ausencia de registros de 
+exchanges
+ centralizados que cooperen voluntariamente o bajo orden judicial— frustra la imputación penal y la posterior etapa de elevación a juicio, dejando desamparadas a las víctimas de los ciberdelitos.
+Marco e Impactos en lo Socioeconómico
+La irrupción de la 
+tokenización
+ en el Real Estate local genera profundos impactos económicos y sociales que deben ser analizados.
+Desde una perspectiva positiva, los beneficios socioeconómicos potenciales son significativos:
+Fraccionamiento del capital:
+ Permite a pequeños ahorristas acceder al mercado de Real Estate comprando fracciones equivalentes a fracciones de metro cuadrado de un inmueble (por ejemplo, con inversiones mínimas de 100 dólares), lo cual funciona como un canal alternativo de ahorro frente a la constante devaluación de la moneda local.
+Aumento de la liquidez:
+ El mercado inmobiliario tradicional es ilíquido por naturaleza. La 
+tokenización
+ permite el comercio secundario de estos tokens de participación en plataformas digitales las 24 horas del día.
+Reducción de costos de transacción:
+ Al automatizar procesos de distribución de dividendos o rentas mediante 
+smart
+ 
+contracts
+, se suprimen gastos de administración de intermediarios financieros.
+Sin embargo, los impactos negativos y los riesgos asociados son igualmente graves:
+Asimetría informativa extrema:
+ El adquirente medio desconoce la arquitectura de la red y las vulnerabilidades técnicas del contrato inteligente. Confía ciegamente en el marketing de la plataforma Fintech, creyendo que posee un "título de propiedad" cuando en realidad posee una mera promesa contractual no garantizada.
+Riesgo de fraude sistémico:
+ La proliferación de proyectos fraudulentos que recaudan fondos públicos bajo la promesa de desarrollos inmobiliarios y luego desaparecen (
+rug
+ 
+pulls
+) socava la confianza general en los mercados de inversión digital.
+Riesgo de lavado de activos:
+ El 
+pseudonimato
+ inherente a las 
+blockchains
+ públicas puede ser aprovechado para estructurar transacciones de origen ilícito en el mercado de la construcción, evadiendo los controles de la Unidad de Información Financiera (UIF).
+Barrera de acceso digital:
+ Genera una brecha de exclusión para aquellos sectores de la población que no poseen la alfabetización tecnológica necesaria para gestionar billeteras de 
+autocustodia
+ con seguridad.
+Comprobación de Hipótesis de Trabajo
+A la luz de todo el desarrollo teórico, normativo, comparado y casuístico expuesto, la hipótesis planteada en esta investigación queda plenamente demostrada.
+Se corrobora que la aplicación de 
+smart
+ 
+contracts
+ puros en la 
+tokenización
+ inmobiliaria local engendra una inseguridad jurídica insalvable debido a que:
+1. 
+La ineficacia del título real:
+ La falta de instrumentación pública (escritura) y de registración estatal impide la constitución de un derecho real de dominio (Art. 1017 y 1893 CCyCN). Los adquirentes de tokens inmobiliarios quedan colocados en la precaria posición jurídica de acreedores quirografarios frente a sociedades o fideicomisos, sujetos al riesgo de insolvencia o malversación de dichos vehículos intermedios.
+2. 
+La precarización probatoria:
+ Al no contar con firmas digitales certificadas bajo la Ley 25.506, los 
+smart
+ 
+contracts
+ solo califican como instrumentos particulares no firmados (Art. 287 CCyCN), cuya validez e imputabilidad quedan sujetas al amplio arbitrio judicial en el proceso civil.
+3. 
+El déficit de tutela penal:
+ Frente a ilícitos tales como la estafa informática (Art. 173, inc. 16 CP), el 
+pseudonimato
+ de la tecnología 
+blockchain
+ y la falta de regulación sobre oráculos e identidades 
+on-chain
+ dificultan gravemente la individualización de los delincuentes informáticos, obstaculizando la acción penal de los fiscales y la consiguiente recuperación de los activos defraudados.
+En suma, existe una brecha insalvable entre la publicidad comercial de la 
+tokenización
+ y la realidad del derecho vigente en la Argentina, lo que atenta contra la seguridad jurídica de los inversores.
+Propuesta de Reforma y Adecuación Regulatoria
+Frente a este diagnóstico de inseguridad jurídica, se propone un modelo de adecuación regulatoria integrador que no intente prohibir la tecnología, sino amalgamar sus ventajas de eficiencia con el orden público y las garantías institucionales de la fe pública notarial y registral. La propuesta se articula en tres ejes fundamentales:
+Escribanos Públicos como "Nodos Oráculo Notariales"
+Se propone que los notarios intervengan en los 
+smart
+ 
+contracts
+ inmobiliarios actuando como oráculos de legalidad del sistema. Antes de que un 
+smart
+ 
+contract
+ ejecute la transferencia de tokens o libere fondos depositados en garantía (
+escrow
+), el escribano público deberá calificar y certificar en el mundo físico la validez de la transacción. El escribano, utilizando su firma digital oficial reglada por la Ley 25.506, inyectará un dato estructurado en la 
+blockchain
+ (input) atestiguando que:
+Las partes han manifestado su consentimiento de manera libre y capaz.
+El inmueble se encuentra libre de gravámenes o embargos según informe registral.
+Se ha verificado el origen lícito de los fondos de conformidad con las normas de prevención de lavado de dinero de la UIF.
+Una vez que el oráculo notarial firma y transmite este estado verificado 
+on-chain
+, el 
+smart
+ 
+contract
+ queda habilitado para autoejecutar las transferencias económicas de forma segura y automatizada.
+Registro de la Propiedad Inmueble Digital y Emisión de Dominio-NFT
+Los Registros de la Propiedad Inmueble provinciales y de la Ciudad Autónoma de Buenos Aires deben evolucionar hacia la adopción de infraestructuras DLT permisionadas administradas por el Estado. La propuesta consiste en que el Registro emita una representación oficial digital en formato de Token No Fungible (NFT) de cada partida inmobiliaria. 
+La transferencia de este Dominio-NFT se realizaría de forma electrónica en la 
+blockchain
+ estatal, requiriendo de manera obligatoria e inseparable la concurrencia de la firma digital del escribano interviniente (en cumplimiento del requisito de escritura del Art. 1017) y la firma de las partes interesadas. La ejecución de la transacción en la red DLT estatal registraría de modo automático la transferencia en la base de datos registral, satisfaciendo plenamente la oponibilidad ante terceros exigida por el artículo 1893 del CCyCN.
+Vinculación Obligatoria de 
+Wallets
+ con Identidad Digital Soberana
+Para suprimir el 
+pseudonimato
+ que ampara el fraude y garantizar la plena eficacia probatoria en el proceso civil y penal, se propone la homologación estatal de billeteras virtuales para transacciones de alto valor patrimonial. Los usuarios que deseen operar en plataformas de 
+tokenización
+ inmobiliaria local deberán asociar sus 
+wallets
+ a una Identidad Digital Soberana (ID) provista por el Estado Nacional (por ejemplo, a través de la integración de la firma criptográfica con la plataforma Mi Argentina y el Registro Nacional de las Personas - 
+Renaper
+). 
+Esta vinculación asociará indubitablemente la clave pública de la 
+wallet
+ con el número de DNI y la persona física del contratante, dotando a la firma 
+on-chain
+ del carácter y las presunciones de la 
+Firma Digital
+ de la Ley 25.506. De este modo, en caso de litigio, se contará con plena certeza sobre la autoría de la transacción, facilitando la imputabilidad civil y penal ante eventuales defraudaciones informáticas.
+Conclusión y Reflexiones Finales
+El presente trabajo final de investigación ha examinado exhaustivamente la compleja relación jurídica surgida de la aplicación de los 
+smart
+ 
+contracts
+ y la 
+tokenización
+ de activos en el sector de Real Estate local. A lo largo del análisis, se ha demostrado que la pretensión de 
+desintermediar
+ de manera absoluta las transacciones inmobiliarias valiéndose únicamente de algoritmos de 
+blockchain
+ colisiona de forma directa con el andamiaje protector y de orden público que rige el derecho de propiedad en la República Argentina.
+La inmutabilidad y 
+autoejecución
+ que definen a los 
+smart
+ 
+contracts
+ son propiedades valiosas para la eficiencia y velocidad transaccional, pero resultan insuficientes para 
+suplir la función del control de legalidad preventivo ejercido por el escribano y el registrador. Delegar la fe pública en un código informático introduce riesgos desmedidos de asimetría de información, fraude, ciberdelincuencia e inseguridad en los títulos, lo cual termina perjudicando al eslabón más débil del sistema: el pequeño ahorrista atraído por la promesa de inversiones democratizadas.
+La salida a esta encrucijada no reside en una postura de rechazo legislativo a las tecnologías emergentes, la cual solo lograría marginar a la Argentina de los flujos globales de innovación financiera y desarrollo de software Web3. Por el contrario, la solución óptima es el desarrollo de un modelo híbrido institucional, tal como el propuesto en este trabajo. Al integrar a los notarios como oráculos de fe pública y habilitar a los Registros de la Propiedad para operar en plataformas DLT permisionadas asociadas con sistemas nacionales de identidad digital, se logra un equilibrio virtuoso. Este ecosistema híbrido permite capturar la eficiencia, la automatización y la trazabilidad de los 
+smart
+ 
+contracts
+, sin renunciar a las irrenunciables garantías constitucionales de seguridad jurídica preventiva que fundan y sostienen el ordenamiento jurídico argentino.
+Bibliografía
+Libros y artículos de doctrina
+Alterini, J. H. (2016). 
+Código Civil y Comercial Comentado. Tratado Exegético
+. Buenos Aires, Argentina: Thomson Reuters La Ley.
+Faliero
+, J. C. (20
+17
+). 
+Criptomonedas: la nueva frontera regulatoria del derecho informático
+. Buenos Aires, Argentina: Ad-Hoc.
+Lorenzetti, R. L. (2015). 
+Tratado de los Contratos
+. Santa Fe, Argentina: 
+Rubinzal-Culzoni
+ Editores.
+Szabo, N. (1996). 
+Smart Contracts: Building Blocks for Digital Markets
+. 
+Extropy
+, 16(2), pp. 12-18.
+De Caria, R. (2018). 
+El estatuto jurídico de los contratos inteligentes (
+smart
+ 
+contracts
+)
+. Revista de Derecho Privado y Comunitario, 2018(3), pp. 85-112.
+De Filippi, P., y Wright, A. (2018). 
+Blockchain and the Law: The Rule of Code
+. 
+Cambridge, Estados Unidos: Harvard University Press.
+Legislación
+Congreso de la Nación Argentina. (2014). 
+Código Civil y Comercial de la Nación
+. Ley 
+N°
+ 26.994. Boletín Oficial del 08 de 
+Octubre
+ de 2014. Buenos Aires, Argentina.
+Congreso de la Nación Argentina. (2001). 
+Ley de Firma Digital
+. Ley 
+N°
+ 25.506. Boletín Oficial del 14 de 
+Diciembre
+ de 2001. Buenos Aires, Argentina.
+Congreso de la Nación Argentina. (2008). 
+Ley de Delitos Informáticos
+. Ley 
+N°
+ 26.388. Boletín Oficial del 25 de 
+Junio
+ de 2008. Buenos Aires, Argentina.
+Congreso de la Nación Argentina. (1921 y 
+modif
+.). 
+Código Penal de la Nación Argentina
+. Ley 
+N°
+ 11.179. Buenos Aires, Argentina.
+Parlamento Europeo y Consejo de la Unión Europea. (2023). 
+Reglamento (UE) 2023/1114 relativo a los mercados de 
+criptoactivos
+ (
+MiCA
+)
+. Diario Oficial de la Unión Europea del 9 de junio de 2023. Bruselas, Bélgica.
+Sitios web
+Colegio de Registradores de España. (2022). 
+Estudios e iniciativas sobre la aplicación de tecnologías DLT en el Registro de la Propiedad
+. Madrid, España: Colegio de Registradores. Recuperado de https://www.registradores.org/blockchain-propiedad
+Buterin, V. (2014). 
+A Next-Generation Smart Contract and Decentralized Application Platform
+. Ethereum Whitepaper. 
+Recuperado
+ de https://ethereum.org/en/whitepaper
+Nakamoto, S. (2008). 
+Bitcoin: A Peer-to-Peer Electronic Cash System
+. Bitcoin Foundation. 
+Recuperado
+ de https://bitcoin.org/bitcoin.pdf
+Anexos
+Anexo A: Solidity Smart Contract (`
+RealEstateToken.sol
+`)
+A 
+continuación
+ se presenta un borrador funcional en 
+Solidity
+ de un contrato inteligente para 
+tokenizar
+ una participación en fideicomiso inmobiliario. Este código ilustra de forma técnica cómo se ejecutan 
+on-chain
+ las transferencias y el pago de rentas, y dónde radican las debilidades relativas a la falta de calificación notarial o control de identidad.
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.20;
+/**
+ * @title 
+RealEstateToken
+ 
+* @dev Representa una 
+participacion
+ fraccionada en un Fideicomiso Inmobiliario local.
+ * ADVERTENCIA: Este contrato no transfiere derechos reales de dominio 
+segun
+ el Art. 1017 del CCyCN.
+ 
+*/
+contract 
+RealEstateToken
+ {
+    string public name;
+    string public symbol;
+    uint8 public decimals;
+    uint256 public 
+totalSupply
+;
+    address public administrator;
+    
+    
+// Mapeo de saldos de tokens por billetera
+    
+mapping(
+address => uint256) private balances;
+    
+// Mapeo de aprobaciones de transferencia (
+patron
+ ERC-20)
+    
+mapping(
+address => 
+mapping(
+address => uint256)) private allowances;
+    
+// Registro de billeteras verificadas (identidad digital soberana del 
+Renaper
+)
+    
+mapping(
+address => 
+bool
+) public 
+isIdentityVerified
+;
+    event 
+Transfer(
+address indexed from, address indexed to, uint256 value);
+    event 
+Approval(
+address indexed owner, address indexed spender, uint256 value);
+    event 
+IdentityVerified
+(
+address indexed user, string 
+idHash
+);
+    event 
+RentDistributed
+(
+uint256 
+totalAmount
+);
+    modifier 
+onlyAdmin
+(
+) {
+        
+require
+(
+msg.sender
+ == 
+administrator
+, "Solo el administrador del fideicomiso puede ejecutar");
+        _;
+    }
+    
+modifier
+ 
+onlyVerified
+(
+address
+ _
+user
+) {
+        
+require
+(
+isIdentityVerified
+[_
+user
+], "La 
+direccion
+ no posee su identidad digital verificada ante el Registro");
+        
+_;
+    }
+    
+constructor(
+string memory _name, string memory _symbol, uint256 _
+initialSupply
+) {
+        name = _name;
+        symbol = _symbol;
+        decimals = 18;
+        
+totalSupply
+ = _
+initialSupply
+ * (10 ** uint256(decimals));
+        administrator = 
+msg.sender
+;
+        balances[
+msg.sender
+] = 
+totalSupply
+;
+        
+isIdentityVerified
+[
+msg.sender
+] = true;
+    
+}
+    /**
+     * @dev Asocia una 
+wallet
+ con una identidad certificada (actuando como 
+oraculo
+ del 
+Renaper
+/Mi Argentina)
+     
+*/
+    function 
+verifyUserIdentity
+(
+address _user, string memory _
+idHash
+) external 
+onlyAdmin
+ {
+        
+require(
+_
+user !
+= 
+address(
+0), "
+Direccion
+ 
+invalida
+");
+        
+isIdentityVerified
+[_user] = true;
+        emit 
+IdentityVerified
+(
+_user, _
+idHash
+);
+    }
+    function 
+balanceOf
+(
+address _owner) external view returns (uint256) {
+        
+return
+ balances[_
+owner
+];
+    }
+    /**
+     * @dev Transferencia de tokens inmobiliarios.
+     * Requiere que el adquirente este previamente verificado para evitar el anonimato.
+     
+*/
+    function 
+transfer(
+address _to, uint256 _value) external 
+onlyVerified
+(
+msg.sender
+) 
+onlyVerified
+(_to) returns (bool) {
+        
+require
+(
+_
+to
+ !
+= 
+address
+(
+0), "Destinatario no puede ser cero");
+        
+require(balances[
+msg.sender
+] >= _value, "Saldo 
+insuficiente
+");
+        
+        balances[
+msg.sender
+] -= _value;
+        balances[_to] += _value;
+        
+        emit 
+Transfer(
+msg.sender
+, _to, _value);
+        
+return
+ true;
+    }
+    /**
+     * @dev 
+Distribucion
+ de rentas en moneda de curso legal (o 
+stablecoins
+ equivalentes)
+     * a prorrata de las participaciones 
+poseidas
+ en el fideicomiso.
+     
+*/
+    function 
+distributeRent
+(
+) external payable 
+onlyAdmin
+ {
+        
+require
+(
+msg.value
+ > 0, "Monto de renta debe ser mayor a cero");
+        
+        // 
+Distribucion
+ simulada a 
+traves
+ de 
+oraculo
+ de pago externo.
+        // En una 
+blockchain
+ publica, transferir gas a 
+multiples
+ cuentas puede fallar por falta de fondos.
+        
+emit
+ 
+RentDistributed
+(
+msg.value
+);
+    }
+}
+Anexo B: Tabla comparativa (Proceso Tradicional vs. 
+Tokenizado
+)
+La siguiente tabla resume los aspectos instrumentales y de seguridad jurídica contrastando la transferencia inmobiliaria tradicional y la 
+tokenización
+ mediante 
+smart
+ 
+contracts
+:
+Aspecto
+ 
+Jurídico
+ / 
+Operativo
+Transferencia
+ 
+Tradicional
+ (
+CCyCN
+)
+Tokenización
+ Pura mediante Smart 
+Contract
+ (Web3)
+Propuesta Híbrida Integradora (Oráculo Notarial + DLT Estatal)
+Instrumento
+ de 
+adquisición
+Escritura Pública Notarial (Art. 1017 CCyCN).
+Transacción Digital firmada criptográficamente (Firma Electrónica).
+Escritura Digital con Firma Digital del Escribano y partes (Art. 288 CCyCN).
+Rol del Notario
+Obligatorio: control de legalidad, identidad, y retenciones impositivas.
+Inexistente o eludido mediante plataformas Fintech intermediarias.
+Obligatorio: actúa como "Nodo Oráculo" validando el negocio físico e inyectando fe pública.
+Oponibilidad
+ Registral
+Inscripción en Registro de la Propiedad Inmueble (Art. 1893 CCyCN).
+Inexistente ante el Registro de la Propiedad tradicional.
+Inscripción en tiempo real mediante transferencia de Dominio-NFT en red estatal.
+Naturaleza
+ del Derecho
+Derecho Real de Dominio / Condominio (oponibilidad *erga omnes*).
+Derecho Personal (de crédito) contra fideicomisos o sociedades vehiculares.
+Derecho Real de Dominio digitalizado, oponible y amparado por el Estado.
+Valor 
+Probatorio
+ Civil
+Plena fe pública de instrumento público (Arts. 289 y 296 CCyCN).
+Instrumento particular no firmado (Art. 287). Sujeto a pericia técnica y arbitrio judicial.
+Instrumento privado firmado digitalmente con presunción de integridad y autoría.
+Riesgo de 
+Estafa
+ / 
+Ciberseguridad
+Bajo riesgo informático. Riesgo físico de falsificación de firma o doble venta.
+Alto riesgo informático: hackeo del protocolo, errores lógicos en 
+Solidity
+, phishing.
+Bajo riesgo informático: controles de identidad rigurosos y doble firma criptográfica/notarial.
+Identificación
+ 
+Subjetiva
+Plena certeza de identidad de las partes por comparecencia física y DNI.
+Pseudónimo. Dificultad para deslindar autoría 
+on-chain
+ en sede judicial penal.
+Plena certeza mediante 
+wallets
+ asociadas a Identidad Digital Soberana del 
+Renaper
+.

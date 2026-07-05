@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vacíos Legales en Smart Contracts Inmobiliarios</title>
+    <!-- Reveal.js CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/night.min.css" id="theme">
+    <style>
+        .reveal h1, .reveal h2, .reveal h3 { text-transform: none; }
+        .reveal ul { font-size: 0.85em; line-height: 1.4; }
+        .highlight-text { color: #e7ad52; }
+    </style>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- Portada -->
+            <section>
+                <h2>Vacíos Legales y Seguridad Jurídica</h2>
+                <h3>en los <span class="highlight-text">Smart Contracts</span></h3>
+                <p>Aplicados al Real Estate Local</p>
+                <!-- <p><small>Presiona la tecla <strong>'S'</strong> para abrir la vista de presentador (Notas)</small></p> -->
+            </section>
+
+            <!-- Placa 1 -->
+            <section>
+                <section>
+                    <h2>1. La Promesa vs. El CCyCN</h2>
+                    <ul>
+                        <li class="fragment"><strong>La Innovación:</strong> Democratizar el Real Estate eliminando intermediarios.</li>
+                        <li class="fragment"><strong>Choque Normativo:</strong> Colisión frontal con el Código Civil y Comercial.</li>
+                        <li class="fragment"><strong>Exigencias Legales:</strong>
+                            <ul>
+                                <li>Art. 1017: Escritura pública obligatoria.</li>
+                                <li>Art. 1893: Inscripción registral para oponibilidad.</li>
+                            </ul>
+                        </li>
+                        <li class="fragment"><strong>El Problema:</strong> Traspasar un token carece de solemnidad y control notarial.</li>
+                    </ul>
+                    <aside class="notes">
+                        (2 MINUTOS) ¡Buenas tardes a todos! Hoy vamos a hablar del lado B de la tokenización inmobiliaria. 
+                        Todos hemos escuchado cómo los Smart Contracts prometen revolucionar y facilitar la inversión en ladrillos. 
+                        Pero aquí nos topamos con un muro: nuestro Código Civil es extremadamente formalista por una buena razón: proteger la seguridad jurídica.
+                        Para que una casa sea tuya legalmente frente a terceros, necesitas un escribano y el Registro de la Propiedad.
+                        Un simple clic moviendo un token no transfiere el dominio real en Argentina. Esto deja al inversor operando en un profundo vacío legal, con una falsa ilusión de propiedad.
+                    </aside>
+                </section>
+            </section>
+
+            <!-- Placa 2 -->
+            <section>
+                <section>
+                    <h2>2. Estructuras Indirectas</h2>
+                    <h4>¿Qué compramos realmente?</h4>
+                    <ul>
+                        <li class="fragment">Imposibilidad de transferir dominio on-chain &#8594; <strong>Parches legales</strong>.</li>
+                        <li class="fragment"><strong>Fideicomisos:</strong> Compra de derechos personales/crédito, no metros cuadrados.</li>
+                        <li class="fragment"><strong>Sociedades (SA/SAS):</strong> El token representa una acción de la empresa titular.</li>
+                        <li class="fragment"><strong>Riesgo Oculto:</strong> Se asume riesgo crediticio y de mala administración, perdiendo el "señorío" directo.</li>
+                    </ul>
+                    <aside class="notes">
+                        (2 MINUTOS) Entonces, ¿qué está haciendo el mercado para sortear esta barrera? Usan estructuras jurídicas indirectas.
+                        Arman un Fideicomiso o una SAS. Cuando el marketing te dice "sé dueño de una cuotaparte", legalmente no estás comprando ladrillos. 
+                        Estás comprando un derecho personal contra un fiduciario, o acciones de una sociedad. 
+                        Si el fiduciario administra mal o quiebra, vos no tenés la acción real para reclamar el inmueble. 
+                        Esto es crítico, porque pulveriza por completo la promesa de descentralización de la tecnología: terminás dependiendo y confiando en un administrador centralizado.
+                    </aside>
+                </section>
+            </section>
+
+            <!-- Placa 3 -->
+            <section>
+                <section>
+                    <h2>3. El Desafío Probatorio</h2>
+                    <ul>
+                        <li class="fragment"><strong>Falla del Smart Contract:</strong> ¿Qué pasa si vamos a juicio?</li>
+                        <li class="fragment"><strong>Firma Electrónica:</strong> Claves criptográficas (Ethereum/Polygon) no certificadas por ONTI (Ley 25.506).</li>
+                        <li class="fragment"><strong>Documento No Firmado:</strong> Según el Art. 287 CCyCN.</li>
+                        <li class="fragment"><strong>El Pseudonimato:</strong> Dificultad para probar <em>quién</em> apretó el botón y cuál era la intención real de las partes.</li>
+                    </ul>
+                    <aside class="notes">
+                        (2 MINUTOS) Imaginen que el Smart Contract falla, o retiene los fondos indebidamente. Hay que ir a la justicia civil.
+                        Acá el dolor de cabeza es probatorio. Como las billeteras virtuales usan criptografía no homologada por el Estado (ONTI), eso califica apenas como "firma electrónica", no digital.
+                        Para el Código Civil, ese Smart Contract es un simple "instrumento particular no firmado". 
+                        Aunque la blockchain te asegure que la transacción es inmutable y existió, el anonimato de las wallets te va a hacer sudar tinta para probar en el juzgado quién estaba del otro lado de la pantalla y si realmente tuvo la intención jurídica de firmar ese contrato.
+                    </aside>
+                </section>
+            </section>
+
+            <!-- Placa 4 -->
+            <section>
+                <section>
+                    <h2>4. Estafas y Vulnerabilidades</h2>
+                    <h4>El Mito de "Code is Law"</h4>
+                    <ul>
+                        <li class="fragment"><strong>Riesgos Comunes:</strong> <em>Rug pulls</em> y oráculos manipulados.</li>
+                        <li class="fragment"><strong>Estafa Informática:</strong> Tipificada en el Art. 173, inc. 16 del Código Penal.</li>
+                        <li class="fragment"><strong>Obstáculos:</strong>
+                            <ul>
+                                <li>Rastreo internacional bloqueado por el anonimato.</li>
+                                <li>Dificultad técnica para probar dolo vs. falla de oráculo.</li>
+                            </ul>
+                        </li>
+                        <li class="fragment"><strong>"Code is Law" No Aplica:</strong> Aprovechar un <em>bug</em> sigue siendo un delito en Argentina.</li>
+                    </ul>
+                    <aside class="notes">
+                        (2 MINUTOS) Pasemos al derecho penal. El ecosistema cripto es tierra fértil para defraudaciones, como los "rug pulls" o robos de fondos.
+                        Nuestra ley ya tipifica esto: es una estafa informática. 
+                        Pero hay un mito tecnológico muy extendido: "Code is Law" (el código es la ley), que sugiere que si el programa te permitió sacar los fondos por una falla, es legítimo.
+                        En Argentina, eso es falso. Aprovechar una vulnerabilidad es un delito doloso, por más que el código defectuoso lo haya permitido.
+                        El verdadero problema penal no es que la ley no exista, sino lograr identificar al responsable detrás de la dirección alfanumérica y rastrear los fondos a nivel internacional.
+                    </aside>
+                </section>
+            </section>
+
+            <!-- Placa 5 -->
+            <section>
+                <section>
+                    <h2>5. Propuesta y Conclusión</h2>
+                    <h4>Amalgamando Tecnología y Seguridad Jurídica</h4>
+                    <ul>
+                        <li class="fragment"><strong>Integración, no prohibición.</strong></li>
+                        <li class="fragment"><strong>Oráculos Notariales:</strong> Escribanos validando eventos del mundo físico hacia la blockchain.</li>
+                        <li class="fragment"><strong>Registro Digital:</strong> Registros emitiendo <em>NFTs Oficiales</em> (título real).</li>
+                        <li class="fragment"><strong>Identidad Digital:</strong> Wallets homologadas (Renaper) para operaciones inmobiliarias.</li>
+                    </ul>
+                    <aside class="notes">
+                        (2 MINUTOS) Para cerrar, no debemos tener una actitud luddita ni frenar la innovación. 
+                        La solución no es prohibir, sino modernizar a nuestros garantes de fe pública.
+                        Propongo la creación de los "Oráculos Notariales": escribanos que conecten la realidad física (identidad, libre deuda) con la blockchain. 
+                        Imaginemos un Registro de la Propiedad que empiece a emitir "NFTs Oficiales" del dominio, y que para operarlos debas usar una billetera vinculada a tu identidad en Renaper.
+                        De este modo, tendríamos lo mejor de los dos mundos: la eficiencia implacable de los Smart Contracts, pero blindados por la irrenunciable seguridad jurídica que demanda nuestro sistema argentino. ¡Muchas gracias!
+                    </aside>
+                </section>
+            </section>
+
+        </div>
+    </div>
+
+    <!-- Reveal.js Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/plugin/notes/notes.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            controls: true,
+            progress: true,
+            center: true,
+            transition: 'slide', // none/fade/slide/convex/concave/zoom
+            plugins: [ RevealNotes ]
+        });
+    </script>
+</body>
+</html>
