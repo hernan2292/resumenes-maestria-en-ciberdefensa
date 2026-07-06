@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Defensa: Vacíos Legales y Seguridad Jurídica en Smart Contracts</title>
+  <meta name="description" content="Presentación de defensa de tesina. Mapa conceptual interactivo con doble vista expositor/proyector.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* === TOKENS === */
+    :root {
+      --bg: #0a0e17; --card: #111827; --card2: #1f2937; --brd: #374151;
+      --tx: #f3f4f6; --tx2: #9ca3af;
+      --sky: #38bdf8; --amb: #fbbf24; --grn: #34d399; --red: #f87171;
+      --hd: 'Outfit',sans-serif; --bd: 'Inter',sans-serif;
+    }
+    body.lt {
+      --bg: #f1f5f9; --card: #ffffff; --card2: #f1f5f9; --brd: #cbd5e1;
+      --tx: #0f172a; --tx2: #475569;
+      --sky: #0284c7; --amb: #b45309; --grn: #059669; --red: #dc2626;
+    }
+
+    /* === RESET === */
+    *{box-sizing:border-box;margin:0;padding:0;border-radius:0!important}
+    body{font-family:var(--bd);background:var(--bg);color:var(--tx);height:100vh;width:100vw;overflow:hidden}
+
+    /* === EXPOSITOR LAYOUT (split) === */
+    body.expo {
+      display:grid; grid-template-columns:1fr 420px;
+      grid-template-rows:52px 1fr 48px;
+      grid-template-areas:"hd hd" "vp pn" "ft pn";
+    }
+    /* === PROYECTOR LAYOUT (fullscreen) === */
+    body.proj { display:flex; flex-direction:column; }
+
+    /* --- Header --- */
+    header{grid-area:hd;padding:0 24px;border-bottom:1px solid var(--brd);display:flex;justify-content:space-between;align-items:center;background:var(--card)}
+    body.proj header{display:none}
+
+    /* --- Viewport --- */
+    .vp{grid-area:vp;padding:20px;display:flex;align-items:center;justify-content:center;background:var(--bg)}
+    body.proj .vp{flex:1;padding:0;width:100vw}
+
+    /* --- Slide frame --- */
+    .sf{width:100%;height:100%;background:var(--card);border:1px solid var(--brd);position:relative;overflow:hidden}
+    body.proj .sf{border:none}
+
+    /* --- Footer --- */
+    footer{grid-area:ft;padding:0 24px;border-top:1px solid var(--brd);background:var(--card);display:flex;justify-content:space-between;align-items:center}
+    body.proj footer{display:none}
+
+    /* --- Panel Expositor --- */
+    .pn{grid-area:pn;border-left:1px solid var(--brd);background:var(--card);padding:16px;display:flex;flex-direction:column;gap:16px;overflow-y:auto}
+    body.proj .pn{display:none}
+
+    /* --- Keyboard Tips --- */
+    .kt{text-align:center;padding:5px;font-size:.68rem;color:var(--tx2);border-top:1px solid var(--brd);background:var(--bg)}
+    body.proj .kt{display:none}
+    .kk{border:1px solid var(--brd);background:var(--card);padding:0 4px;font-family:monospace;font-weight:700;color:var(--tx)}
+
+    /* === PANEL WIDGETS === */
+    .pw{border:1px solid var(--brd);background:var(--bg);padding:12px}
+    .pw-t{font-family:var(--hd);font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--amb);margin-bottom:8px;border-left:3px solid var(--amb);padding-left:8px}
+    .vms{display:flex;gap:6px}
+    .mb{flex:1;padding:8px;background:var(--card);border:1px solid var(--brd);color:var(--tx2);font-family:var(--hd);font-size:.8rem;font-weight:700;cursor:pointer;text-align:center}
+    .mb.on{border-color:var(--sky);color:var(--sky);background:rgba(56,189,248,.06)}
+    .mb:hover:not(.on){background:var(--card2);color:var(--tx)}
+
+    /* Timer */
+    .gt{display:flex;flex-direction:column;align-items:center;gap:8px}
+    .gt-t{font-family:monospace;font-size:3.2rem;font-weight:700;line-height:1}
+    .gt-b{display:flex;gap:10px;width:100%;justify-content:center}
+    .cb{background:var(--card);border:1px solid var(--brd);color:var(--tx);padding:6px 14px;font-size:.78rem;font-weight:600;cursor:pointer}
+    .cb:hover{background:var(--card2);border-color:var(--tx)}
+    .tc-g{color:var(--grn)}.tc-o{color:var(--amb)}.tc-r{color:var(--red)}
+    .tc-p{animation:pls 1s infinite alternate}
+    @keyframes pls{0%{opacity:.5}100%{opacity:1;text-shadow:0 0 10px var(--red)}}
+
+    /* Script */
+    .sv{flex:1;display:flex;flex-direction:column;min-height:150px}
+    .sv-b{font-size:1.05rem;line-height:1.5;color:var(--tx);overflow-y:auto;padding-right:6px}
+    .sv-b ul{list-style:none;margin-top:6px}
+    .sv-b li{position:relative;padding-left:18px;margin-bottom:8px}
+    .sv-b li::before{content:"▸";position:absolute;left:0;color:var(--sky)}
+    .sv-b strong{color:var(--amb)}
+
+    /* === SLIDES === */
+    .sl{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;pointer-events:none;transition:opacity .3s;display:flex;flex-direction:column;padding:5% 6%}
+    .sl.on{opacity:1;pointer-events:auto}
+    .sl-hdr{border-left:5px solid var(--sky);padding-left:14px;margin-bottom:3%;flex-shrink:0}
+    .sl-sub{font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--sky)}
+    .sl-ttl{font-family:var(--hd);font-weight:700;color:var(--tx)}
+    .sl-body{flex:1;display:flex;align-items:center;justify-content:center}
+
+    /* === COVER === */
+    .cov{display:flex;flex-direction:column;justify-content:center;height:100%;border-left:8px solid var(--sky);padding-left:6%}
+    .cov-sub{font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--amb)}
+    .cov-ttl{font-family:var(--hd);font-weight:800;line-height:1.08;letter-spacing:-.02em;margin:2% 0 4%}
+    .cov-meta{border-top:1px solid var(--brd);padding-top:4%;display:grid;grid-template-columns:1fr 1fr;gap:4%}
+    .cm span{display:block;color:var(--tx2);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px}
+    .cm strong{color:var(--tx);font-weight:700}
+
+    /* === CONCEPT MAP NODES === */
+    .nd{background:var(--bg);border:2px solid var(--brd);padding:4% 5%;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:6px;transition:border-color .2s,background .2s,box-shadow .2s}
+    .nd:hover{border-color:var(--sky);background:var(--card2);box-shadow:0 0 12px rgba(56,189,248,.12)}
+    .nd.on{border-color:var(--amb);background:var(--card2);box-shadow:0 0 18px rgba(251,191,36,.2)}
+    .nd.bl{border-left:6px solid var(--sky)}
+    .nd.am{border-left:6px solid var(--amb)}
+    .nd.rd{border-left:6px solid var(--red)}
+    .nd.gn{border-left:6px solid var(--grn)}
+    .nd-kw{font-family:var(--hd);font-weight:700;text-transform:uppercase;letter-spacing:.03em;line-height:1.1}
+    .nd-dt{color:var(--tx2);line-height:1.3}
+
+    /* Hide detail text in projector — ONLY keywords visible */
+    body.proj .nd-dt{display:none!important}
+
+    /* === CONNECTOR ELEMENTS (CSS-based, no SVG) === */
+    .conn{display:flex;align-items:center;justify-content:center;color:var(--tx2);font-family:var(--hd);font-weight:700;text-transform:uppercase;letter-spacing:.1em;position:relative}
+    .conn-h::before,.conn-h::after{content:'';flex:1;height:2px;background:var(--brd)}
+    .conn-h{display:flex;align-items:center;gap:8px}
+    .conn-v{flex-direction:column;gap:4px}
+    .conn-v::before,.conn-v::after{content:'';width:2px;height:100%;background:var(--brd);flex:1}
+    .conn span{white-space:nowrap}
+
+    /* === SLIDE 2 GRID: Choque === */
+    .g2{width:100%;height:100%;display:grid;grid-template-columns:1fr auto 1fr;grid-template-rows:1fr auto 1fr;gap:0}
+    .g2>.nd:nth-child(1){grid-column:1;grid-row:1}
+    .g2>.conn-vs{grid-column:2;grid-row:1;padding:0 12px}
+    .g2>.nd:nth-child(3){grid-column:3;grid-row:1}
+    .g2>.conn-down{grid-column:1/span 3;grid-row:2;padding:8px 0}
+    .g2-bot{grid-column:1/span 3;grid-row:3;display:grid;grid-template-columns:1fr 1fr;gap:4%}
+
+    /* === SLIDE 3 GRID: 3 Dimensions === */
+    .g3{width:100%;height:100%;display:grid;grid-template-columns:1fr auto 1fr auto 1fr;grid-template-rows:1fr;gap:0}
+    .g3>.conn-arr{padding:0 10px}
+
+    /* === SLIDE 4 GRID: Proposal === */
+    .g4{width:100%;height:100%;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr auto auto;gap:0 4%}
+    .g4>.conn-d2{grid-column:1/span 3;grid-row:2;padding:8px 0}
+    .g4-concl{grid-column:1/span 3;grid-row:3;background:var(--bg);border:2px solid var(--brd);border-top:4px solid var(--grn);padding:3% 4%;display:flex;align-items:center;gap:4%}
+    .g4-concl-i{color:var(--grn);flex-shrink:0}
+    .g4-concl-t h3{font-family:var(--hd);font-weight:700;text-transform:uppercase;margin-bottom:4px}
+    .g4-concl-t p{color:var(--tx2);line-height:1.35}
+
+    /* === TYPOGRAPHY: EXPOSITOR === */
+    body.expo .sl-sub{font-size:.7rem} body.expo .sl-ttl{font-size:1.4rem}
+    body.expo .cov-sub{font-size:.9rem} body.expo .cov-ttl{font-size:1.8rem}
+    body.expo .cov-meta{font-size:.75rem} body.expo .cm span{font-size:.65rem}
+    body.expo .nd-kw{font-size:.85rem} body.expo .nd-dt{font-size:.68rem}
+    body.expo .conn{font-size:.6rem}
+    body.expo .g4-concl-t h3{font-size:.8rem} body.expo .g4-concl-t p{font-size:.7rem}
+
+    /* === TYPOGRAPHY: PROYECTOR (720p optimized — uses vw for guaranteed fit) === */
+    body.proj .sl-sub{font-size:clamp(1rem,1.8vw,1.6rem)}
+    body.proj .sl-ttl{font-size:clamp(2rem,4vw,3.8rem)}
+    body.proj .cov-sub{font-size:clamp(1.2rem,2vw,2rem)}
+    body.proj .cov-ttl{font-size:clamp(2.2rem,4.5vw,4.2rem)}
+    body.proj .cov-meta{font-size:clamp(1rem,1.5vw,1.5rem);padding-top:5%;gap:5%}
+    body.proj .cm span{font-size:clamp(.8rem,1.1vw,1.1rem)}
+    body.proj .nd-kw{font-size:clamp(1.4rem,2.5vw,2.6rem)}
+    body.proj .conn{font-size:clamp(.8rem,1.3vw,1.4rem)}
+    body.proj .g4-concl-t h3{font-size:clamp(1.2rem,2vw,2rem)}
+    body.proj .g4-concl-t p{font-size:clamp(1rem,1.5vw,1.5rem)}
+    body.proj .sl{padding:5% 5%}
+    body.proj .nd{padding:5% 4%}
+
+    /* === NAV === */
+    .nw{display:flex;gap:1px;background:var(--brd);border:1px solid var(--brd)}
+    .nb{background:var(--card);border:none;color:var(--tx);width:42px;height:42px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+    .nb:hover:not(:disabled){background:var(--sky);color:#000}
+    .nb:disabled{opacity:.2;cursor:not-allowed}
+    .pt{flex:1;height:2px;background:var(--brd);margin:0 24px}
+    .pf{height:100%;width:25%;background:var(--sky);transition:width .3s}
+    .si{font-size:.82rem;font-weight:700;min-width:45px;text-align:right}
+
+    /* Floating exit */
+    .fe{display:none;position:fixed;bottom:20px;right:20px;background:rgba(17,24,39,.9);border:1px solid rgba(255,255,255,.2);color:#fff;padding:8px 18px;font-size:.8rem;font-family:var(--hd);font-weight:700;cursor:pointer;z-index:100}
+    .fe:hover{background:var(--sky);color:#000;border-color:var(--sky)}
+    body.proj .fe{display:block}
+
+    /* Header bits */
+    .hl{font-family:var(--hd);font-size:.95rem;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:8px}
+    .hl span{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:2px 6px;background:var(--sky);color:#000}
+    .tb{background:transparent;border:1px solid var(--brd);color:var(--tx);padding:5px 10px;font-size:.75rem;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px}
+    .tb:hover{background:var(--card2);border-color:var(--tx)}
+  </style>
+</head>
+<body class="expo">
+
+  <header>
+    <div class="hl"><h1><span>DEFENSA</span> Smart Contracts & Real Estate</h1></div>
+    <button class="tb" onclick="toggleTheme()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+      Contraste
+    </button>
+  </header>
+
+  <main class="vp"><div class="sf">
+
+    <!-- ====================== SLIDE 1: PORTADA ====================== -->
+    <section class="sl on" id="s1">
+      <div class="cov">
+        <span class="cov-sub">Trabajo Final Integrador</span>
+        <h2 class="cov-ttl">Vacíos Legales y<br>Seguridad Jurídica en los<br>Smart Contracts aplicados<br>al Real Estate Local</h2>
+        <div class="cov-meta">
+          <div class="cm"><span>Autor</span><strong>Lic. Hernán Herrera</strong></div>
+          <div class="cm"><span>Materia</span><strong>Rég. Legal del Manejo de Datos · 2026</strong></div>
+          <div class="cm"><span>Directora</span><strong>Prof. Dra. PhD J. C. Faliero</strong></div>
+          <div class="cm"><span>Programa</span><strong>Maestría en Ciberdefensa</strong></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== SLIDE 2: CHOQUE ====================== -->
+    <section class="sl" id="s2">
+      <div class="sl-hdr">
+        <span class="sl-sub">Problema · Hipótesis</span>
+        <h2 class="sl-ttl">El Choque Ontológico</h2>
+      </div>
+      <div class="sl-body">
+        <div class="g2">
+          <!-- Row 1: Two poles -->
+          <div class="nd bl" onclick="sel(this,'blockchain')">
+            <div class="nd-kw">Blockchain</div>
+            <div class="nd-dt">Code is Law · Inmutable · Pseudónimo</div>
+          </div>
+
+          <div class="conn conn-vs conn-h">
+            <span>VS</span>
+          </div>
+
+          <div class="nd am" onclick="sel(this,'ccycn')">
+            <div class="nd-kw">Derechos Reales</div>
+            <div class="nd-dt">Art. 1017 · Art. 1893 · Notario</div>
+          </div>
+
+          <!-- Row 2: Connector arrow down -->
+          <div class="conn conn-down conn-v">
+            <span>↓ colisiona y genera ↓</span>
+          </div>
+
+          <!-- Row 3: Results -->
+          <div class="g2-bot">
+            <div class="nd rd" onclick="sel(this,'debciv')">
+              <div class="nd-kw">Sin Título Real</div>
+              <div class="nd-dt">Solo crédito vs. fideicomiso</div>
+            </div>
+            <div class="nd rd" onclick="sel(this,'debpen')">
+              <div class="nd-kw">Sin Tutela Efectiva</div>
+              <div class="nd-dt">Art. 287 · Ley 25.506 · Art. 173 CP</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== SLIDE 3: DIMENSIONES ====================== -->
+    <section class="sl" id="s3">
+      <div class="sl-hdr">
+        <span class="sl-sub">Análisis · Impacto</span>
+        <h2 class="sl-ttl">Tres Dimensiones del Vacío</h2>
+      </div>
+      <div class="sl-body">
+        <div class="g3">
+          <div class="nd bl" onclick="sel(this,'dciv')">
+            <div class="nd-kw">Prueba Civil Precaria</div>
+            <div class="nd-dt">Firma Electrónica · Art. 287 · Art. 319</div>
+          </div>
+
+          <div class="conn conn-arr conn-h"><span>agrava →</span></div>
+
+          <div class="nd rd" onclick="sel(this,'dpen')">
+            <div class="nd-kw">Impunidad Penal</div>
+            <div class="nd-dt">Art. 173 inc. 16 · The DAO · Anónimo</div>
+          </div>
+
+          <div class="conn conn-arr conn-h"><span>potencia →</span></div>
+
+          <div class="nd am" onclick="sel(this,'dsoc')">
+            <div class="nd-kw">Riesgo Socioeconómico</div>
+            <div class="nd-dt">Asimetría · Lavado UIF · Exclusión</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================== SLIDE 4: PROPUESTA ====================== -->
+    <section class="sl" id="s4">
+      <div class="sl-hdr">
+        <span class="sl-sub">Propuesta · Conclusión</span>
+        <h2 class="sl-ttl">Modelo Híbrido Institucional</h2>
+      </div>
+      <div class="sl-body">
+        <div class="g4">
+          <div class="nd gn" onclick="sel(this,'p1')">
+            <div class="nd-kw">1 · Escribano Oráculo</div>
+            <div class="nd-dt">Fe pública + control preventivo</div>
+          </div>
+          <div class="nd gn" onclick="sel(this,'p2')">
+            <div class="nd-kw">2 · Dominio-NFT</div>
+            <div class="nd-dt">Registro DLT estatal oponible</div>
+          </div>
+          <div class="nd gn" onclick="sel(this,'p3')">
+            <div class="nd-kw">3 · Wallet = DNI</div>
+            <div class="nd-dt">Renaper · Firma Digital 25.506</div>
+          </div>
+
+          <div class="conn conn-d2 conn-v"><span>↓ integran en ↓</span></div>
+
+          <div class="g4-concl">
+            <div class="g4-concl-i">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="g4-concl-t">
+              <h3>Conclusión</h3>
+              <p>Amalgamar eficiencia técnica con fe pública notarial y registral. La tecnología es soporte, no sustituto del Estado de Derecho.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div></main>
+
+  <!-- EXPOSITOR PANEL -->
+  <aside class="pn">
+    <div class="pw">
+      <div class="pw-t">Modo</div>
+      <div class="vms">
+        <button class="mb on" id="bE" onclick="setV('expo')">Expositor</button>
+        <button class="mb" id="bP" onclick="setV('proj')">Proyector</button>
+      </div>
+    </div>
+    <div class="pw gt">
+      <div class="pw-t">Temporizador (Meta 8m · Máx 10m)</div>
+      <div class="gt-t tc-g" id="tD">00:00</div>
+      <div class="gt-b">
+        <button class="cb" onclick="togT()" id="tB">Iniciar</button>
+        <button class="cb" onclick="resT()">Reiniciar</button>
+      </div>
+    </div>
+    <div class="pw sv">
+      <div class="pw-t" id="scT">Guía de Exposición</div>
+      <div class="sv-b" id="scB">Cargando...</div>
+    </div>
+  </aside>
+
+  <footer>
+    <div class="nw">
+      <button class="nb" id="pB" onclick="prv()" disabled aria-label="Anterior"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg></button>
+      <button class="nb" id="nB" onclick="nxt()" aria-label="Siguiente"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+    </div>
+    <div class="pt"><div class="pf" id="pF"></div></div>
+    <div class="si" id="sI">1 / 4</div>
+  </footer>
+
+  <button class="fe" onclick="setV('expo')">&larr; Volver (Esc)</button>
+
+  <div class="kt">
+    <span class="kk">&rarr;</span> / <span class="kk">Espacio</span> avanza · <span class="kk">&larr;</span> retrocede · <span class="kk">P</span> proyector · <span class="kk">Esc</span> expositor
+  </div>
+
+  <script>
+    let ci=0, isLt=false;
+    const SL=document.querySelectorAll('.sl'),
+      pB=document.getElementById('pB'),nB=document.getElementById('nB'),
+      pF=document.getElementById('pF'),sI=document.getElementById('sI'),
+      bE=document.getElementById('bE'),bP=document.getElementById('bP'),
+      scT=document.getElementById('scT'),scB=document.getElementById('scB');
+
+    // Timer
+    let tI=null,tS=0,tR=false;
+    const tD=document.getElementById('tD'),tBtn=document.getElementById('tB');
+
+    // === SCRIPTS ===
+    const dS={
+      0:`<strong>Portada (0:00 – 1:30)</strong>
+        <ul><li><strong>Saludo formal</strong> al tribunal y a la Dra. Faliero.</li>
+        <li><strong>Encuadre:</strong> "Esta tesina investiga la colisión entre los smart contracts de blockchain y el régimen de derechos reales inmobiliarios argentino."</li>
+        <li><strong>Objetivo:</strong> Demostrar la inseguridad jurídica de la tokenización pura y proponer un modelo híbrido que integre fe pública con eficiencia tecnológica.</li></ul>`,
+      1:`<strong>Choque Ontológico (1:30 – 3:30)</strong>
+        <ul><li><strong>Izquierda (Blockchain):</strong> "Code is Law". Autoejecución inmutable, descentralizada, pseudónima. Szabo (1994) → Ethereum (2015). Oráculos como puente al mundo físico.</li>
+        <li><strong>Derecha (CCyCN):</strong> Art. 1017 inc. a exige escritura pública notarial; Art. 1893 exige inscripción registral para oponibilidad. Orden público irrenunciable.</li>
+        <li><strong>Abajo (Colisión):</strong> Sin escritura ni registro, el token no confiere derecho real. El comprador es acreedor quirografario contra fideicomiso Fintech. Ante rug pull o hackeo, queda desamparado. La firma criptográfica es "firma electrónica" (Art. 5, Ley 25.506), no digital. El smart contract = instrumento particular no firmado (Art. 287).</li></ul>`,
+      2:`<strong>Tres Dimensiones (3:30 – 6:00)</strong>
+        <ul><li><strong>Civil/Probatorio:</strong> Sin certificador licenciado (ONTI), la clave criptográfica es firma electrónica sin presunción de autoría. Art. 319: el juez evalúa confiabilidad del sistema. Peritaje blockchain caro e incierto.</li>
+        <li><strong>Penal:</strong> Art. 173 inc. 16 CP: estafa informática. Caso The DAO (2016): ~50M USD, hacker alegó "code is law", comunidad hizo hard fork. Sin KYC, el pseudonimato impide individualizar al autor → la acción penal se frustra.</li>
+        <li><strong>Socioeconómico:</strong> Potencial: fracciones desde U$D 100, liquidez 24/7. Riesgos: asimetría (inversor no lee Solidity), lavado eludiendo UIF, brecha digital de exclusión.</li></ul>`,
+      3:`<strong>Propuesta + Conclusión (6:00 – 8:30)</strong>
+        <ul><li><strong>Pilar 1:</strong> El notario certifica consentimiento, legitimación, origen de fondos (UIF). Su Firma Digital (Ley 25.506) habilita el smart contract.</li>
+        <li><strong>Pilar 2:</strong> Registros de Propiedad adoptan DLT permisionada. Emiten NFT-Dominio por partida. Transferencia requiere firma digital del escribano + partes → inscripción automática (Art. 1893).</li>
+        <li><strong>Pilar 3:</strong> Wallets vinculadas a Renaper/Mi Argentina. Clave pública ↔ DNI = Firma Digital con presunción de autoría plena.</li>
+        <li><strong>Cierre (8:30):</strong> La tecnología aporta eficiencia pero no fe pública. Modelo híbrido amalgama automatización con garantías del Estado de Derecho. No prohibir: integrar institucionalmente.</li></ul>`
+    };
+
+    const nS={
+      blockchain:{t:"Blockchain: Autoejecución",b:`<strong>Hablar de:</strong> Smart contracts = programas if-then en la EVM. Inmutables una vez publicados. No contemplan imprevisión, fuerza mayor ni renegociación. Ejemplo de la máquina expendedora de Szabo. Oráculos como puente al mundo físico. El "gas" como costo computacional.`},
+      ccycn:{t:"Derechos Reales: Formalismo",b:`<strong>Hablar de:</strong> Art. 1017 inc. a CCyCN → escritura pública obligatoria. Art. 1892 → título suficiente + tradición. Art. 1893 → inscripción registral para oponibilidad erga omnes. El escribano ejerce control de legalidad preventivo: verifica identidad, capacidad, gravámenes.`},
+      debciv:{t:"Sin Título Real",b:`<strong>Hablar de:</strong> El comprador del token cree que compra un inmueble. Jurídicamente solo compra un derecho de crédito personal contra un fideicomiso Fintech. Es acreedor quirografario. Ante insolvencia o rug pull, no tiene acción reivindicatoria de dominio.`},
+      debpen:{t:"Sin Tutela Efectiva",b:`<strong>Hablar de:</strong> Firma criptográfica on-chain = firma electrónica (Art. 5 Ley 25.506), NO firma digital. Smart contract = instrumento particular no firmado (Art. 287 CCyCN). Valor probatorio al arbitrio judicial (Art. 319). En lo penal: Art. 173 inc. 16 CP sanciona estafa informática, pero pseudonimato de wallets impide individualizar autor.`},
+      dciv:{t:"Prueba Civil Precaria",b:`<strong>Hablar de:</strong> Sin certificador licenciado por ONTI, las claves criptográficas son firma electrónica (Art. 5 Ley 25.506). Si el firmante las desconoce, la carga probatoria recae en quien la invoca. Art. 319 CCyCN: arbitrio judicial. Peritaje blockchain es caro y complejo. Comparar con la plena fe del instrumento público notarial (Art. 296).`},
+      dpen:{t:"Impunidad Penal",b:`<strong>Hablar de:</strong> Art. 173 inc. 16 CP (Ley 26.388): "quien defraude mediante manipulación informática". Caso The DAO (2016): hacker explotó vulnerabilidad de reentrada, ~50M USD. Alegó que el código era la ley. Comunidad hizo hard fork para revertir. En Argentina: sin KYC, wallets anónimas → fiscales no pueden vincular dirección con persona → acción penal frustrada.`},
+      dsoc:{t:"Riesgo Socioeconómico",b:`<strong>Hablar de:</strong> Potencial: fraccionamiento de capital (tickets U$D 100), liquidez 24/7, costos bajos. Riesgos: asimetría informativa extrema (inversor no lee Solidity), rug pulls que socavan confianza, lavado de activos evitando UIF, brecha digital de exclusión.`},
+      p1:{t:"Pilar 1: Escribano Oráculo",b:`<strong>Hablar de:</strong> El notario como oráculo de legalidad. Antes de que el smart contract ejecute, el escribano certifica: (1) consentimiento libre y capacidad, (2) inmueble sin gravámenes, (3) origen lícito de fondos (UIF). Inyecta su Firma Digital nacional (Ley 25.506) como input habilitante del contrato.`},
+      p2:{t:"Pilar 2: Dominio-NFT Estatal",b:`<strong>Hablar de:</strong> Registros de Propiedad adoptan DLT permisionada estatal. Emiten NFT oficial por partida. Transferencia requiere firma digital del escribano + partes. Operación en red DLT registra automáticamente la transferencia → Art. 1893 CCyCN (oponibilidad).`},
+      p3:{t:"Pilar 3: Wallet = DNI",b:`<strong>Hablar de:</strong> Billeteras homologadas por el Estado. Clave pública ↔ DNI mediante Mi Argentina / Renaper. Esto convierte la firma on-chain en Firma Digital (Art. 2 Ley 25.506) con presunción iuris tantum de autoría. Plena certeza en litigios civiles y penales. Elimina pseudonimato.`}
+    };
+
+    // === VIEW MODES ===
+    function setV(m){
+      isLt=document.body.classList.contains('lt');
+      document.body.className=m;
+      if(isLt) document.body.classList.add('lt');
+      bE.classList.toggle('on',m==='expo');
+      bP.classList.toggle('on',m==='proj');
+      upd();
+    }
+
+    // === SLIDES ===
+    function upd(){
+      SL.forEach((s,i)=>{s.classList.toggle('on',i===ci);if(i===ci) defScript(i);});
+      document.querySelectorAll('.nd').forEach(n=>n.classList.remove('on'));
+      pB.disabled=ci===0; nB.disabled=ci===SL.length-1;
+      pF.style.width=((ci+1)/SL.length*100)+'%';
+      sI.textContent=(ci+1)+' / '+SL.length;
+    }
+    function nxt(){if(ci<SL.length-1){ci++;upd();}}
+    function prv(){if(ci>0){ci--;upd();}}
+    function defScript(i){scT.textContent='Guía: Diapositiva '+(i+1);scB.innerHTML=dS[i];}
+    function sel(el,k){
+      el.parentElement.querySelectorAll('.nd').forEach(n=>n.classList.remove('on'));
+      el.classList.add('on');
+      const d=nS[k];if(d){scT.textContent='Apoyo: '+d.t;scB.innerHTML=d.b;}
+    }
+
+    document.addEventListener('keydown',e=>{
+      if(e.key==='p'||e.key==='P')setV('proj');
+      else if(e.key==='Escape'||e.key==='e'||e.key==='E')setV('expo');
+      else if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();nxt();}
+      else if(e.key==='ArrowLeft'){e.preventDefault();prv();}
+    });
+
+    // === TIMER ===
+    function togT(){tR?pauseT():startT();}
+    function startT(){if(!tR){tR=true;tBtn.textContent="Pausar";tI=setInterval(()=>{tS++;updT();},1000);}}
+    function pauseT(){if(tR){tR=false;tBtn.textContent="Reanudar";clearInterval(tI);}}
+    function resT(){pauseT();tS=0;tBtn.textContent="Iniciar";updT();}
+    function updT(){
+      const m=Math.floor(tS/60),s=tS%60;
+      tD.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+      tD.className='gt-t';
+      if(m<8)tD.classList.add('tc-g');
+      else if(m<10)tD.classList.add('tc-o');
+      else tD.classList.add('tc-r','tc-p');
+    }
+
+    // === THEME ===
+    function toggleTheme(){document.body.classList.toggle('lt');localStorage.setItem('dt',document.body.classList.contains('lt')?'l':'d');}
+    window.addEventListener('DOMContentLoaded',()=>{if(localStorage.getItem('dt')==='l')document.body.classList.add('lt');upd();});
+  </script>
+</body>
+</html>
