@@ -1,0 +1,2435 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaultwarden: Criptografía y Hardening en Gestores de Contraseñas Auto-hospedados</title>
+  
+  <!-- SEO & Academic Metadata -->
+  <meta name="description" content="Presentación interactiva para el trabajo final de Introducción a la Seguridad Informática. Análisis de Vaultwarden: Criptografía Zero-Knowledge, Hardening y Comparativa.">
+  <meta name="author" content="Maestría en Ciberdefensa - Introducción a la Seguridad Informática">
+  
+  <!-- Google Fonts: Outfit (Display/Headings), Inter (Body) & Fira Code (Monospace/Crypto) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==========================================================================
+       1. VARIABLES Y SISTEMA DE DISEÑO (CYBERPUNK NEON GLASSMORPHISM)
+       ========================================================================== */
+    :root {
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-display: 'Outfit', var(--font-sans);
+      --font-mono: 'Fira Code', monospace;
+
+      /* Dark Theme (Default) */
+      --bg-body: #070b14;
+      --bg-panel: rgba(15, 23, 42, 0.7);
+      --bg-panel-solid: #0d1527;
+      --bg-card: rgba(30, 41, 59, 0.45);
+      --bg-card-hover: rgba(51, 65, 85, 0.6);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-inverse: #0f172a;
+      
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.16);
+      
+      /* Neon Accent Colors */
+      --neon-cyan: #00f2fe;
+      --neon-cyan-glow: rgba(0, 242, 254, 0.3);
+      --neon-purple: #8b5cf6;
+      --neon-purple-glow: rgba(139, 92, 246, 0.3);
+      --neon-pink: #ff007f;
+      --neon-pink-glow: rgba(255, 0, 127, 0.3);
+      --neon-green: #05ffc0;
+      --neon-green-glow: rgba(5, 255, 192, 0.3);
+      --neon-amber: #f59e0b;
+      --neon-amber-glow: rgba(245, 158, 11, 0.3);
+      
+      --shadow-lg: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+      --glass-backdrop: blur(16px);
+      
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 20px;
+      --radius-xl: 32px;
+    }
+
+    [data-theme="light"] {
+      /* Light Theme alternative */
+      --bg-body: #f1f5f9;
+      --bg-panel: rgba(255, 255, 255, 0.8);
+      --bg-panel-solid: #ffffff;
+      --bg-card: rgba(226, 232, 240, 0.7);
+      --bg-card-hover: rgba(203, 213, 225, 0.9);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-inverse: #ffffff;
+      
+      --border-color: rgba(15, 23, 42, 0.1);
+      --border-hover: rgba(15, 23, 42, 0.2);
+      
+      --neon-cyan: #0891b2;
+      --neon-cyan-glow: rgba(8, 145, 178, 0.15);
+      --neon-purple: #6d28d9;
+      --neon-purple-glow: rgba(109, 40, 217, 0.15);
+      --neon-pink: #db2777;
+      --neon-pink-glow: rgba(219, 39, 119, 0.15);
+      --neon-green: #059669;
+      --neon-green-glow: rgba(5, 150, 105, 0.15);
+      --neon-amber: #d97706;
+      --neon-amber-glow: rgba(217, 119, 6, 0.15);
+      
+      --shadow-lg: 0 15px 30px -10px rgba(15, 23, 42, 0.15);
+    }
+
+    /* ==========================================================================
+       2. RESET & LAYOUT GLOBAL
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-body);
+      color: var(--text-main);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      user-select: none;
+      background-image: 
+        radial-gradient(circle at 5% 15%, var(--neon-cyan-glow) 0%, transparent 35%),
+        radial-gradient(circle at 95% 85%, var(--neon-purple-glow) 0%, transparent 35%);
+      background-attachment: fixed;
+    }
+
+    /* Contenedor Principal (Flexbox de tres áreas: Cabecera, Zona Central y Barra de Control) */
+    .app-wrapper {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      width: 100%;
+      position: relative;
+    }
+
+    .presentation-main {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      height: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Cabecera Académica */
+    .app-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      z-index: 10;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--bg-panel);
+      backdrop-filter: var(--glass-backdrop);
+    }
+
+    .header-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-badge {
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 6px var(--neon-cyan));
+      font-weight: 800;
+    }
+
+    .header-title {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      color: var(--text-main);
+    }
+
+    .header-course-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      background: var(--bg-card);
+      padding: 0.25rem 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* Botones Genéricos Premium */
+    .btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      outline: none;
+    }
+
+    .btn:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px var(--neon-cyan-glow);
+      background: var(--bg-card-hover);
+    }
+
+    .btn-circle {
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border-radius: 50%;
+      justify-content: center;
+    }
+
+    .btn-active {
+      border-color: var(--neon-cyan);
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--neon-cyan);
+    }
+
+    /* ==========================================================================
+       3. SISTEMA DE DIAPOSITIVAS (SLIDES ENGINE)
+       ========================================================================== */
+    .slides-container {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .slide {
+      position: absolute;
+      width: 90%;
+      max-width: 1200px;
+      height: 80%;
+      max-height: 680px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.95) translateY(20px);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      backdrop-filter: var(--glass-backdrop);
+    }
+
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1) translateY(0);
+      z-index: 2;
+    }
+
+    /* Animación hacia atrás */
+    .slide.exit-left {
+      opacity: 0;
+      transform: scale(0.95) translateX(-100px);
+    }
+
+    .slide.exit-right {
+      opacity: 0;
+      transform: scale(0.95) translateX(100px);
+    }
+
+    /* Estructura Interna de la Diapositiva */
+    .slide-header {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .slide-number {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--neon-cyan);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: 600;
+    }
+
+    .slide-title {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      background: linear-gradient(135deg, var(--text-main), #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-body {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 1.5rem;
+      padding-right: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Elementos Estilizados Comunes */
+    .slide-subtitle {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      margin-bottom: 1rem;
+    }
+
+    .p-desc {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.25rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+
+    /* Tarjetas de Contenido */
+    .info-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 3px;
+      background: var(--neon-cyan);
+    }
+
+    .info-card.purple::before { background: var(--neon-purple); }
+    .info-card.pink::before { background: var(--neon-pink); }
+    .info-card.green::before { background: var(--neon-green); }
+    .info-card.amber::before { background: var(--neon-amber); }
+
+    .info-card h4 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .info-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .info-card ul {
+      margin-left: 1.15rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Listas con Iconos */
+    .icon-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .icon-list li {
+      display: flex;
+      gap: 0.75rem;
+      font-size: 1rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .icon-list-bullet {
+      color: var(--neon-cyan);
+      font-weight: 700;
+    }
+
+    /* Badges de Estado */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid currentColor;
+      background: rgba(0, 0, 0, 0.2);
+    }
+    .badge-cyan { color: var(--neon-cyan); }
+    .badge-purple { color: var(--neon-purple); }
+    .badge-green { color: var(--neon-green); }
+    .badge-pink { color: var(--neon-pink); }
+    .badge-amber { color: var(--neon-amber); }
+
+
+
+    /* ==========================================================================
+       3B. DIAGRAMAS Y MATRICES AGREGADAS PARA DESARROLLO EXTENDIDO
+       ========================================================================== */
+    .keeper-flow-diagram {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.7rem;
+      align-items: stretch;
+      margin-top: 0.5rem;
+      position: relative;
+    }
+
+    .keeper-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem 0.85rem;
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .keeper-step::after {
+      content: '→';
+      position: absolute;
+      right: -0.78rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--neon-cyan);
+      font-size: 1.4rem;
+      font-family: var(--font-display);
+      font-weight: 800;
+      z-index: 3;
+      text-shadow: 0 0 8px var(--neon-cyan-glow);
+    }
+
+    .keeper-step:last-child::after { content: ''; }
+
+    .keeper-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      color: var(--text-inverse);
+      font-family: var(--font-mono);
+      font-weight: 800;
+      font-size: 0.8rem;
+    }
+
+    .keeper-step h4 {
+      font-family: var(--font-display);
+      font-size: 0.92rem;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .keeper-step p {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .mini-pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.35rem;
+    }
+
+    .mini-pill {
+      border: 1px solid var(--border-color);
+      background: rgba(255,255,255,0.035);
+      border-radius: 99px;
+      padding: 0.25rem 0.55rem;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .risk-table-compact {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.72rem;
+      line-height: 1.35;
+      background: rgba(0,0,0,0.12);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+
+    .risk-table-compact th,
+    .risk-table-compact td {
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: top;
+    }
+
+    .risk-table-compact th {
+      color: var(--text-main);
+      font-family: var(--font-display);
+      background: rgba(0,0,0,0.22);
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .risk-table-compact tr:last-child td { border-bottom: 0; }
+    .risk-table-compact strong { color: var(--text-main); }
+
+    .risk-level {
+      display: inline-flex;
+      justify-content: center;
+      min-width: 52px;
+      padding: 0.18rem 0.42rem;
+      border-radius: 99px;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.68rem;
+      border: 1px solid currentColor;
+    }
+    .risk-high { color: var(--neon-pink); background: rgba(255,0,127,0.08); }
+    .risk-med { color: var(--neon-amber); background: rgba(245,158,11,0.08); }
+    .risk-low { color: var(--neon-green); background: rgba(5,255,192,0.08); }
+
+    .risk-lifecycle {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .risk-lifecycle-node {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      min-height: 110px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .risk-lifecycle-node h4 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      color: var(--text-main);
+    }
+
+    .risk-lifecycle-node p {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      line-height: 1.45;
+    }
+
+    .risk-arrow {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 10px var(--neon-cyan-glow);
+    }
+
+    .tolerance-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .tolerance-item {
+      background: rgba(255,255,255,0.035);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.8rem;
+      min-height: 110px;
+    }
+
+    .tolerance-item h4 {
+      font-family: var(--font-display);
+      color: var(--neon-cyan);
+      font-size: 0.85rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .tolerance-item p {
+      color: var(--text-muted);
+      font-size: 0.75rem;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 1050px) {
+      .keeper-flow-diagram,
+      .tolerance-grid {
+        grid-template-columns: 1fr;
+      }
+      .keeper-step::after { display: none; }
+      .risk-lifecycle { grid-template-columns: 1fr; }
+      .risk-arrow { display: none; }
+    }
+
+    /* ==========================================================================
+       4. BARRA DE CONTROL DE LA PRESENTACIÓN (NAV BAR)
+       ========================================================================== */
+    .app-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-panel);
+      backdrop-filter: var(--glass-backdrop);
+      z-index: 10;
+    }
+
+    .footer-author {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .navigation-controls {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .progress-bar-container {
+      width: 250px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 99px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(to right, var(--neon-cyan), var(--neon-purple));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .slide-counter-text {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      min-width: 60px;
+      text-align: center;
+    }
+
+    /* =style overview mode */
+    .overview-grid {
+      display: none;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+      padding: 2.5rem;
+      overflow-y: auto;
+      height: calc(100vh - 140px);
+      width: 100%;
+    }
+
+    .overview-grid.active {
+      display: grid;
+      animation: fadeIn 0.4s ease forwards;
+    }
+
+    .overview-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 150px;
+      transition: all 0.2s ease;
+    }
+
+    .overview-card:hover {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 15px var(--neon-cyan-glow);
+      transform: translateY(-2px);
+    }
+
+    .overview-card.selected {
+      border-color: var(--neon-purple);
+      box-shadow: 0 0 15px var(--neon-purple-glow);
+      background: rgba(139, 92, 246, 0.05);
+    }
+
+    .overview-card-header {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--neon-cyan);
+    }
+
+    .overview-card-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+
+    /* ==========================================================================
+       5. PANEL LATERAL: NOTAS DEL ORADOR (SPEAKER NOTES)
+       ========================================================================== */
+    .speaker-notes-panel {
+      width: 0px;
+      background: var(--bg-panel-solid);
+      border-left: 0px solid var(--border-color);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-left-width 0.3s ease;
+      z-index: 15;
+      height: 100%;
+      position: relative;
+    }
+
+    .speaker-notes-panel.open {
+      width: 320px;
+      border-left-width: 1px;
+    }
+
+    .notes-header {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .notes-header h3 {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--neon-purple);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .notes-content {
+      padding: 1.5rem;
+      overflow-y: auto;
+      flex: 1;
+      font-size: 0.92rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    .notes-content strong {
+      color: var(--text-main);
+      display: block;
+      margin-top: 1rem;
+      margin-bottom: 0.25rem;
+      font-size: 0.95rem;
+    }
+
+    .notes-content strong:first-child {
+      margin-top: 0;
+    }
+
+    .notes-content ul {
+      margin-left: 1.2rem;
+      margin-top: 0.5rem;
+    }
+
+    .notes-content li {
+      margin-bottom: 0.5rem;
+    }
+
+    /* ==========================================================================
+       6. COMPONENTES INTERACTIVOS ESPECÍFICOS (SLIDES PARTICULARES)
+       ========================================================================== */
+
+    /* Slide 1: Portada */
+    .title-wrapper {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .title-banner {
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-family: var(--font-display);
+      font-size: 3.5rem;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      filter: drop-shadow(0 4px 15px rgba(0, 242, 254, 0.15));
+    }
+
+    .subtitle-banner {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 700px;
+      line-height: 1.5;
+    }
+
+    .metadata-box {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem 2rem;
+    }
+
+    .metadata-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      text-align: left;
+    }
+
+    .metadata-label {
+      font-size: 0.75rem;
+      color: var(--neon-cyan);
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+
+    .metadata-value {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    /* Slide 4: Criptografía Zero-Knowledge (Interactiva) */
+    .crypto-visualizer {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .form-group label {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .input-control {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border-color);
+      padding: 0.6rem 1rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .input-control:focus {
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 8px var(--neon-cyan-glow);
+    }
+
+    /* Flujo de derivación visual */
+    .crypto-flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      flex: 1;
+      justify-content: center;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      opacity: 0.5;
+      transform: scale(0.98);
+      transition: all 0.3s ease;
+      gap: 1rem;
+    }
+
+    .flow-step.active {
+      opacity: 1;
+      transform: scale(1);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.1);
+    }
+
+    .flow-step.completed {
+      opacity: 0.8;
+      border-color: var(--neon-green);
+    }
+
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.75rem;
+    }
+
+    .active .step-num {
+      background: var(--neon-cyan);
+      color: var(--text-inverse);
+    }
+
+    .completed .step-num {
+      background: var(--neon-green);
+      color: var(--text-inverse);
+    }
+
+    .step-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .step-label {
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .step-val {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--neon-amber);
+      word-break: break-all;
+    }
+
+    .crypto-note-box {
+      font-size: 0.85rem;
+      background: rgba(139, 92, 246, 0.05);
+      border: 1px dashed var(--neon-purple);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .crypto-note-box strong {
+      color: var(--neon-purple);
+    }
+
+    /* Slide 5: Diagrama de Arquitectura Interactivo */
+    .arch-diagram-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      height: 100%;
+    }
+
+    .diagram-viewport {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: relative;
+      gap: 1rem;
+    }
+
+    /* Conexión de red animada */
+    .diagram-connection {
+      height: 2px;
+      flex: 1;
+      background: var(--border-color);
+      position: relative;
+    }
+
+    .diagram-connection::after {
+      content: '';
+      position: absolute;
+      top: -3px;
+      left: 0;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--neon-cyan);
+      animation: pulseFlow 2s linear infinite;
+    }
+
+    @keyframes pulseFlow {
+      0% { left: 0%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { left: 100%; opacity: 0; }
+    }
+
+    .diagram-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      min-width: 140px;
+      text-align: center;
+      transition: all 0.25s ease;
+      position: relative;
+    }
+
+    .diagram-node:hover, .diagram-node.active {
+      border-color: var(--neon-cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 15px var(--neon-cyan-glow);
+    }
+
+    .diagram-node-icon {
+      font-size: 1.8rem;
+    }
+
+    .diagram-node-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .diagram-node-sub {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .diagram-node-shield {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--neon-green);
+      color: var(--text-inverse);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+
+    .arch-explanation-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1rem 1.5rem;
+      min-height: 90px;
+    }
+
+    .arch-explanation-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--neon-cyan);
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .arch-explanation-text {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Slide 8: Matriz Comparativa */
+    .compare-matrix-container {
+      width: 100%;
+      height: 100%;
+      overflow-x: auto;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    .compare-table th, .compare-table td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .compare-table th {
+      font-family: var(--font-display);
+      font-weight: 700;
+      color: var(--text-main);
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    .compare-table tbody tr:hover {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .compare-table td strong {
+      color: var(--text-main);
+    }
+
+    .col-vw {
+      background: rgba(0, 242, 254, 0.03);
+      border-left: 1px solid rgba(0, 242, 254, 0.15);
+      border-right: 1px solid rgba(0, 242, 254, 0.15);
+    }
+
+    .col-vw-header {
+      color: var(--neon-cyan) !important;
+      font-weight: 800 !important;
+    }
+
+    /* Slide 9: Gestión del Riesgo (Módulo Financiero / Cuantitativo) */
+    .risk-calc-box {
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .formula-display {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      color: var(--neon-cyan);
+    }
+
+    .risk-var-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .risk-var-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .risk-var-title {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .risk-var-formula {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--neon-amber);
+    }
+
+    .risk-var-desc {
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    /* Estilos de scrollbar personalizados */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-color);
+      border-radius: 99px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--border-hover);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  
+      /* ==========================================================================
+       7. MODO PRESENTACION Y AJUSTES GLOBALES (Corregido)
+       ========================================================================== */
+      /* Ocultar barra superior y panel lateral EN MODO PRESENTACION SOLAMENTE */
+      body.presentation-mode .app-header,
+      body.presentation-mode .app-footer,
+      body.presentation-mode .speaker-notes-panel {
+        display: none !important;
+      }
+      
+      body.presentation-mode .slides-container {
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Aumentar el tamaño de la letra globalmente */
+      body { font-size: 20px; }
+      .slide-title { font-size: 2.8rem; }
+      .slide-subtitle { font-size: 1.6rem; }
+      .p-desc { font-size: 1.2rem; line-height: 1.6; }
+      .info-card h4 { font-size: 1.3rem; }
+      .info-card p, .info-card ul { font-size: 1.05rem; }
+      .icon-list li { font-size: 1.2rem; }
+      .compare-table { font-size: 1.05rem; }
+      .risk-table-compact { font-size: 0.95rem; }
+      .metadata-value { font-size: 1.15rem; }
+      .keeper-step h4 { font-size: 1.15rem; }
+      .keeper-step p { font-size: 1rem; }
+
+</style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    
+    <!-- ÁREA PRINCIPAL DE LA PRESENTACIÓN -->
+    <div class="presentation-main">
+      
+      <!-- CABECERA -->
+      <header class="app-header">
+        <div class="header-logo">
+          <span class="logo-badge">🛡️ Vaultwarden</span>
+          <span class="header-title">Seguridad y Auto-hospedaje</span>
+        </div>
+        <span class="header-course-tag">Introducción a la Seguridad Informática</span>
+        <div class="header-controls">
+          <button id="notes-toggle-btn" class="btn btn-circle" title="Alternar notas del orador (Tecla: S)">📋</button>
+          <button id="overview-toggle-btn" class="btn btn-circle" title="Vista general (Tecla: Esc)">⬜</button>
+          <button id="theme-toggle-btn" class="btn btn-circle" title="Alternar tema">🌙</button>
+        </div>
+      </header>
+
+      <!-- CONTENEDOR DE DIAPOSITIVAS -->
+      <main class="slides-container" id="slides-container">
+        
+        <!-- SLIDE 1: PORTADA -->
+        <section class="slide active" id="slide-1">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 01 de 14</span>
+            <h2 class="slide-title">Trabajo Práctico Final</h2>
+          </div>
+          <div class="slide-body">
+            <div class="title-wrapper">
+              <h1 class="title-banner">Auto-hospedaje Seguro<br>de Credenciales</h1>
+              <p class="subtitle-banner">
+                Un análisis técnico y de riesgos sobre <strong>Vaultwarden</strong>: Criptografía Zero-Knowledge, implementación de infraestructuras y mitigación de amenazas.
+              </p>
+              
+              <div class="metadata-box">
+                <div class="metadata-item">
+                  <span class="metadata-label">Materia</span>
+                  <span class="metadata-value">Introducción a la Seguridad Informática</span>
+                </div>
+                <div class="metadata-item">
+                  <span class="metadata-label">Maestría</span>
+                  <span class="metadata-value">Maestría en Ciberdefensa</span>
+                </div>
+                <div class="metadata-item">
+                  <span class="metadata-label">Tema</span>
+                  <span class="metadata-value">Vaultwarden (Bitwarden_RS)</span>
+                </div>
+                <div class="metadata-item">
+                  <span class="metadata-label">Integrantes</span>
+                  <span class="metadata-value">Guarnieri · Herrera · Aguilera</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 2: INTRODUCCIÓN Y CONTEXTO -->
+        <section class="slide" id="slide-2">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 02 de 14</span>
+            <h2 class="slide-title">Introducción al Problema</h2>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2">
+              <div>
+                <h3 class="slide-subtitle">La paradoja de los Gestores de Contraseñas</h3>
+                <p class="p-desc">
+                  La centralización de credenciales mitiga el problema de la reutilización de contraseñas y contraseñas débiles, pero crea un <strong>único punto de fallo</strong> altamente atractivo para los atacantes.
+                </p>
+                <ul class="icon-list">
+                  <li>
+                    <span class="icon-list-bullet">✓</span>
+                    <div>
+                      <strong>Bitwarden:</strong> Solución robusta de código abierto basada en una arquitectura Zero-Knowledge.
+                    </div>
+                  </li>
+                  <li>
+                    <span class="icon-list-bullet">✓</span>
+                    <div>
+                      <strong>Vaultwarden:</strong> Re-implementación en Rust del backend de Bitwarden orientada a entornos locales y auto-hospedados (self-hosted).
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="grid-2" style="grid-template-columns: 1fr; gap: 1rem;">
+                <div class="info-card">
+                  <h4>¿Por qué auto-hospedar?</h4>
+                  <p>
+                    Control absoluto sobre la infraestructura de almacenamiento físico del cofre de credenciales, mitigando riesgos de fugas en la nube pública y garantizando soberanía de datos.
+                  </p>
+                </div>
+                <div class="info-card purple">
+                  <h4>¿Qué es Vaultwarden?</h4>
+                  <p>
+                    Un servidor ligero compatible con la API de Bitwarden. Permite utilizar todas las aplicaciones oficiales (móvil, navegador) sin el pesado consumo de recursos de la pila oficial en .NET.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 3: FUNCIONAMIENTO DEL GESTOR -->
+        <section class="slide" id="slide-3">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 03 de 14</span>
+            <h2 class="slide-title">¿Cómo funciona un gestor de contraseñas?</h2>
+          </div>
+          <div class="slide-body">
+            <div>
+              <h3 class="slide-subtitle">Del usuario al cofre cifrado: flujo operativo de Vaultwarden</h3>
+              <p class="p-desc" style="font-size:0.95rem; margin-bottom:0.75rem;">
+                Un gestor de contraseñas no “guarda claves sueltas”: organiza credenciales dentro de un cofre cifrado, genera contraseñas robustas, sincroniza dispositivos y permite compartir accesos con reglas de seguridad.
+              </p>
+              <div class="keeper-flow-diagram">
+                <div class="keeper-step">
+                  <span class="keeper-step-num">1</span>
+                  <h4>Usuario y contraseña maestra</h4>
+                  <p>El usuario recuerda una única clave fuerte. Esa clave no se envía al servidor en texto plano.</p>
+                  <div class="mini-pill-row"><span class="mini-pill">clave maestra</span><span class="mini-pill">identidad</span></div>
+                </div>
+                <div class="keeper-step">
+                  <span class="keeper-step-num">2</span>
+                  <h4>Derivación en el cliente</h4>
+                  <p>La app aplica PBKDF2 o Argon2id para transformar la clave en material criptográfico resistente a fuerza bruta.</p>
+                  <div class="mini-pill-row"><span class="mini-pill">KDF</span><span class="mini-pill">salt</span></div>
+                </div>
+                <div class="keeper-step">
+                  <span class="keeper-step-num">3</span>
+                  <h4>Cifrado local del cofre</h4>
+                  <p>Credenciales, notas seguras y datos sensibles se cifran antes de salir del dispositivo.</p>
+                  <div class="mini-pill-row"><span class="mini-pill">AES-256</span><span class="mini-pill">Zero-Knowledge</span></div>
+                </div>
+                <div class="keeper-step">
+                  <span class="keeper-step-num">4</span>
+                  <h4>Servidor Vaultwarden</h4>
+                  <p>El servidor autentica, sincroniza y almacena blobs cifrados, pero no puede leer el contenido del cofre.</p>
+                  <div class="mini-pill-row"><span class="mini-pill">API</span><span class="mini-pill">TLS</span></div>
+                </div>
+                <div class="keeper-step">
+                  <span class="keeper-step-num">5</span>
+                  <h4>Sincronización y control</h4>
+                  <p>Los dispositivos autorizados reciben el cofre cifrado y lo descifran localmente con la clave del usuario.</p>
+                  <div class="mini-pill-row"><span class="mini-pill">MFA</span><span class="mini-pill">logs</span><span class="mini-pill">backups</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 4: ARQUITECTURA Y TECNOLOGÍAS -->
+        <section class="slide" id="slide-4">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 04 de 14</span>
+            <h2 class="slide-title">Arquitectura y Lenguaje: C# vs. Rust</h2>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2">
+              <div>
+                <h3 class="slide-subtitle">Optimización y reducción de la superficie de ataque</h3>
+                <p class="p-desc">
+                  La arquitectura oficial de Bitwarden requiere múltiples contenedores Docker en C# (.NET) y una base de datos Microsoft SQL Server, lo que exige al menos 2-3 GB de RAM y una compleja configuración.
+                </p>
+                <p class="p-desc">
+                  <strong>Vaultwarden</strong> optimiza esta pila: está escrito enteramente en <strong>Rust</strong>, compilado a código nativo, lo que reduce el consumo de memoria a menos de <strong>50 MB</strong> y permite ejecutar todo el backend en un solo contenedor ligero.
+                </p>
+              </div>
+              <div class="grid-3" style="grid-template-columns: 1fr; gap: 0.75rem;">
+                <div class="info-card green">
+                  <h4>Seguridad de Memoria en Rust</h4>
+                  <p>Rust elimina clases enteras de vulnerabilidades en tiempo de compilación (buffer overflows, null pointers, data races) sin necesidad de recolector de basura.</p>
+                </div>
+                <div class="info-card purple">
+                  <h4>Compatibilidad de API</h4>
+                  <p>Implementa exactamente los mismos puntos de acceso HTTPS REST y WebSocket de la API de Bitwarden, manteniendo total compatibilidad técnica.</p>
+                </div>
+                <div class="info-card amber">
+                  <h4>Bases de Datos Flexibles</h4>
+                  <p>Soporte integrado para SQLite (entornos pequeños), PostgreSQL y MySQL (para escalabilidad y alta disponibilidad).</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 5: CRIPTOGRAFÍA ZERO-KNOWLEDGE (INTERACTIVA) -->
+        <section class="slide" id="slide-5">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 05 de 14</span>
+            <h2 class="slide-title">Criptografía Zero-Knowledge</h2>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2" style="grid-template-columns: 1.1fr 0.9fr; gap: 1.5rem;">
+              <div>
+                <h3 class="slide-subtitle">Derivación en Cliente y Cifrado Simétrico</h3>
+                <p class="p-desc" style="font-size:0.9rem; margin-bottom:0.75rem;">
+                  El servidor de Vaultwarden <strong>nunca</strong> recibe la contraseña maestra en texto plano, ni tampoco la clave de cifrado simétrico del cofre. Todo el cifrado y descifrado se realiza en el cliente mediante <strong>AES-256</strong>.
+                </p>
+                <div class="crypto-note-box">
+                  <strong>Puntos clave del algoritmo:</strong>
+                  <ul style="margin-left: 1.15rem; font-size: 0.8rem; margin-top: 0.25rem;">
+                    <li><strong>Key Derivation Function:</strong> PBKDF2 (SHA-256) o Argon2id para derivar la Clave Maestra.</li>
+                    <li><strong>Separación de Funciones:</strong> La Clave Maestra derivada se divide: la mitad cifra el cofre localmente, y la otra mitad se hashea de nuevo para usarse como clave de autenticación HTTP.</li>
+                    <li><strong>Zero-Knowledge:</strong> Si un atacante compromete la base de datos de Vaultwarden, solo obtiene datos cifrados con AES y hashes bcrypt/Argon2 de autenticación. No puede descifrar los cofres.</li>
+                  </ul>
+                </div>
+              </div>
+              
+              <!-- VISUALIZADOR INTERACTIVO -->
+              <div class="crypto-visualizer">
+                <div class="form-group">
+                  <label for="master-pass-input">Simulador de Derivación en Cliente</label>
+                  <div class="input-row">
+                    <input type="text" id="master-pass-input" class="input-control" value="contraseña_segura_123" placeholder="Ingresa contraseña maestra...">
+                    <button class="btn btn-active" onclick="simulateKDF()">Derivar</button>
+                  </div>
+                </div>
+                
+                <div class="crypto-flow">
+                  <div class="flow-step" id="step-1">
+                    <span class="step-num">1</span>
+                    <div class="step-content">
+                      <span class="step-label">Contraseña Maestra + Email (Salt)</span>
+                      <span class="step-val" id="step-1-val">contraseña_segura_123 + admin@ciberdefensa.edu</span>
+                    </div>
+                  </div>
+                  <div class="flow-step" id="step-2">
+                    <span class="step-num">2</span>
+                    <div class="step-content">
+                      <span class="step-label">PBKDF2 / Argon2id (Master Key)</span>
+                      <span class="step-val" id="step-2-val">No calculado</span>
+                    </div>
+                  </div>
+                  <div class="flow-step" id="step-3">
+                    <span class="step-num">3</span>
+                    <div class="step-content">
+                      <span class="step-label">Master Key Hash (Enviado al Servidor)</span>
+                      <span class="step-val" id="step-3-val">No calculado</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 6: CAPA DE TRANSPORTE Y TLS (INTERACTIVO) -->
+        <section class="slide" id="slide-6">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 06 de 14</span>
+            <h2 class="slide-title">Seguridad en la Capa de Transporte (TLS)</h2>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2" style="grid-template-columns: 0.85fr 1.15fr; gap: 1.5rem; align-items: center;">
+              <!-- Diagrama no interactivo simplificado -->
+              <div class="diagram-vertical-flow"
+                style="display: flex; flex-direction: column; gap: 0.4rem; align-items: center; background: rgba(0, 0, 0, 0.15); padding: 0.8rem; border-radius: 12px; border: 1px solid var(--border-color); width: 100%;">
+                <div class="diagram-static-node"
+                  style="background: var(--bg-card); border: 1px solid var(--neon-cyan); border-radius: 8px; padding: 0.4rem; width: 100%; text-align: center; font-size: 0.95rem;">
+                  📱 <strong>Cliente</strong> (App Bitwarden)
+                </div>
+                <div style="color: var(--neon-cyan); font-weight: bold; font-size: 0.85rem; margin: -2px 0;">↓ TLS /
+                  HTTPS</div>
+                <div class="diagram-static-node"
+                  style="background: var(--bg-card); border: 1px solid var(--neon-purple); border-radius: 8px; padding: 0.4rem; width: 100%; text-align: center; font-size: 0.95rem;">
+                  🔄 <strong>Proxy Inverso</strong> (Caddy / Nginx)
+                </div>
+                <div style="color: var(--neon-purple); font-weight: bold; font-size: 0.85rem; margin: -2px 0;">↓ Proxy
+                  Pass (Localhost)</div>
+                <div class="diagram-static-node"
+                  style="background: var(--bg-card); border: 1px solid var(--neon-green); border-radius: 8px; padding: 0.4rem; width: 100%; text-align: center; font-size: 0.95rem;">
+                  🐋 <strong>Vaultwarden</strong> (Docker Container)
+                </div>
+                <div style="color: var(--neon-green); font-weight: bold; font-size: 0.85rem; margin: -2px 0;">↓ SQLite /
+                  Postgres</div>
+                <div class="diagram-static-node"
+                  style="background: var(--bg-card); border: 1px solid var(--border-hover); border-radius: 8px; padding: 0.4rem; width: 100%; text-align: center; font-size: 0.95rem;">
+                  💾 <strong>Base de Datos</strong> (SQLite / Postgres)
+                </div>
+              </div>
+
+              <!-- Explicación Directa -->
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; width: 100%;">
+                <div class="info-card" style="padding: 0.5rem 0.85rem;">
+                  <h4 style="font-size: 1.15rem; color: var(--neon-cyan); margin: 0;">Clientes Bitwarden Oficiales</h4>
+                  <p style="font-size: 0.92rem; margin: 0; line-height: 1.4;">Derivación criptográfica local y cifrado
+                    simétrico AES-256 en el dispositivo del usuario antes del envío.</p>
+                </div>
+                <div class="info-card purple" style="padding: 0.5rem 0.85rem;">
+                  <h4 style="font-size: 1.15rem; color: var(--neon-purple); margin: 0;">Proxy Inverso (TLS 1.2/1.3)</h4>
+                  <p style="font-size: 0.92rem; margin: 0; line-height: 1.4;">Negociación HTTPS en puerto 443,
+                    renovación de Let's Encrypt y cabeceras HSTS/CORS.</p>
+                </div>
+                <div class="info-card green" style="padding: 0.5rem 0.85rem;">
+                  <h4 style="font-size: 1.15rem; color: var(--neon-green); margin: 0;">Vaultwarden y Base de Datos</h4>
+                  <p style="font-size: 0.92rem; margin: 0; line-height: 1.4;">Contenedor Docker sin privilegios root,
+                    sincronizando blobs cifrados con copias de seguridad externas y programadas.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 7: HARDENING Y SEGURIDAD DEL SERVIDOR -->
+        <section class="slide" id="slide-7">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 07 de 14</span>
+            <h2 class="slide-title">Hardening del Servidor Vaultwarden</h2>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2">
+              <div>
+                <h3 class="slide-subtitle">Reducción del Vector de Ataque en el Host</h3>
+                <p class="p-desc">
+                  Alojar tu propio gestor de contraseñas implica asumir la responsabilidad completa de la seguridad del sistema operativo y de la aplicación.
+                </p>
+                <ul class="icon-list" style="font-size: 0.9rem;">
+                  <li>
+                    <span class="icon-list-bullet">🔒</span>
+                    <div>
+                      <strong>Desactivar Registros Abiertos:</strong> Establecer `SIGNUPS_ALLOWED=false` tras registrar la cuenta principal para evitar que atacantes creen cofres en tu servidor.
+                    </div>
+                  </li>
+                  <li>
+                    <span class="icon-list-bullet">🔒</span>
+                    <div>
+                      <strong>Aislamiento de Docker:</strong> Ejecutar el contenedor como un usuario no root (`user: "1000:1000"`) para mitigar vulnerabilidades de escape de contenedor.
+                    </div>
+                  </li>
+                  <li>
+                    <span class="icon-list-bullet">🔒</span>
+                    <div>
+                      <strong>Protección del Panel Admin:</strong> Deshabilitar el portal `/admin` o protegerlo con un token de acceso aleatorio fuerte (`ADMIN_TOKEN`) y filtrado por IP.
+                    </div>
+                  </li>
+                </ul>
+              </div>
+              <div class="grid-2" style="grid-template-columns: 1fr; gap: 0.75rem;">
+                <div class="info-card amber">
+                  <h4>Prevención de Fuerza Bruta: Fail2ban</h4>
+                  <p>
+                    Configurar fail2ban para parsear los logs de Vaultwarden y banear temporalmente direcciones IP tras múltiples intentos de inicio de sesión fallidos en `/api/accounts/prelogin`.
+                  </p>
+                </div>
+                <div class="info-card purple">
+                  <h4>Copias de Seguridad (Backups) Cifradas</h4>
+                  <p>
+                    SQLite permite backups en caliente (`.backup`). Es crítico automatizar copias cifradas y almacenarlas de forma externa (fuera de la red local) para resiliencia frente a ataques de Ransomware.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 8: AUTENTICACIÓN MULTIFACTOR (MFA) -->
+        <section class="slide" id="slide-8">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 08 de 14</span>
+            <h2 class="slide-title">Políticas de Autenticación y MFA</h2>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2">
+              <div>
+                <h3 class="slide-subtitle">Mitigación del Credential Stuffing</h3>
+                <p class="p-desc">
+                  Incluso con cifrado Zero-Knowledge, la exposición pública del portal de login requiere factores de autenticación adicionales para validar la identidad digital antes de despachar el cofre cifrado.
+                </p>
+                <p class="p-desc">
+                  Vaultwarden soporta múltiples esquemas de autenticación multifactor. En un entorno de alta seguridad (Maestría en Ciberdefensa), se debe priorizar criptografía asimétrica sobre esquemas de canal lateral como SMS o Email.
+                </p>
+              </div>
+              <div class="grid-3" style="grid-template-columns: 1fr; gap: 0.75rem;">
+                <div class="info-card green">
+                  <h4>WebAuthn / FIDO2</h4>
+                  <p><strong>YubiKeys e Identity Providers locales.</strong> Protección robusta basada en firmas criptográficas asimétricas de un solo paso que previene ataques de phishing y robo de sesión.</p>
+                </div>
+                <div class="info-card purple">
+                  <h4>Duo Security / TOTP</h4>
+                  <p>Configuración de códigos de un solo uso basados en tiempo (Time-based One-Time Password) o notificaciones Push corporativas.</p>
+                </div>
+                <div class="info-card amber">
+                  <h4>Yubico OTP</h4>
+                  <p>Integración directa con los servidores de validación de Yubico en la nube para autenticación de token físico.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 9: BITWARDEN VS VAULTWARDEN (MATRIZ COMPARATIVA) -->
+        <section class="slide" id="slide-9">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 09 de 14</span>
+            <h2 class="slide-title">Bitwarden vs. Vaultwarden</h2>
+          </div>
+          <div class="slide-body">
+            <div class="compare-matrix-container">
+              <table class="compare-table">
+                <thead>
+                  <tr>
+                    <th>Característica</th>
+                    <th>Bitwarden Nube Oficial</th>
+                    <th>Bitwarden Autohospedado Oficial</th>
+                    <th class="col-vw col-vw-header">Vaultwarden (Self-Hosted)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Lenguaje & Motor</strong></td>
+                    <td>C# (.NET Core)</td>
+                    <td>C# (.NET Core)</td>
+                    <td class="col-vw"><strong>Rust (Ligero)</strong></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Requerimientos de RAM</strong></td>
+                    <td>N/A (Nube)</td>
+                    <td>~2 GB a 4 GB RAM</td>
+                    <td class="col-vw"><strong>&lt; 50 MB RAM</strong> (Raspberry Pi/VPS)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Base de Datos</strong></td>
+                    <td>Microsoft SQL / Azure</td>
+                    <td>Microsoft SQL Server</td>
+                    <td class="col-vw"><strong>SQLite / Postgres / MySQL</strong></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Funciones Premium</strong></td>
+                    <td>Pago mensual/anual</td>
+                    <td>Licencia Enterprise requerida</td>
+                    <td class="col-vw"><strong>Desbloqueadas gratis</strong> (Org, 2FA, Send)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Auditorías & Cumplimiento</strong></td>
+                    <td>SOC 2, HIPAA, GDPR Cert.</td>
+                    <td>Cumplimiento Corporativo</td>
+                    <td class="col-vw"><strong>Ninguna certificación oficial</strong></td>
+                  </tr>
+                  <tr>
+                    <td><strong>Soporte Técnico</strong></td>
+                    <td>Soporte SLA Oficial</td>
+                    <td>Soporte Corporativo Oficial</td>
+                    <td class="col-vw">Comunidad (GitHub Issues)</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Riesgos Clave</strong></td>
+                    <td>Fallos en nube de terceros</td>
+                    <td>Mantenimiento de pila pesada</td>
+                    <td class="col-vw"><strong>Riesgo de API Drift</strong> (romper apps oficiales)</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 10: GESTIÓN DEL RIESGO Y GOBIERNO DE TI -->
+        <section class="slide" id="slide-10">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 10 de 14</span>
+            <h2 class="slide-title">Gestión de Riesgo: Inversión en Ciberseguridad</h2>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2" style="grid-template-columns: 1.2fr 0.8fr; gap: 1.5rem;">
+              <div>
+                <h3 class="slide-subtitle">Cálculo Cuantitativo del Riesgo en Auto-hospedaje</h3>
+                <p class="p-desc" style="font-size:0.92rem; margin-bottom:0.75rem;">
+                  Al migrar de la nube oficial de Bitwarden a un Vaultwarden auto-hospedado, la organización asume tareas de administración, disponibilidad y hardening que alteran la expectativa de pérdida anual.
+                </p>
+                <div class="risk-calc-box">
+                  <div class="formula-display">
+                    ALE = SLE × ARO
+                  </div>
+                  <div class="risk-var-grid">
+                    <div class="risk-var-card">
+                      <span class="risk-var-title">SLE</span>
+                      <span class="risk-var-formula">AV × EF</span>
+                      <span class="risk-var-desc">Costo de pérdida de un incidente (fuga/pérdida de cofre).</span>
+                    </div>
+                    <div class="risk-var-card">
+                      <span class="risk-var-title">ARO</span>
+                      <span class="risk-var-formula">Frecuencia / año</span>
+                      <span class="risk-var-desc">Probabilidad de vulneración en servidor expuesto sin parchear.</span>
+                    </div>
+                    <div class="risk-var-card">
+                      <span class="risk-var-title">ALE</span>
+                      <span class="risk-var-formula">Pérdida Anual</span>
+                      <span class="risk-var-desc">Impacto financiero anualizado de la amenaza.</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="grid-2" style="grid-template-columns: 1fr; gap: 0.75rem;">
+                <div class="info-card purple">
+                  <h4>Transferencia de Riesgo</h4>
+                  <p style="font-size:0.8rem;">
+                    Con Bitwarden Cloud, se transfiere parte del riesgo operativo de disponibilidad y seguridad física al proveedor mediante contratos de nivel de servicio (SLA).
+                  </p>
+                </div>
+                <div class="info-card amber">
+                  <h4>Mitigación Directa</h4>
+                  <p style="font-size:0.8rem;">
+                    Auto-hospedar con Vaultwarden disminuye el coste financiero (inversión de capital), pero requiere mayor presupuesto de administración (horas de ingeniería de seguridad) para evitar que el ARO se dispare.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 11: MATRIZ DE RIESGO APLICADA -->
+        <section class="slide" id="slide-11">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 11 de 14</span>
+            <h2 class="slide-title">Matriz de Riesgo Aplicada a Vaultwarden</h2>
+          </div>
+          <div class="slide-body">
+            <div>
+              <h3 class="slide-subtitle">Riesgo = Consecuencia × Probabilidad</h3>
+              <p class="p-desc" style="font-size:0.88rem; margin-bottom:0.8rem;">
+                El análisis se centra en eventos concretos que pueden afectar la confidencialidad, integridad y disponibilidad de las credenciales. La valoración es cualitativa: Alta, Media o Baja.
+              </p>
+              <table class="risk-table-compact">
+                <thead>
+                  <tr>
+                    <th>Riesgo</th>
+                    <th>Evento</th>
+                    <th>Consecuencia</th>
+                    <th>Prob.</th>
+                    <th>Impacto</th>
+                    <th>C/I/D</th>
+                    <th>Controles propuestos</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>Credential stuffing</strong></td>
+                    <td>Uso de credenciales filtradas en otros servicios.</td>
+                    <td>Acceso no autorizado al cofre cifrado o descarga del vault.</td>
+                    <td><span class="risk-level risk-high">Alta</span></td>
+                    <td><span class="risk-level risk-high">Alta</span></td>
+                    <td>Confidencialidad</td>
+                    <td>MFA obligatorio, contraseña maestra robusta, monitoreo de logs.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Fuerza bruta</strong></td>
+                    <td>Intentos masivos contra el login expuesto a Internet.</td>
+                    <td>Bloqueo del servicio o compromiso de cuentas débiles.</td>
+                    <td><span class="risk-level risk-med">Media</span></td>
+                    <td><span class="risk-level risk-high">Alta</span></td>
+                    <td>Confidencialidad / Disponibilidad</td>
+                    <td>Fail2ban, rate limiting, alertas, bloqueo temporal.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Panel admin expuesto</strong></td>
+                    <td>Acceso al endpoint administrativo desde Internet.</td>
+                    <td>Cambio de configuración, abuso del servidor o interrupción.</td>
+                    <td><span class="risk-level risk-med">Media</span></td>
+                    <td><span class="risk-level risk-high">Alta</span></td>
+                    <td>Integridad / Disponibilidad</td>
+                    <td>ADMIN_TOKEN fuerte, restricción por IP, deshabilitación si no se usa.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Pérdida de base de datos</strong></td>
+                    <td>Falla de disco, borrado accidental o ransomware.</td>
+                    <td>Pérdida de disponibilidad de credenciales y continuidad operativa.</td>
+                    <td><span class="risk-level risk-med">Media</span></td>
+                    <td><span class="risk-level risk-high">Alta</span></td>
+                    <td>Disponibilidad</td>
+                    <td>Backups cifrados, externos, automatizados y prueba de restauración.</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Mala configuración TLS</strong></td>
+                    <td>Certificados vencidos, HTTP expuesto o proxy inseguro.</td>
+                    <td>Intercepción, robo de sesión o degradación del canal.</td>
+                    <td><span class="risk-level risk-low">Baja</span></td>
+                    <td><span class="risk-level risk-high">Alta</span></td>
+                    <td>Confidencialidad</td>
+                    <td>HTTPS obligatorio, TLS 1.2/1.3, HSTS y renovación automática.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 12: APETITO TOLERANCIA Y RESIDUAL -->
+        <section class="slide" id="slide-12">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 12 de 14</span>
+            <h2 class="slide-title">Apetito, Tolerancia y Riesgo Residual</h2>
+          </div>
+          <div class="slide-body">
+            <div>
+              <div class="risk-lifecycle">
+                <div class="risk-lifecycle-node">
+                  <h4>Riesgo inherente</h4>
+                  <p>Situación inicial: contraseñas reutilizadas, falta de MFA, backups no probados y administración manual.</p>
+                  <span class="risk-level risk-high">Alto</span>
+                </div>
+                <div class="risk-arrow">→</div>
+                <div class="risk-lifecycle-node">
+                  <h4>Controles</h4>
+                  <p>Vaultwarden + MFA + hardening + Fail2ban + TLS + backups cifrados + capacitación de usuarios.</p>
+                  <span class="risk-level risk-med">Mitigación</span>
+                </div>
+                <div class="risk-arrow">→</div>
+                <div class="risk-lifecycle-node">
+                  <h4>Riesgo residual</h4>
+                  <p>Permanece el riesgo de error humano, vulnerabilidades nuevas, mala operación o pérdida de la clave maestra.</p>
+                  <span class="risk-level risk-low">Aceptable</span>
+                </div>
+              </div>
+
+              <h3 class="slide-subtitle" style="font-size:1.05rem; margin-bottom:0.4rem;">Criterios de aceptación para la Alta Gerencia</h3>
+              <div class="tolerance-grid">
+                <div class="tolerance-item">
+                  <h4>Apetito de riesgo</h4>
+                  <p>Muy bajo para confidencialidad de credenciales; bajo para integridad; medio-bajo para disponibilidad.</p>
+                </div>
+                <div class="tolerance-item">
+                  <h4>Tolerancia técnica</h4>
+                  <p>No se aceptan cuentas administrativas sin MFA ni panel admin expuesto sin restricción.</p>
+                </div>
+                <div class="tolerance-item">
+                  <h4>Continuidad</h4>
+                  <p>Backups externos, cifrados y restaurables. La copia no debe quedar en el mismo servidor productivo.</p>
+                </div>
+                <div class="tolerance-item">
+                  <h4>Gobierno</h4>
+                  <p>Política de contraseñas, alta/baja de usuarios, revisión de logs y actualización dentro de 72 h para parches críticos.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 13: CONCLUSIONES -->
+        <section class="slide" id="slide-13">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 13 de 14</span>
+            <h2 class="slide-title">Conclusiones del Análisis</h2>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2">
+              <div>
+                <h3 class="slide-subtitle">La Ciberseguridad como un Proceso Continuo</h3>
+                <p class="p-desc">
+                  Vaultwarden demuestra ser una pieza excepcional de ingeniería de software en Rust. Sin embargo, desde una perspectiva académica y corporativa, la herramienta en sí es solo un control de seguridad.
+                </p>
+                <p class="p-desc">
+                  El auto-hospedaje exitoso depende del diseño, monitoreo y mantenimiento del ciclo de vida del servicio.
+                </p>
+              </div>
+              <div class="grid-2" style="grid-template-columns: 1fr; gap: 0.75rem;">
+                <div class="info-card green">
+                  <h4>Para Entornos de Producción y Empresas</h4>
+                  <p>
+                    El Bitwarden oficial (Nube o Self-hosted) es la opción correcta debido a las certificaciones de cumplimiento (SOC2, HIPAA) necesarias para auditorías legales y contractuales.
+                  </p>
+                </div>
+                <div class="info-card purple">
+                  <h4>Para Desarrolladores y Power Users</h4>
+                  <p>
+                    Vaultwarden ofrece una plataforma insuperable en rendimiento, libertad de gestión y acceso a funcionalidades premium para entornos domésticos u laboratorios de ciberdefensa.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+        <!-- SLIDE 14: DEMO Y CIERRE -->
+        <section class="slide" id="slide-14">
+          <div class="slide-header">
+            <span class="slide-number">Diapositiva 14 de 14</span>
+            <h2 class="slide-title">Preguntas e Interacción</h2>
+          </div>
+          <div class="slide-body">
+            <div class="title-wrapper">
+              <h2 style="font-family: var(--font-display); font-size: 3rem; font-weight: 800; color: var(--neon-cyan);">¿Preguntas?</h2>
+              <p class="subtitle-banner" style="font-size: 1.2rem;">
+                "El único sistema verdaderamente seguro es aquel que está apagado, encerrado en un bloque de cemento y guardado en una habitación protegida con guardias... e incluso así tengo mis dudas."<br>
+                <span style="font-size: 0.95rem; color: var(--neon-purple); font-style: italic; font-weight: 600;">— Gene Spafford</span>
+              </p>
+              <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                <button class="btn btn-active" onclick="resetPresentation()">🔄 Volver al Inicio</button>
+                <button class="btn" onclick="toggleNotes()">📋 Mostrar Notas del Orador</button>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+
+      </main>
+
+      <!-- BARRA DE CONTROL DE NAVEGACIÓN -->
+      <footer class="app-footer">
+        <div class="footer-author">Trabajo Final — Guarnieri · Herrera · Aguilera</div>
+        <div class="navigation-controls">
+          <button class="btn" id="prev-btn" onclick="prevSlide()">← Anterior</button>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progress-bar-fill"></div>
+          </div>
+          <span class="slide-counter-text" id="slide-counter">Slide 1 / 14</span>
+          <button class="btn btn-active" id="next-btn" onclick="nextSlide()">Siguiente →</button>
+        </div>
+      </footer>
+    </div>
+
+    <!-- VISTA GENERAL (GRID DE SLIDES) -->
+    <div class="overview-grid" id="overview-grid">
+      <!-- Se inyecta dinámicamente en JS -->
+    </div>
+
+    <!-- PANEL LATERAL DE NOTAS DEL ORADOR (SPEAKER NOTES) -->
+    <aside class="speaker-notes-panel" id="speaker-notes-panel">
+      <div class="notes-header">
+        <h3>📋 Notas del Orador</h3>
+        <button class="btn btn-circle" onclick="toggleNotes()" style="height:30px; width:30px; font-size:0.75rem;">✕</button>
+      </div>
+      <div class="notes-content" id="notes-content">
+        <!-- Contenido dinámico -->
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- SCRIPT DE INTERACTIVIDAD Y LÓGICA DE NAVEGACIÓN -->
+  <script>
+    // 1. CONFIGURACIÓN E INICIALIZACIÓN
+    const totalSlides = 14;
+    let currentSlideIndex = 1;
+    let isNotesOpen = false;
+    let isOverviewMode = false;
+
+    // Base de datos de notas del orador
+    const SPEAKER_NOTES = {
+      1: `<strong>Portada y Saludo Inicial:</strong>
+      <ul>
+        <li>Saludar al docente y presentar a los integrantes: Franco Guarnieri, Hernan Herrera y Jhonatan Aguilera.</li>
+        <li>Introducir el objetivo: analizar una herramienta open source aplicada a la seguridad de credenciales.</li>
+        <li>Aclarar que el caso elegido es Vaultwarden, como implementación auto-hospedada compatible con Bitwarden.</li>
+      </ul>`,
+      2: `<strong>Introducción al Problema de Credenciales:</strong>
+      <ul>
+        <li>Explicar que el uso de múltiples sistemas genera fatiga de contraseñas, reutilización y almacenamiento inseguro.</li>
+        <li>Señalar la paradoja: centralizar mejora el control, pero convierte al gestor en un activo crítico.</li>
+        <li>Presentar Vaultwarden como alternativa ligera para una organización que necesita controlar sus datos.</li>
+      </ul>`,
+      3: `<strong>Funcionamiento del Gestor de Contraseñas:</strong>
+      <ul>
+        <li>Usar el diagrama para explicar que la contraseña maestra no se guarda en el servidor.</li>
+        <li>Remarcar que el cifrado ocurre en el cliente y que Vaultwarden almacena blobs cifrados.</li>
+        <li>Conectar el funcionamiento con confidencialidad, integridad y disponibilidad.</li>
+      </ul>`,
+      4: `<strong>Arquitectura de Software y Rust:</strong>
+      <ul>
+        <li>Comparar la pila oficial de Bitwarden con Vaultwarden.</li>
+        <li>Explicar que Rust reduce ciertas vulnerabilidades de memoria y permite una ejecución más liviana.</li>
+        <li>Indicar que menor complejidad puede disminuir la superficie de ataque, aunque no elimina la necesidad de hardening.</li>
+      </ul>`,
+      5: `<strong>Criptografía Zero-Knowledge:</strong>
+      <ul>
+        <li><strong>Demostración en vivo:</strong> usar el simulador de derivación para mostrar clave maestra, KDF y hash de autenticación.</li>
+        <li>Explicar PBKDF2/Argon2id como funciones que dificultan ataques de fuerza bruta.</li>
+        <li>Destacar que el servidor no conoce la clave capaz de descifrar el cofre.</li>
+      </ul>`,
+      6: `<strong>Seguridad en Transporte:</strong>
+      <ul>
+        <li>Usar el diagrama interactivo: Cliente → Proxy inverso → Vaultwarden → Base de datos.</li>
+        <li>Explicar el rol de TLS/HTTPS, certificados, HSTS y proxy inverso.</li>
+        <li>Relacionarlo con la prevención de sniffing, robo de sesión y ataques Man-in-the-Middle.</li>
+      </ul>`,
+      7: `<strong>Hardening del Servidor:</strong>
+      <ul>
+        <li>Desactivar registros públicos una vez creados los usuarios autorizados.</li>
+        <li>Proteger el panel admin, ejecutar contenedores sin privilegios root y configurar Fail2ban.</li>
+        <li>Insistir en backups cifrados y externos como control de continuidad.</li>
+      </ul>`,
+      8: `<strong>Autenticación Multifactor:</strong>
+      <ul>
+        <li>Explicar que MFA reduce el riesgo de credential stuffing y phishing.</li>
+        <li>Priorizar FIDO2/WebAuthn para cuentas críticas por su resistencia al phishing.</li>
+        <li>Indicar que TOTP es útil, pero debe acompañarse con buenas prácticas de usuario.</li>
+      </ul>`,
+      9: `<strong>Comparativa Crítica:</strong>
+      <ul>
+        <li>Bitwarden oficial es más adecuado para ambientes con certificaciones y soporte contractual.</li>
+        <li>Vaultwarden es más eficiente y económico para laboratorios, pymes o entornos controlados.</li>
+        <li>Riesgo relevante: dependencia de compatibilidad con la API oficial y soporte comunitario.</li>
+      </ul>`,
+      10: `<strong>Gestión del Riesgo:</strong>
+      <ul>
+        <li>Explicar la lógica ALE = SLE × ARO.</li>
+        <li>Auto-hospedar reduce costos de licencia, pero transfiere responsabilidad técnica a la organización.</li>
+        <li>La decisión debe alinearse con el apetito de riesgo y la capacidad real de administrar el servicio.</li>
+      </ul>`,
+      11: `<strong>Matriz de Riesgo Aplicada:</strong>
+      <ul>
+        <li>Leer dos o tres riesgos principales: credential stuffing, fuerza bruta y pérdida de base de datos.</li>
+        <li>Relacionar cada evento con consecuencia, probabilidad, impacto y C/I/D.</li>
+        <li>Explicar que los controles bajan la probabilidad, aunque no eliminan totalmente el impacto.</li>
+      </ul>`,
+      12: `<strong>Apetito, Tolerancia y Riesgo Residual:</strong>
+      <ul>
+        <li>Diferenciar riesgo inherente, controles y riesgo residual.</li>
+        <li>Explicar que no se acepta MFA ausente en administradores ni backups sin cifrar.</li>
+        <li>Justificar ante la Alta Gerencia que el riesgo residual queda en un nivel aceptable si se cumplen los controles.</li>
+      </ul>`,
+      13: `<strong>Conclusión del Trabajo Final:</strong>
+      <ul>
+        <li>Resumir que Vaultwarden es una herramienta, no una solución mágica.</li>
+        <li>La seguridad depende de proceso, configuración, mantenimiento, monitoreo y cultura de usuarios.</li>
+        <li>Conectar con mejora continua: revisar, medir, ajustar y actualizar controles.</li>
+      </ul>`,
+      14: `<strong>Cierre y Q&A:</strong>
+      <ul>
+        <li>Agradecer la atención del docente y tribunal.</li>
+        <li>Abrir la ronda de preguntas y debate sobre la arquitectura propuesta.</li>
+      </ul>`
+    };
+
+    // 2. NAVEGACIÓN DE DIAPOSITIVAS (SLIDES LOGIC)
+    function showSlide(index) {
+      if (index < 1 || index > totalSlides) return;
+      
+      const prevIndex = currentSlideIndex;
+      currentSlideIndex = index;
+      
+      // Remover clases de transición previas
+      const slides = document.querySelectorAll('.slide');
+      slides.forEach(slide => {
+        slide.classList.remove('active', 'exit-left', 'exit-right');
+      });
+      
+      // Aplicar clases de salida a la diapositiva vieja
+      const prevSlideEl = document.getElementById(`slide-${prevIndex}`);
+      if (prevSlideEl && prevIndex !== index) {
+        if (index > prevIndex) {
+          prevSlideEl.classList.add('exit-left');
+        } else {
+          prevSlideEl.classList.add('exit-right');
+        }
+      }
+      
+      // Activar nueva diapositiva
+      const activeSlideEl = document.getElementById(`slide-${index}`);
+      if (activeSlideEl) {
+        activeSlideEl.classList.add('active');
+      }
+
+      // Actualizar Barra de Progreso y Contador
+      const progressPercent = ((index - 1) / (totalSlides - 1)) * 100;
+      document.getElementById('progress-bar-fill').style.width = `${progressPercent}%`;
+      document.getElementById('slide-counter').textContent = `Slide ${index} / ${totalSlides}`;
+
+      // Actualizar Notas del Orador
+      updateNotesContent(index);
+
+      // Deshabilitar/Habilitar Botones según corresponda
+      document.getElementById('prev-btn').disabled = (index === 1);
+      document.getElementById('next-btn').disabled = (index === totalSlides);
+      
+      // En modo overview, resaltar la tarjeta seleccionada
+      if (isOverviewMode) {
+        const cards = document.querySelectorAll('.overview-card');
+        cards.forEach(card => card.classList.remove('selected'));
+        const activeCard = document.querySelector(`.overview-card[data-slide-index="${index}"]`);
+        if (activeCard) activeCard.classList.add('selected');
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlideIndex < totalSlides) {
+        showSlide(currentSlideIndex + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlideIndex > 1) {
+        showSlide(currentSlideIndex - 1);
+      }
+    }
+
+    function resetPresentation() {
+      showSlide(1);
+    }
+
+    // 3. EVENTOS DE TECLADO Y GESTOS
+    document.addEventListener('keydown', (e) => {
+      if (isOverviewMode) {
+        if (e.key === 'Escape') toggleOverview();
+        return;
+      }
+      
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        prevSlide();
+      } else if (e.key.toLowerCase() === 's') {
+        toggleNotes();
+      } else if (e.key === 'Escape') {
+        toggleOverview();
+      }
+    });
+
+    // Soporte de Swipes (Pantallas Táctiles)
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, false);
+    
+    function handleSwipe() {
+      const swipeDistance = touchEndX - touchStartX;
+      if (Math.abs(swipeDistance) > 80) { // Umbral de swipe
+        if (swipeDistance < 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    }
+
+    // 4. LÓGICA DE NOTAS DEL ORADOR
+    function toggleNotes() {
+      const notesPanel = document.getElementById('speaker-notes-panel');
+      const toggleBtn = document.getElementById('notes-toggle-btn');
+      
+      isNotesOpen = !isNotesOpen;
+      if (isNotesOpen) {
+        notesPanel.classList.add('open');
+        toggleBtn.classList.add('btn-active');
+      } else {
+        notesPanel.classList.remove('open');
+        toggleBtn.classList.remove('btn-active');
+      }
+    }
+
+    function updateNotesContent(slideIndex) {
+      const contentEl = document.getElementById('notes-content');
+      if (contentEl) {
+        contentEl.innerHTML = SPEAKER_NOTES[slideIndex] || 'No hay notas para esta diapositiva.';
+      }
+    }
+
+    // 5. MODO CLARO / OSCURO
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    themeToggleBtn.addEventListener('click', () => {
+      const htmlEl = document.documentElement;
+      const currentTheme = htmlEl.getAttribute('data-theme');
+      
+      if (currentTheme === 'dark') {
+        htmlEl.setAttribute('data-theme', 'light');
+        themeToggleBtn.textContent = '☀️';
+      } else {
+        htmlEl.setAttribute('data-theme', 'dark');
+        themeToggleBtn.textContent = '🌙';
+      }
+    });
+
+    // 6. MODO VISTA GENERAL (OVERVIEW MODE)
+    const overviewToggleBtn = document.getElementById('overview-toggle-btn');
+    
+    function toggleOverview() {
+      const mainContainer = document.getElementById('slides-container');
+      const overviewGrid = document.getElementById('overview-grid');
+      
+      isOverviewMode = !isOverviewMode;
+      
+      if (isOverviewMode) {
+        // Generar tarjetas si el grid está vacío
+        if (overviewGrid.children.length === 0) {
+          generateOverviewCards();
+        }
+        
+        mainContainer.style.display = 'none';
+        overviewGrid.classList.add('active');
+        overviewToggleBtn.classList.add('btn-active');
+        
+        // Resaltar la seleccionada
+        const activeCard = document.querySelector(`.overview-card[data-slide-index="${currentSlideIndex}"]`);
+        if (activeCard) activeCard.classList.add('selected');
+      } else {
+        mainContainer.style.display = 'flex';
+        overviewGrid.classList.remove('active');
+        overviewToggleBtn.classList.remove('btn-active');
+        showSlide(currentSlideIndex);
+      }
+    }
+
+    function generateOverviewCards() {
+      const overviewGrid = document.getElementById('overview-grid');
+      overviewGrid.innerHTML = '';
+      
+      for (let i = 1; i <= totalSlides; i++) {
+        const slideEl = document.getElementById(`slide-${i}`);
+        const titleEl = slideEl.querySelector('.slide-title');
+        const titleText = titleEl ? titleEl.textContent : `Diapositiva ${i}`;
+        
+        const card = document.createElement('div');
+        card.className = 'overview-card';
+        card.setAttribute('data-slide-index', i);
+        card.innerHTML = `
+          <div class="overview-card-header">Diapositiva ${String(i).padStart(2, '0')}</div>
+          <div class="overview-card-title">${titleText}</div>
+          <span class="badge badge-cyan" style="align-self:flex-start; font-size:0.6rem;">Ver</span>
+        `;
+        
+        card.addEventListener('click', () => {
+          currentSlideIndex = i;
+          toggleOverview();
+        });
+        
+        overviewGrid.appendChild(card);
+      }
+    }
+    
+    overviewToggleBtn.addEventListener('click', toggleOverview);
+
+    // 7. COMPONENTE INTERACTIVO: SIMULADOR CRIPTOGRÁFICO (SLIDE 4)
+    function simulateKDF() {
+      const masterPass = document.getElementById('master-pass-input').value;
+      const step1Val = document.getElementById('step-1-val');
+      const step2Val = document.getElementById('step-2-val');
+      const step3Val = document.getElementById('step-3-val');
+      
+      const step1 = document.getElementById('step-1');
+      const step2 = document.getElementById('step-2');
+      const step3 = document.getElementById('step-3');
+      
+      // Reseteo visual
+      step1.classList.remove('active', 'completed');
+      step2.classList.remove('active', 'completed');
+      step3.classList.remove('active', 'completed');
+      
+      step2Val.textContent = "Calculando KDF...";
+      step3Val.textContent = "Esperando Clave Maestra...";
+      
+      // Simular computación
+      setTimeout(() => {
+        step1.classList.add('completed');
+        step2.classList.add('active');
+        
+        // Generar un hash determinista simulado (solo visual para no importar bibliotecas pesadas)
+        let hash = simpleHash(masterPass + "admin@ciberdefensa.edu");
+        step2Val.textContent = "MasterKey (derived): " + hash.substring(0, 32) + "...";
+        
+        setTimeout(() => {
+          step2.classList.add('completed');
+          step3.classList.add('active');
+          
+          let authHash = simpleHash(hash);
+          step3Val.textContent = "AuthHash: " + authHash.substring(0, 32) + "...";
+          
+          setTimeout(() => {
+            step3.classList.add('completed');
+          }, 300);
+        }, 800);
+      }, 400);
+    }
+    
+    // Algoritmo de hash simple para visualizador de UI
+    function simpleHash(str) {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convertir a entero de 32 bits
+      }
+      return Math.abs(hash).toString(16) + "e17a3f8c85c2c510fa789cd5ef" + Math.abs(hash * 3).toString(16);
+    }
+
+    // 8. COMPONENTE INTERACTIVO: ARQUITECTURA DE RED (SLIDE 5)
+    const ARCH_INFO = {
+      client: {
+        title: "Clientes Bitwarden Oficiales (Móvil, Navegador, Desktop)",
+        text: "Realizan la derivación criptográfica localmente (Zero-Knowledge). Cifran la base de datos con AES-256 antes de transmitirla y descifran los datos devueltos utilizando la clave maestra. Nunca transmiten la contraseña en texto plano."
+      },
+      proxy: {
+        title: "Proxy Inverso (Caddy / Nginx / Traefik)",
+        text: "Obligatorio en producción. Escucha en el puerto 443 (HTTPS), negocia la sesión TLS v1.2/v1.3 y gestiona la renovación automática de certificados con Let's Encrypt o ZeroSSL. Aplica políticas de cabeceras HSTS y CORS para endurecer el canal de transporte."
+      },
+      vw: {
+        title: "Vaultwarden (Docker Container)",
+        text: "Ejecutado con aislamiento de sistema de archivos. Procesa peticiones HTTP REST de autenticación, almacenamiento del cofre cifrado y websocket para sincronización en tiempo real. Configurado para bloquear registros externos (SIGNUPS_ALLOWED=false) y fail2ban local."
+      },
+      db: {
+        title: "Base de Datos de Vaultwarden (SQLite / Postgres)",
+        text: "Almacena los cofres ya cifrados en el cliente, las configuraciones de los usuarios y hashes bcrypt/Argon2 para verificar el login. Debe respaldarse periódicamente utilizando comandos en caliente como '.backup' de sqlite."
+      }
+    };
+    
+    function showArchDetails(nodeId) {
+      // Remover clase activa de todos los nodos
+      const nodes = document.querySelectorAll('.diagram-node');
+      nodes.forEach(node => node.classList.remove('active'));
+      
+      // Activar nodo clickeado
+      const clickedNode = document.getElementById(`node-${nodeId}`);
+      if (clickedNode) clickedNode.classList.add('active');
+      
+      // Cambiar textos explicativos
+      const info = ARCH_INFO[nodeId];
+      if (info) {
+        document.getElementById('arch-exp-title').textContent = info.title;
+        document.getElementById('arch-exp-text').textContent = info.text;
+      }
+    }
+
+    // Inicializar cargando notas y estado base
+    window.addEventListener('load', () => {
+      showSlide(1);
+    });
+  </script>
+</body>
+</html>

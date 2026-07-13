@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -7,14 +8,33 @@
     <!-- Reveal.js CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reset.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/reveal.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.min.css" id="theme">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.3.1/theme/simple.min.css"
+        id="theme">
     <style>
-        .reveal h1, .reveal h2, .reveal h3 { text-transform: none; color: #2c3e50; }
-        .reveal ul { font-size: 0.85em; line-height: 1.4; color: #34495e; }
-        .highlight-text { color: #e74c3c; font-weight: bold; }
-        .reveal aside.notes { color: #fff; }
+        .reveal h1,
+        .reveal h2,
+        .reveal h3 {
+            text-transform: none;
+            color: #2c3e50;
+        }
+
+        .reveal ul {
+            font-size: 0.85em;
+            line-height: 1.4;
+            color: #34495e;
+        }
+
+        .highlight-text {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .reveal aside.notes {
+            color: #fff;
+        }
     </style>
 </head>
+
 <body>
     <div class="reveal">
         <div class="slides">
@@ -25,6 +45,27 @@
                 <h2>Vacíos Legales en <br><span class="highlight-text">Smart Contracts</span> Inmobiliarios</h2><br>
                 <p>Lic. Hernán Herrera - Maestría en Ciberdefensa</p>
                 <!-- <p><small>Presiona la tecla <strong>'S'</strong> para abrir la vista de presentador (Notas)</small></p> -->
+                <aside class="notes">
+                    <div
+                        style="display: flex; gap: 24px; align-items: flex-start; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #34495e; padding: 24px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: left;">
+                        <div style="flex: 1.1; font-size: 1.6rem; line-height: 1.6;">
+                            <p
+                                style="margin-bottom: 16px; color: #2c3e50; font-size: 1.9rem; font-weight: bold; border-bottom: 2px solid #e74c3c; padding-bottom: 8px;">
+                                <strong>Portada (0:00 – 1:30)</strong>
+                            </p>
+                            <ul style="color: #475569; font-size: 1.45rem; margin-left: 20px; line-height: 1.6;">
+                                <li style="margin-bottom: 8px;"><strong style="color: #2c3e50;">Saludo formal:</strong>
+                                    Saludo al tribunal y a la Dra. Faliero.</li>
+                                <li style="margin-bottom: 8px;"><strong style="color: #2c3e50;">Encuadre:</strong>
+                                    Investigación sobre la colisión entre smart contracts en blockchain and el régimen
+                                    de derechos reales inmobiliarios argentino.</li>
+                                <li style="margin-bottom: 8px;"><strong style="color: #2c3e50;">Objetivo:</strong>
+                                    Demostrar la inseguridad jurídica de la tokenización pura y proponer un modelo
+                                    híbrido institucional (fe pública + eficiencia).</li>
+                            </ul>
+                        </div>
+                    </div>
+                </aside>
             </section>
 
             <!-- Placa 1 -->
@@ -33,20 +74,39 @@
                     <h2>1. El Choque de Paradigmas</h2>
                     <h4>"Code is Law" vs. Seguridad Jurídica</h4>
                     <ul>
-                        <li class="fragment"><strong>El Paradigma DLT:</strong> Desintermediación y automatización absoluta.</li>
+                        <li class="fragment"><strong>El Paradigma DLT:</strong> Desintermediación y automatización
+                            absoluta.</li>
                         <li class="fragment"><strong>La Barrera del CCyCN:</strong>
                             <ul>
                                 <li>Art. 1017: Solemnidad de la Escritura Pública.</li>
                                 <li>Art. 1893: Publicidad Registral para oponibilidad.</li>
                             </ul>
                         </li>
-                        <li class="fragment"><strong>Ineficacia del Título Real:</strong> El inversor no obtiene dominio, sino un crédito contra intermediarios, generando inseguridad jurídica estructural.</li>
+                        <li class="fragment"><strong>Ineficacia del Título Real:</strong> El inversor no obtiene
+                            dominio, sino un crédito contra intermediarios, generando inseguridad jurídica estructural.
+                        </li>
                     </ul>
                     <aside class="notes">
-                        (2 MINUTOS) Buenas tardes. Mi tesina aborda el profundo choque normativo entre la tokenización de inmuebles y nuestro Código Civil.
-                        Por un lado, la tecnología blockchain nos dice que "el código es la ley" y promete transacciones sin intermediarios.
-                        Pero la ley argentina exige una escritura pública y la inscripción registral para que un inmueble sea tuyo frente al mundo.
-                        Como resultado, las ventas on-chain son jurídicamente ineficaces para transmitir el dominio. El inversor cree comprar una casa, pero en realidad solo está obteniendo un derecho personal de crédito, lo cual es sumamente riesgoso.
+                        <div
+                            style="display: flex; gap: 24px; align-items: flex-start; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #34495e; padding: 24px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: left;">
+                            <div style="flex: 1.1; font-size: 1.6rem; line-height: 1.6;">
+                                <p
+                                    style="margin-bottom: 16px; color: #2c3e50; font-size: 1.9rem; font-weight: bold; border-bottom: 2px solid #e74c3c; padding-bottom: 8px;">
+                                    <strong>1. Choque Ontológico (1:30 – 3:30)</strong>
+                                </p>
+                                <p style="margin-bottom: 12px;"><strong style="color: #e74c3c;">(2 MINUTOS)</strong>
+                                    Buenas tardes. Mi tesina aborda el profundo choque normativo entre la tokenización
+                                    de inmuebles y nuestro Código Civil.</p>
+                                <p style="margin-bottom: 12px;">Por un lado, la tecnología blockchain nos dice que "el
+                                    código es la ley" y promete transacciones sin intermediarios.</p>
+                                <p style="margin-bottom: 12px;">Pero la ley argentina exige una escritura pública (Art.
+                                    1017) y la inscripción registral (Art. 1893) para que un inmueble sea tuyo frente al
+                                    mundo.</p>
+                                <p>Como resultado, las ventas on-chain son jurídicamente ineficaces para transmitir el
+                                    dominio. El inversor cree comprar una casa, pero en realidad solo obtiene un derecho
+                                    personal de crédito, lo cual es sumamente riesgoso.</p>
+                            </div>
+                        </div>
                     </aside>
                 </section>
             </section>
@@ -65,17 +125,36 @@
                         </li>
                         <li class="fragment"><strong>Riesgos Críticos:</strong>
                             <ul>
-                                <li><strong>Asimetría Informativa:</strong> Inversores que no comprenden el código (Ej. Solidity).</li>
+                                <li><strong>Asimetría Informativa:</strong> Inversores que no comprenden el código (Ej.
+                                    Solidity).</li>
                                 <li><strong>Lavado de Activos:</strong> Evasión de la UIF mediante pseudonimato.</li>
-                                <li><strong>Fraude Sistémico:</strong> Proliferación de <em>Rug Pulls</em> (abandonos de proyectos).</li>
+                                <li><strong>Fraude Sistémico:</strong> Proliferación de <em>Rug Pulls</em> (abandonos de
+                                    proyectos).</li>
                             </ul>
                         </li>
                     </ul>
                     <aside class="notes">
-                        (2 MINUTOS) Evaluar este fenómeno requiere ver ambas caras de la moneda. 
-                        Del lado positivo, fraccionar un inmueble permite que pequeños ahorristas inviertan desde montos muy bajos, dando liquidez a un mercado históricamente estancado.
-                        Sin embargo, los riesgos son inmensos. Hay una asimetría informativa extrema: la gente no sabe leer código y confía ciegamente en el marketing tecnológico. 
-                        Además, el anonimato de la blockchain es un terreno fértil para el fraude (como los 'rug pulls'), y una ventana abierta para el lavado de activos, esquivando totalmente los controles de la UIF.
+                        <div
+                            style="display: flex; gap: 24px; align-items: flex-start; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #34495e; padding: 24px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: left;">
+                            <div style="flex: 1.1; font-size: 1.6rem; line-height: 1.6;">
+                                <p
+                                    style="margin-bottom: 16px; color: #2c3e50; font-size: 1.9rem; font-weight: bold; border-bottom: 2px solid #e74c3c; padding-bottom: 8px;">
+                                    <strong>2. Impacto Socioeconómico (3:30 – 4:30)</strong>
+                                </p>
+                                <p style="margin-bottom: 12px;"><strong style="color: #e74c3c;">(2 MINUTOS)</strong>
+                                    Evaluar este fenómeno requiere ver ambas caras de la moneda.</p>
+                                <p style="margin-bottom: 12px;">Del lado positivo, fraccionar un inmueble permite que
+                                    pequeños ahorristas inviertan desde montos muy bajos, dando liquidez a un mercado
+                                    históricamente estancado.</p>
+                                <p style="margin-bottom: 12px;">Sin embargo, los riesgos son inmensos. Hay una asimetría
+                                    informativa extrema: la gente no sabe leer código y confía ciegamente en el
+                                    marketing tecnológico.</p>
+                                <p>Además, el anonimato de la blockchain es un terreno fértil para el fraude (como los
+                                    <em>rug pulls</em>), y una ventana abierta para el lavado de activos, esquivando
+                                    totalmente los controles de la UIF.
+                                </p>
+                            </div>
+                        </div>
                     </aside>
                 </section>
             </section>
@@ -106,14 +185,34 @@
                     <h2>3. El Déficit Probatorio y Penal</h2>
                     <h4>La Caída del Mito "Code is Law"</h4>
                     <ul>
-                        <li class="fragment"><strong>Precarización Probatoria (Sede Civil):</strong> Al no contar con firma digital (ONTI), el smart contract es un <em>instrumento particular no firmado</em>.</li>
-                        <li class="fragment"><strong>Déficit de Tutela Penal:</strong> Obstáculos procesales para investigar la Estafa Informática (Art. 173 CP).</li>
-                        <li class="fragment"><strong>El Problema del Pseudonimato:</strong> El caso histórico <em>The DAO</em> demostró que el factor humano y equitativo es indispensable ante vulnerabilidades del software.</li>
+                        <li class="fragment"><strong>Precarización Probatoria (Sede Civil):</strong> Al no contar con
+                            firma digital (ONTI), el smart contract es un <em>instrumento particular no firmado</em>.
+                        </li>
+                        <li class="fragment"><strong>Déficit de Tutela Penal:</strong> Obstáculos procesales para
+                            investigar la Estafa Informática (Art. 173 CP).</li>
+                        <li class="fragment"><strong>El Problema del Pseudonimato:</strong> El caso histórico <em>The
+                                DAO</em> demostró que el factor humano y equitativo es indispensable ante
+                            vulnerabilidades del software.</li>
                     </ul>
                     <aside class="notes">
-                        (2 MINUTOS) Cuando los contratos fallan, el mito de "el código es la ley" se derrumba, como vimos en el histórico hackeo de The DAO en 2016.
-                        En la justicia civil argentina, probar una falla es un calvario: la firma criptográfica es solo firma electrónica, por lo que el contrato es un documento "no firmado".
-                        En la justicia penal, si hay una estafa informática, el gran problema es el pseudonimato. Es muy fácil tipificar el delito, pero casi imposible identificar al delincuente detrás de una dirección alfanumérica sin la cooperación de exchanges. Esto deja a las víctimas completamente desamparadas.
+                        <div
+                            style="display: flex; gap: 24px; align-items: flex-start; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #34495e; padding: 24px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: left;">
+                            <div style="flex: 1.1; font-size: 1.6rem; line-height: 1.6;">
+                                <p
+                                    style="margin-bottom: 16px; color: #2c3e50; font-size: 1.9rem; font-weight: bold; border-bottom: 2px solid #e74c3c; padding-bottom: 8px;">
+                                    <strong>3. Déficit Probatorio y Penal (4:30 – 6:30)</strong>
+                                </p>
+                                <p style="margin-bottom: 12px;"><strong style="color: #e74c3c;">(2 MINUTOS)</strong>
+                                    Cuando los contratos fallan, el mito de "el código es la ley" se derrumba, como
+                                    vimos en el histórico hackeo de The DAO en 2016.</p>
+                                <p style="margin-bottom: 12px;">En la justicia civil argentina, la firma criptográfica
+                                    es firma electrónica, por lo que el contrato es un <em>instrumento particular no
+                                        firmado</em> (Art. 287).</p>
+                                <p>En la justicia penal, si hay una estafa informática (Art. 173 CP), el gran problema
+                                    es el pseudonimato. Es casi imposible identificar al delincuente detrás de una
+                                    dirección sin la cooperación de exchanges.</p>
+                            </div>
+                        </div>
                     </aside>
                 </section>
             </section>
@@ -124,17 +223,36 @@
                     <h2>4. Propuesta Híbrida Institucional</h2>
                     <h4>Amalgamando Tecnología y Estado</h4>
                     <ul>
-                        <li class="fragment"><strong>Oráculos Notariales:</strong> Escribanos certificando el consentimiento y la legalidad, inyectando esa validez como <em>dato</em> en la blockchain.</li>
-                        <li class="fragment"><strong>Registro Digital (Dominio-NFT):</strong> El Estado emitiendo un NFT oficial que represente el verdadero derecho real de dominio.</li>
-                        <li class="fragment"><strong>Wallets Homologadas:</strong> Identidad digital soberana (Renaper / Mi Argentina) vinculada a las billeteras patrimoniales.</li>
-                        <li class="fragment"><strong>Reflexión Final:</strong> Eficiencia tecnológica protegida por las garantías constitucionales argentinas.</li>
+                        <li class="fragment"><strong>Oráculos Notariales:</strong> Escribanos certificando el
+                            consentimiento y la legalidad, inyectando esa validez como <em>dato</em> en la blockchain.
+                        </li>
+                        <li class="fragment"><strong>Registro Digital (Dominio-NFT):</strong> El Estado emitiendo un NFT
+                            oficial que represente el verdadero derecho real de dominio.</li>
+                        <li class="fragment"><strong>Wallets Homologadas:</strong> Identidad digital soberana (Renaper /
+                            Mi Argentina) vinculada a las billeteras patrimoniales.</li>
+                        <li class="fragment"><strong>Reflexión Final:</strong> Eficiencia tecnológica protegida por las
+                            garantías constitucionales argentinas.</li>
                     </ul>
                     <aside class="notes">
-                        (2 MINUTOS) Para concluir, la tesina propone un modelo institucional híbrido, que no prohíba la innovación pero asegure el orden público.
-                        Primero, transformar al escribano en un "oráculo notarial" que verifique la legalidad en el mundo físico antes de que el contrato ejecute fondos.
-                        Segundo, que los Registros de la Propiedad emitan NFTs oficiales, asegurando el título real.
-                        Y tercero, exigir que las billeteras virtuales operen vinculadas a la identidad digital del Renaper.
-                        De esta forma eliminamos el anonimato fraudulento y unimos la eficiencia de la Web3 con la indispensable seguridad jurídica de la Argentina. Muchas gracias.
+                        <div
+                            style="display: flex; gap: 24px; align-items: flex-start; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #34495e; padding: 24px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: left;">
+                            <div style="flex: 1.1; font-size: 1.6rem; line-height: 1.6;">
+                                <p
+                                    style="margin-bottom: 16px; color: #2c3e50; font-size: 1.9rem; font-weight: bold; border-bottom: 2px solid #e74c3c; padding-bottom: 8px;">
+                                    <strong>4. Propuesta Híbrida (6:30 – 8:30)</strong>
+                                </p>
+                                <p style="margin-bottom: 12px;"><strong style="color: #e74c3c;">(2 MINUTOS)</strong>
+                                    Para concluir, la tesina propone un modelo institucional híbrido, que no prohíba la
+                                    innovación pero asegure el orden público.</p>
+                                <p style="margin-bottom: 8px;"><strong style="color: #2c3e50;">1. Oráculos
+                                        Notariales:</strong> Escribano certifica validez e inyecta su Firma Digital como
+                                    entrada a la blockchain.</p>
+                                <p style="margin-bottom: 8px;"><strong style="color: #2c3e50;">2. Dominio-NFT:</strong>
+                                    Registro de Propiedad emite NFT oficial de dominio oponible.</p>
+                                <p><strong style="color: #2c3e50;">3. Wallets Homologadas:</strong> Vincular clave
+                                    pública al DNI (Renaper) para Firma Digital plena.</p>
+                            </div>
+                        </div>
                     </aside>
                 </section>
             </section>
@@ -148,7 +266,16 @@
                     <span style="font-size: 0.9em; color: #34495e;">Maestría en Ciberdefensa - FIE</span>
                 </p>
                 <aside class="notes">
-                    Muchas gracias por su atención y tiempo.
+                    <div
+                        style="display: flex; gap: 24px; align-items: flex-start; font-family: system-ui, -apple-system, sans-serif; background: #ffffff; color: #34495e; padding: 24px; border-radius: 8px; border: 1px solid #cbd5e1; box-shadow: 0 4px 20px rgba(0,0,0,0.08); text-align: left;">
+                        <div style="flex: 1.1; font-size: 1.6rem; line-height: 1.6;">
+                            <p
+                                style="margin-bottom: 16px; color: #2c3e50; font-size: 1.9rem; font-weight: bold; border-bottom: 2px solid #e74c3c; padding-bottom: 8px;">
+                                <strong>Cierre (8:30+)</strong>
+                            </p>
+                            <p>Muchas gracias por su atención y tiempo. Abierto a preguntas del tribunal.</p>
+                        </div>
+                    </div>
                 </aside>
             </section>
 
@@ -165,8 +292,9 @@
             progress: true,
             center: true,
             transition: 'fade', // Estilo más académico
-            plugins: [ RevealNotes ]
+            plugins: [RevealNotes]
         });
     </script>
 </body>
+
 </html>
