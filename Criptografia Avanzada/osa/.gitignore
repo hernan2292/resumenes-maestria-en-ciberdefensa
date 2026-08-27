@@ -1,0 +1,19 @@
+# Secretos / config local — nunca versionar
+.env
+server/.env.dev
+
+# Node
+client/node_modules
+client/dist
+client/dist-ssr
+*.local
+
+# Go
+server/osa-api
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.log

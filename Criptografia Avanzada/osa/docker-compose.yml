@@ -1,0 +1,47 @@
+name: osa
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-osa_app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?falta POSTGRES_PASSWORD en .env (ver .env.example)}
+      POSTGRES_DB: ${POSTGRES_DB:-osa_dev}
+    volumes:
+      - osa_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-osa_app} -d ${POSTGRES_DB:-osa_dev}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: ./server
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER:-osa_app}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-osa_dev}?sslmode=disable
+      LISTEN_ADDR: 0.0.0.0:8080
+      JWT_SIGNING_KEY: ${JWT_SIGNING_KEY:?falta JWT_SIGNING_KEY en .env (mínimo 32 caracteres, ver .env.example)}
+      TOTP_ENCRYPTION_KEY: ${TOTP_ENCRYPTION_KEY:?falta TOTP_ENCRYPTION_KEY en .env (exactamente 32 bytes, ver .env.example)}
+      ENVIRONMENT: ${ENVIRONMENT:-development}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:5173}
+      AUDIT_IP_TRUNCATE: ${AUDIT_IP_TRUNCATE:-true}
+      RATE_LIMIT_LOGIN_PER_MINUTE: ${RATE_LIMIT_LOGIN_PER_MINUTE:-10}
+    ports:
+      - "${API_PORT:-8080}:8080"
+
+  client:
+    build:
+      context: ./client
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080}
+    depends_on:
+      - api
+    ports:
+      - "${CLIENT_PORT:-5173}:80"
+
+volumes:
+  osa_postgres_data:
