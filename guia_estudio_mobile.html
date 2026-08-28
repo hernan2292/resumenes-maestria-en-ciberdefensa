@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0e17">
+  <title>Senior Backend & Web3 - Entrevista & Casos Prácticos</title>
+  <style>
+    :root {
+      --bg-primary: #0a0e17;
+      --bg-surface: #111726;
+      --bg-card: #182234;
+      --bg-card-hover: #1f2c44;
+      --accent-cyan: #00f2fe;
+      --accent-blue: #3b82f6;
+      --accent-purple: #8b5cf6;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #f43f5e;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-highlight: rgba(0, 242, 254, 0.25);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-glow: 0 4px 20px rgba(0, 242, 254, 0.15);
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      line-height: 1.5;
+      padding-bottom: 84px;
+      max-width: 640px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header & Progress Bar */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 14, 23, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 12px 16px;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .app-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .streak-badge {
+      background: rgba(245, 158, 11, 0.15);
+      color: var(--accent-amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .progress-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-bar-bg {
+      flex: 1;
+      height: 10px;
+      background: var(--bg-surface);
+      border-radius: 5px;
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-emerald));
+      border-radius: 5px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-text {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--accent-emerald);
+      min-width: 40px;
+      text-align: right;
+    }
+
+    /* Search Bar */
+    .search-wrapper {
+      padding: 10px 16px 4px 16px;
+    }
+    .search-input-box {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 10px 14px 10px 38px;
+      color: var(--text-main);
+      font-size: 0.88rem;
+      outline: none;
+      transition: border-color 0.2s;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2394a3b8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: 12px center;
+      background-size: 18px;
+    }
+    .search-input-box:focus {
+      border-color: var(--accent-cyan);
+    }
+
+    /* Main Container & Tabs */
+    main {
+      flex: 1;
+      padding: 12px 16px;
+    }
+
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.25s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 640px;
+      background: rgba(17, 23, 38, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-around;
+      padding: 8px 0;
+      z-index: 1000;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 20%;
+      gap: 3px;
+      transition: color 0.2s;
+    }
+
+    .nav-item svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      transition: transform 0.2s;
+    }
+
+    .nav-item.active {
+      color: var(--accent-cyan);
+    }
+    .nav-item.active svg {
+      transform: translateY(-2px);
+    }
+
+    /* Components Styling */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tag-go { background: rgba(0, 242, 254, 0.15); color: var(--accent-cyan); border: 1px solid rgba(0, 242, 254, 0.3); }
+    .tag-ts { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); border: 1px solid rgba(59, 130, 246, 0.3); }
+    .tag-eda { background: rgba(139, 92, 246, 0.15); color: var(--accent-purple); border: 1px solid rgba(139, 92, 246, 0.3); }
+    .tag-cloud { background: rgba(245, 158, 11, 0.15); color: var(--accent-amber); border: 1px solid rgba(245, 158, 11, 0.3); }
+    .tag-db { background: rgba(16, 185, 129, 0.15); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.3); }
+    .tag-web3 { background: rgba(244, 63, 94, 0.15); color: var(--accent-rose); border: 1px solid rgba(244, 63, 94, 0.3); }
+
+    /* Accordion & Modules */
+    .module-item {
+      margin-bottom: 12px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+    }
+    .module-trigger {
+      width: 100%;
+      padding: 14px 16px;
+      background: var(--bg-card);
+      border: none;
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .module-trigger span {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .module-content {
+      display: none;
+      padding: 14px 16px;
+      border-top: 1px solid var(--border-subtle);
+      background: var(--bg-surface);
+    }
+    .module-content.open {
+      display: block;
+    }
+
+    .topic-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topic-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+
+    .topic-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+    }
+
+    .checkbox-custom {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    .topic-item.completed .checkbox-custom {
+      background: var(--accent-emerald);
+      border-color: var(--accent-emerald);
+    }
+    .topic-item.completed .checkbox-custom::after {
+      content: '✓';
+      color: #000;
+      font-weight: 900;
+      font-size: 13px;
+    }
+    .topic-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      flex: 1;
+    }
+    .topic-item.completed .topic-title {
+      text-decoration: line-through;
+      color: var(--text-muted);
+    }
+
+    .topic-details {
+      margin-top: 12px;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      border-top: 1px dashed var(--border-subtle);
+      padding-top: 12px;
+    }
+
+    .section-block {
+      background: rgba(13, 17, 23, 0.7);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      margin-top: 8px;
+    }
+    .section-title-practical {
+      font-weight: 800;
+      font-size: 0.82rem;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .section-title-interview {
+      font-weight: 800;
+      font-size: 0.82rem;
+      color: var(--accent-emerald);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+    .section-title-trap {
+      font-weight: 800;
+      font-size: 0.82rem;
+      color: var(--accent-rose);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+    }
+
+    .key-points {
+      margin-top: 6px;
+      padding-left: 18px;
+    }
+    .key-points li {
+      margin-bottom: 5px;
+    }
+
+    /* Roadmap Timeline */
+    .roadmap-timeline {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      padding-left: 20px;
+      margin-top: 10px;
+    }
+    .roadmap-timeline::before {
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 12px;
+      bottom: 12px;
+      width: 2px;
+      background: linear-gradient(180deg, var(--accent-cyan), var(--accent-purple), var(--accent-rose));
+    }
+    .roadmap-step {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 16px;
+    }
+    .roadmap-step::before {
+      content: '';
+      position: absolute;
+      left: -18px;
+      top: 20px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      box-shadow: 0 0 10px var(--accent-cyan);
+    }
+    .step-number {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .step-title {
+      font-size: 0.98rem;
+      font-weight: 700;
+      margin: 3px 0 6px 0;
+    }
+    .step-desc {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    /* Flashcard Component */
+    .flashcard-container {
+      perspective: 1000px;
+      margin: 16px 0;
+    }
+    .flashcard {
+      width: 100%;
+      min-height: 260px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-highlight);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      box-shadow: var(--shadow-glow);
+      transition: transform 0.3s ease;
+    }
+    .flashcard-topic {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+    }
+    .flashcard-question {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .flashcard-answer {
+      font-size: 0.88rem;
+      color: var(--accent-cyan);
+      display: none;
+      line-height: 1.6;
+      text-align: left;
+    }
+    .flashcard.flipped .flashcard-question {
+      display: none;
+    }
+    .flashcard.flipped .flashcard-answer {
+      display: block;
+    }
+    .flashcard-hint {
+      position: absolute;
+      bottom: 12px;
+      font-size: 0.75rem;
+      color: var(--text-subtle);
+    }
+    .flashcard-controls {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: var(--radius-sm);
+      border: none;
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+    .btn:active { opacity: 0.8; }
+    .btn-red { background: rgba(244, 63, 94, 0.2); color: var(--accent-rose); border: 1px solid rgba(244, 63, 94, 0.4); }
+    .btn-green { background: rgba(16, 185, 129, 0.2); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.4); }
+    .btn-primary { background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue)); color: #000; font-weight: 800; }
+
+    /* Quiz Styling */
+    .quiz-option {
+      width: 100%;
+      padding: 13px 14px;
+      margin-bottom: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-main);
+      text-align: left;
+      font-size: 0.86rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .quiz-option.correct {
+      background: rgba(16, 185, 129, 0.2);
+      border-color: var(--accent-emerald);
+      color: var(--accent-emerald);
+      font-weight: 700;
+    }
+    .quiz-option.incorrect {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: var(--accent-rose);
+      color: var(--accent-rose);
+    }
+    .quiz-explanation {
+      margin-top: 12px;
+      padding: 12px;
+      background: rgba(0, 242, 254, 0.08);
+      border-left: 3px solid var(--accent-cyan);
+      border-radius: 4px;
+      font-size: 0.83rem;
+      color: var(--text-main);
+      line-height: 1.5;
+      display: none;
+    }
+
+    /* Code Snippets & Syntax Styling */
+    pre {
+      background: #0d1117;
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      overflow-x: auto;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 0.8rem;
+      color: #e6edf3;
+      margin: 10px 0;
+      position: relative;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: var(--text-muted);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      cursor: pointer;
+    }
+    code .kw { color: #ff7b72; font-weight: bold; }
+    code .fn { color: #d2a8ff; }
+    code .str { color: #a5d6ff; }
+    code .cm { color: #8b949e; font-style: italic; }
+
+    .diagram-box {
+      background: #0d1117;
+      border: 1px dashed var(--accent-blue);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: var(--accent-cyan);
+      text-align: center;
+      margin: 8px 0;
+      white-space: pre;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header with Progress and Streak -->
+  <header>
+    <div class="header-top">
+      <div class="app-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Senior Prep & Entrevistas
+      </div>
+      <div class="streak-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 23c-4.97 0-9-4.03-9-9 0-3.66 2.19-6.81 5.35-8.23.49-.22 1.05.12 1.05.65 0 1.25.5 2.45 1.41 3.36.91.91 2.11 1.41 3.36 1.41.53 0 .87.56.65 1.05C13.81 15.4 10.66 17.6 7 17.6c-.34 0-.67-.02-1-.06.27.77.71 1.47 1.28 2.05C8.61 20.91 10.23 21.6 12 21.6c3.87 0 7-3.13 7-7 0-1.89-.75-3.6-1.97-4.86-.38-.39-.24-1.04.28-1.21C18.89 8.02 20 9.87 20 12c0 6.07-4.93 11-11 11z"/></svg>
+        Práctico & Pitfalls
+      </div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="global-progress-fill"></div>
+      </div>
+      <div class="progress-text" id="global-progress-text">0%</div>
+    </div>
+  </header>
+
+  <!-- Search Filter -->
+  <div class="search-wrapper">
+    <input type="text" id="global-search" class="search-input-box" placeholder="Buscar (ej. Goroutines, Kafka, Outbox, Redlock, ERC-4337)..." onkeyup="filterContent()">
+  </div>
+
+  <!-- Main Content Area -->
+  <main>
+
+    <!-- TAB 1: ROADMAP -->
+    <div id="tab-roadmap" class="tab-content active">
+      <div class="card" style="background: linear-gradient(135deg, rgba(0, 242, 254, 0.1), rgba(59, 130, 246, 0.05)); border-color: var(--border-highlight);">
+        <div class="card-title" style="color: var(--accent-cyan);">
+          🎯 Enfoque Práctico & Preparación para Entrevistas
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">
+          Esta guía te brinda la narrativa exacta, los trade-offs de arquitectura y la resolución de preguntas trampa para sonar como un candidato Senior seguro y experimentado.
+        </p>
+      </div>
+
+      <div class="roadmap-timeline">
+        <div class="roadmap-step">
+          <div class="step-number">Fase 1 • Fundamentos Senior</div>
+          <div class="step-title">Go Core + NestJS Enterprise + Clean Arch + gRPC</div>
+          <div class="step-desc">
+            Dominio de Concurrencia Go en producción, IoC NestJS, Arquitectura Hexagonal para desacoplamiento y serialización binaria gRPC/Protobuf.
+          </div>
+          <button class="btn btn-primary" onclick="switchTab('temario'); openModule('mod-1')">Ir a Módulos 1 & 5</button>
+        </div>
+
+        <div class="roadmap-step">
+          <div class="step-number">Fase 2 • Persistencia & Cloud</div>
+          <div class="step-title">PostgreSQL Avanzado + Redis Distribuido + AWS/Containers</div>
+          <div class="step-desc">
+            Optimización SQL, JSONB/GIN, caching atómico con Redlock/Rate Limiting, y despliegue cloud en AWS (ECS Fargate, Lambda, VPC).
+          </div>
+          <button class="btn btn-primary" onclick="switchTab('temario'); openModule('mod-4')">Ir a Módulos 3 & 4</button>
+        </div>
+
+        <div class="roadmap-step">
+          <div class="step-number">Fase 3 • Sistemas Distribuidos</div>
+          <div class="step-title">Event-Driven Architecture (EDA) & Observabilidad</div>
+          <div class="step-desc">
+            Streaming con Kafka vs RabbitMQ, patrones Saga/Outbox/CQRS, Idempotencia y Trazabilidad distribuida con OpenTelemetry + Jaeger.
+          </div>
+          <button class="btn btn-primary" onclick="switchTab('temario'); openModule('mod-2')">Ir a Módulo 2</button>
+        </div>
+
+        <div class="roadmap-step">
+          <div class="step-number">Fase 4 • Especialización Web3</div>
+          <div class="step-title">Solidity/Foundry + Backend Blockchain (go-ethereum/Viem)</div>
+          <div class="step-desc">
+            Fuzz testing con Foundry, listeners WebSockets en Go con `go-ethereum`, indexación con The Graph y patrones de seguridad (Reentrancy, ERC-4337).
+          </div>
+          <button class="btn btn-primary" onclick="switchTab('temario'); openModule('mod-6')">Ir a Módulo 6</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: TEMARIO / MÓDULOS -->
+    <div id="tab-temario" class="tab-content">
+
+      <!-- MÓDULO 1: GO & TYPESCRIPT/NESTJS -->
+      <div class="module-item" id="mod-1">
+        <button class="module-trigger" onclick="toggleAccordion('mod-1')">
+          <span><span class="tag tag-go">1</span> Go & TypeScript/NestJS Empresarial</span>
+          <small>▼</small>
+        </button>
+        <div class="module-content">
+          <ul class="topic-list">
+
+            <!-- Topic 1.1 -->
+            <li class="topic-item" data-id="go-concurrency">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">Concurrencia Avanzada en Go (Goroutines, Channels, Mutex)</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  Procesamiento en paralelo de lotes de pagos o scrapers concurrentes. Por ejemplo, llamar a 5 pasarelas de pago externas simultáneamente (Stripe, PayPal, MercadoPago) esperando la respuesta más rápida o consolidando resultados antes de un timeout global.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "En Go la concurrencia no usa hilos del SO por petición, sino el <strong>scheduler M:N</strong> del runtime. Las goroutines pesan solo ~2KB inicialmente. Aplico el principio CSP: <i>'No comuniques compartiendo memoria, comparte memoria comunicándote'</i> mediante canales. Cuando requiero exclusión mutua en estructuras compartidas utilizo <code>sync.RWMutex</code> o operaciones atómicas para evitar contention overhead."
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-trap">⚠️ Preguntas Trampa & Pitfalls</div>
+                  <ul>
+                    <li><strong>¿Qué pasa si envías datos a un canal cerrado?</strong> Lanza un <code>panic</code> fatal inmediatamente.</li>
+                    <li><strong>¿Y si lees de un canal cerrado?</strong> Devuelve el valor cero del tipo y <code>ok = false</code> sin bloquear.</li>
+                    <li><strong>¿Cómo evitas Goroutine Leaks?</strong> Pasando un <code>context.Context</code> con timeout o canal de cancelación para que la goroutine no quede bloqueada eternamente en un I/O.</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+
+            <!-- Topic 1.2 -->
+            <li class="topic-item" data-id="go-standards">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">Ecosistema Go & Estándares (net/http, context, pgx, error handling)</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  Microservicio HTTP con cancelación en cascada. Si un cliente aborta la llamada HTTP desde la app móvil, el <code>context.Context</code> cancela de inmediato la consulta SQL en ejecución en PostgreSQL (driver <code>pgx</code>) y la petición a Redis, liberando conexiones del pool al instante.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "Estructuro proyectos bajo la convención estándar (<code>cmd/</code> para entradas, <code>internal/</code> para lógica de dominio encapsulada). Para manejar errores utilizo wrapping idiomático con <code>fmt.Errorf("...: %w", err)</code>, lo que permite evaluar errores específicos con <code>errors.Is()</code> o extraer tipos de error con <code>errors.As()</code> sin perder el stack trace."
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-trap">⚠️ Preguntas Trampa & Pitfalls</div>
+                  <ul>
+                    <li><strong>¿Por qué usar <code>pgx</code> sobre <code>database/sql</code> tradicional?</strong> <code>pgx</code> soporta tipos nativos de Postgres (JSONB, Arrays), Binary Protocol directo (mayor velocidad) y pipelines de queries sin pasar por la capa de abstracción genérica de Go.</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+
+            <!-- Topic 1.3 -->
+            <li class="topic-item" data-id="ts-nestjs">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">TypeScript & NestJS Empresarial (IoC, Guards, Interceptors)</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  Arquitectura backend SaaS multi-tenant donde los permisos (Guards RBAC) y el formateo de respuestas de auditoría (Interceptors) se aplican de forma declarativa mediante decoradores sin ensuciar los controladores.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "NestJS provee un contenedor IoC de inyección de dependencias robusto. Organizo por Módulos desacoplados. La ejecución del ciclo de vida del request sigue un orden estricto: Middleware -> Guards (para Auth/Roles) -> Interceptors (Pre-request) -> Pipes (validación DTO con <code>class-validator</code>) -> Handler -> Interceptors (Post-request) -> Exception Filters."
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-trap">⚠️ Preguntas Trampa & Pitfalls</div>
+                  <ul>
+                    <li><strong>¿Cuál es el peligro de usar Scope.REQUEST en los providers de NestJS?</strong> Cada petición HTTP creará una nueva instancia de la clase, destruyendo el patrón Singleton por defecto y reduciendo drásticamente el rendimiento bajo alto tráfico. Usa Singleton siempre que sea posible.</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+      <!-- MÓDULO 2: EVENT-DRIVEN & MENSAJERÍA DISTRIBUIDA -->
+      <div class="module-item" id="mod-2">
+        <button class="module-trigger" onclick="toggleAccordion('mod-2')">
+          <span><span class="tag tag-eda">2</span> Event-Driven & Arquitectura Distribución</span>
+          <small>▼</small>
+        </button>
+        <div class="module-content">
+          <ul class="topic-list">
+
+            <!-- Topic 2.1 -->
+            <li class="topic-item" data-id="eda-kafka-rabbitmq">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">Kafka, RabbitMQ & AWS SQS/SNS</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  <strong>Kafka:</strong> Ingesta de métricas y tracking GPS de repartidores en tiempo real (Uber/PedidosYa) o stream de órdenes de compra (MercadoLibre).<br>
+                  <strong>RabbitMQ:</strong> Colas de tareas asincrónicas individuales (generación de facturas PDF, envío de correos).<br>
+                  <strong>AWS SNS+SQS:</strong> Arquitectura Fan-Out serverless. Cuando se registra un usuario, SNS publica un evento y 3 colas SQS distintas lo procesan de manera independiente.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "Kafka no es solo un message broker, es un <strong>distributed commit log</strong> ordenado por particiones donde el mensaje persiste en disco y los consumidores manejan su propio offset. RabbitMQ es un broker AMQP tradicional orientado al ciclo de vida del mensaje (se elimina tras el ACK del consumidor)."
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-trap">⚠️ Preguntas Trampa & Pitfalls</div>
+                  <ul>
+                    <li><strong>¿Cómo garantizas orden de mensajes en Kafka?</strong> El orden solo se garantiza dentro de la <strong>misma partición</strong>. Para ordenar por usuario/orden, debes usar una <code>Partition Key</code> consistente (ej. <code>user_id</code>).</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+
+            <!-- Topic 2.2 -->
+            <li class="topic-item" data-id="eda-patterns">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">Patrones Distribuidos (Saga, Transactional Outbox, CQRS)</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  <strong>Saga Orchestration:</strong> Proceso de pago en e-commerce (Reservar Stock -> Cobrar Tarjeta -> Crear Envío). Si el cobro falla, el Orquestador ejecuta transacciones de compensación para liberar el stock previamente reservado.<br>
+                  <strong>Outbox Pattern:</strong> Evitar la falla 'Dual Write' escribiendo el registro en la DB y la tabla `outbox` en la misma transacción SQL local.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "En arquitecturas de microservicios evitamos transacciones distribuidas 2PC por temas de bloqueo. Implementamos <strong>Sagas</strong> con transacciones de compensación. Para resolver la inconsistencia entre guardar en la DB y publicar en el Broker, aplicamos el <strong>Transactional Outbox Pattern</strong> combinado con CDC (Debezium) o un polling worker."
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-trap">⚠️ Preguntas Trampa & Pitfalls</div>
+                  <ul>
+                    <li><strong>¿Por qué el consumidor DEBE ser idempotente?</strong> Porque en sistemas distribuidos la garantía de entrega es <i>At-Least-Once</i> (al menos una vez). Si la red falla durante el ACK, el mensaje se procesará dos veces. Debes usar una tabla de deduplicación con el <code>message_id</code>.</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+      <!-- MÓDULO 3: CLOUD-NATIVE & DEVOPS -->
+      <div class="module-item" id="mod-3">
+        <button class="module-trigger" onclick="toggleAccordion('mod-3')">
+          <span><span class="tag tag-cloud">3</span> Infraestructura Cloud-Native & DevOps</span>
+          <small>▼</small>
+        </button>
+        <div class="module-content">
+          <ul class="topic-list">
+
+            <!-- Topic 3.1 -->
+            <li class="topic-item" data-id="cloud-aws">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">Servicios AWS (ECS Fargate vs EC2, Lambda, IAM, VPC)</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  Despliegue de microservicios Go en AWS ECS Fargate corriendo dentro de subredes privadas de una VPC, comunicándose con PostgreSQL RDS a través de Security Groups estrictos y asumiendo un IAM Role específico para leer secretos desde AWS Secrets Manager.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "Prefiero ECS Fargate para microservicios persistentes de alto tráfico porque elimina la sobrecarga operativa de parchear y escalar nodos EC2. Aplico el principio de <strong>Least Privilege</strong> en IAM mediante Task Roles específicas para cada contenedor."
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-trap">⚠️ Preguntas Trampa & Pitfalls</div>
+                  <ul>
+                    <li><strong>Diferencia entre Security Groups y NACLs en AWS:</strong> Security Groups son stateful (se aplican a nivel ENI/instancia); NACLs son stateless (se aplican a nivel de Subnet).</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+
+            <!-- Topic 3.2 -->
+            <li class="topic-item" data-id="cloud-k8s-observability">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">Kubernetes, API Gateways & Trazabilidad (OpenTelemetry/Jaeger)</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  Un usuario hace click en 'Comprar'. La petición entra por Kong API Gateway, valida el JWT y la reenvía a Kubernetes. OpenTelemetry inyecta un encabezado <code>traceparent</code> HTTP para seguir la traza completa a través de 5 microservicios en Jaeger UI, identificando si la latencia viene del servicio de inventario o de la base de datos.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "La observabilidad moderna se apoya en los 3 pilares: Métricas (Prometheus/Grafana), Logs estructurados (JSON a ELK/Datadog) y Trazas Distribuidas (OpenTelemetry + Jaeger). La trazabilidad contextualizada por <code>TraceID</code> y <code>SpanID</code> es imprescindible para hacer post-mortems en arquitecturas de microservicios."
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+      <!-- MÓDULO 4: BASES DE DATOS AVANZADAS & CACHÉ -->
+      <div class="module-item" id="mod-4">
+        <button class="module-trigger" onclick="toggleAccordion('mod-4')">
+          <span><span class="tag tag-db">4</span> Bases de Datos Avanzadas & Caché</span>
+          <small>▼</small>
+        </button>
+        <div class="module-content">
+          <ul class="topic-list">
+
+            <!-- Topic 4.1 -->
+            <li class="topic-item" data-id="db-redis">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">Redis Avanzado (Rate Limiting, Redlock, Distributed Lock)</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  <strong>CyberMonday / Flash Sales:</strong> 100,000 usuarios intentan comprar los últimos 10 tickets. Usar un **Distributed Lock (Redlock)** o un script Lua en Redis previene que dos transacciones concurrentes vendan el mismo ticket (previene sobre-venta por race condition).
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "Redis corre en un solo hilo de ejecución para operaciones de datos, lo que garantiza atomicidad nativa. Para patrones complejos como Rate Limiting o Distributed Locks utilizo <strong>Scripts Lua</strong> ejecutados directamente en Redis. Esto evita viajes de red adicionales y previene condiciones de carrera."
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-trap">⚠️ Preguntas Trampa & Pitfalls</div>
+                  <ul>
+                    <li><strong>¿Qué es el problema del Cache Stampede / Thundering Herd?</strong> Ocurre cuando una clave de caché de alto tráfico expira y miles de peticiones simultáneas golpean la base de datos a la vez. Se soluciona con Mutex de Caché o Refresh Probabilístico (Early Expiration).</li>
+                  </ul>
+                </div>
+              </div>
+            </li>
+
+            <!-- Topic 4.2 -->
+            <li class="topic-item" data-id="db-postgres-nosql">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">PostgreSQL Avanzado (JSONB/GIN, Particionamiento) & NoSQL</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  <strong>Postgres JSONB + GIN:</strong> Almacenar metadatos dinámicos e hiper-personalizables de productos manteniendo la capacidad de indexar e indexar búsquedas internas.<br>
+                  <strong>ClickHouse:</strong> Almacenamiento analítico columnar de logs masivos e historial de eventos para consultar miles de millones de filas en milisegundos.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "Para datos semi-estructurados en Postgres utilizo `JSONB` indexado con un índice `GIN`, logrando rendimiento cercano a MongoDB sin perder las garantías ACID relacionales. En tablas masivas de auditoría con millones de registros aplico **Table Partitioning** por rango de fechas para acelerar queries y facilitar la purga de datos."
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+      <!-- MÓDULO 5: DISEÑO Y COMUNICACIÓN -->
+      <div class="module-item" id="mod-5">
+        <button class="module-trigger" onclick="toggleAccordion('mod-5')">
+          <span><span class="tag tag-go">5</span> Arquitectura Hexagonal, DDD & gRPC</span>
+          <small>▼</small>
+        </button>
+        <div class="module-content">
+          <ul class="topic-list">
+
+            <!-- Topic 5.1 -->
+            <li class="topic-item" data-id="design-hexagonal-ddd">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">Arquitectura Hexagonal (Ports & Adapters) & DDD</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  Poder reemplazar PostgreSQL por MongoDB o migrar el transporte de HTTP REST a gRPC sin modificar una sola línea de la lógica del Dominio de Negocio, únicamente implementando una nueva clase o struct Adapter.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "Arquitectura Hexagonal aísla las reglas de negocio en el núcleo. El Dominio define <strong>Ports</strong> (interfaces) para la entrada y salida. La infraestructura (HTTP, SQL, Kafka) son <strong>Adapters</strong> externos. Esto garantiza testabilidad unitaria total sin levantar bases de datos."
+                </div>
+              </div>
+            </li>
+
+            <!-- Topic 5.2 -->
+            <li class="topic-item" data-id="design-grpc-openapi">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">gRPC / Protocol Buffers & Contract-First</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  Comunicación interna de baja latencia entre microservicios backend en Go. Reduce el uso de ancho de banda hasta un 60% comparado con REST/JSON gracias al empaquetado binario Protobuf sobre HTTP/2.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "En comunicación inter-servicios adoptamos **Contract-First** definiendo archivos `.proto` o especificaciones OpenAPI antes de escribir código. gRPC utiliza tipos estrictos compilados y transporte HTTP/2 multiplexado."
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+      <!-- MÓDULO 6: WEB3 & EVM -->
+      <div class="module-item" id="mod-6">
+        <button class="module-trigger" onclick="toggleAccordion('mod-6')">
+          <span><span class="tag tag-web3">6</span> Web3, Ethereum (EVM) & Smart Contracts</span>
+          <small>▼</small>
+        </button>
+        <div class="module-content">
+          <ul class="topic-list">
+
+            <!-- Topic 6.1 -->
+            <li class="topic-item" data-id="web3-foundry">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">Foundry (Forge, Cast, Anvil) vs Hardhat</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  Testing de contratos inteligentes DeFi en Solidity con <strong>Fuzz Testing</strong> (generación masiva de parámetros de entrada aleatorios) y Mainnet Forking para validar interacciones reales con Uniswap/Aave en segundos.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "Foundry es el estándar moderno en Rust para el desarrollo EVM. Permite escribir tests directamente en Solidity en lugar de JS/TS, alcanzando una velocidad de ejecución hasta 10 veces mayor y ofreciendo Fuzzing nativo con `vm.assume()`."
+                </div>
+              </div>
+            </li>
+
+            <!-- Topic 6.2 -->
+            <li class="topic-item" data-id="web3-backend-integration">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">Integración Backend <-> EVM (go-ethereum & Viem)</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  Servicio Backend Go (`go-ethereum`) suscrito a WebSockets de la red Ethereum para escuchar el evento `Transfer` de un contrato inteligente y acreditar el saldo en la base de datos relacional del usuario en tiempo real.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "Con `go-ethereum` utilizo `abigen` para generar bindings Go fuertemente tipados a partir del ABI del contrato. Firmo transacciones de forma segura offline con llaves ECDSA y utilizo **The Graph (Subgraphs)** para consultar datos históricos mediante GraphQL."
+                </div>
+              </div>
+            </li>
+
+            <!-- Topic 6.3 -->
+            <li class="topic-item" data-id="web3-security-erc">
+              <div class="topic-header" onclick="toggleTopic(this)">
+                <div class="checkbox-custom"></div>
+                <div class="topic-title">Seguridad Smart Contracts & ERC-4337 (Account Abstraction)</div>
+              </div>
+              <div class="topic-details" style="display:none;">
+                <div class="section-block">
+                  <div class="section-title-practical">🏭 Caso de Uso Práctico en Producción</div>
+                  <strong>Reentrancy Protection:</strong> Proteger funciones de retiro en Smart Contracts usando `ReentrancyGuard` o Checks-Effects-Interactions.<br>
+                  <strong>ERC-4337:</strong> Permitir transacciones Gasless (pagadas por sponsor/Paymaster) y login social en dApps.
+                </div>
+
+                <div class="section-block">
+                  <div class="section-title-interview">🎙️ Cómo Explicarlo en la Entrevista Senior</div>
+                  "El ataque de Reentrancy ocurre cuando un contrato malicioso vuelve a llamar a la función de retiro antes de que el estado interno actualice el balance. Se soluciona aplicando el patrón <strong>Checks-Effects-Interactions</strong>. En UX Web3, **ERC-4337** introduce Account Abstraction permitiendo UserOperations procesadas por Bundlers sin alterar la capa de consenso EVM."
+                </div>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- TAB 3: FLASHCARDS -->
+    <div id="tab-flashcards" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Tarjeta <span id="fc-index">1</span> de <span id="fc-total">10</span></span>
+        <button class="btn btn-primary" style="padding: 4px 12px; font-size: 0.75rem; width: auto;" onclick="resetFlashcards()">Reiniciar</button>
+      </div>
+
+      <div class="flashcard-container">
+        <div class="flashcard" id="flashcard-element" onclick="flipFlashcard()">
+          <div class="flashcard-topic"><span class="tag tag-go" id="fc-tag">GO CONCURRENCY</span></div>
+          <div class="flashcard-question" id="fc-question">¿Cuál es la diferencia entre un Buffered Channel y un Unbuffered Channel en Go?</div>
+          <div class="flashcard-answer" id="fc-answer">
+            Un <strong>Unbuffered Channel</strong> requiere que tanto el sender como el receiver estén listos simultáneamente (bloqueante/sincrónico).<br><br>
+            Un <strong>Buffered Channel</strong> permite enviar mensajes sin bloquear hasta llenar la capacidad especificada del buffer.
+          </div>
+          <div class="flashcard-hint">💡 Toca la tarjeta para ver la respuesta</div>
+        </div>
+      </div>
+
+      <div class="flashcard-controls">
+        <button class="btn btn-red" onclick="nextFlashcard(false)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          Repasar
+        </button>
+        <button class="btn btn-green" onclick="nextFlashcard(true)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>
+          ¡Lo Dominé!
+        </button>
+      </div>
+    </div>
+
+    <!-- TAB 4: QUIZ INTERACTIVO -->
+    <div id="tab-quiz" class="tab-content">
+      <div class="card" id="quiz-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <span class="tag tag-eda" id="quiz-tag">EVENT-DRIVEN ARCHITECTURE</span>
+          <span style="font-size: 0.8rem; color: var(--accent-amber); font-weight: 700;">Score: <span id="quiz-score">0</span></span>
+        </div>
+        <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 14px;" id="quiz-question">
+          ¿Qué patrón garantiza la consistencia atómica entre la modificación de una base de datos relacional y la publicación de un evento a Kafka?
+        </div>
+        <div id="quiz-options">
+          <button class="quiz-option" onclick="checkAnswer(this, 0)">A) CQRS Pattern</button>
+          <button class="quiz-option" onclick="checkAnswer(this, 1)">B) Transactional Outbox Pattern</button>
+          <button class="quiz-option" onclick="checkAnswer(this, 2)">C) Saga Orchestration</button>
+          <button class="quiz-option" onclick="checkAnswer(this, 3)">D) Two-Phase Commit (2PC)</button>
+        </div>
+        <div class="quiz-explanation" id="quiz-explanation">
+          <strong>¡Correcto!</strong> El Transactional Outbox Pattern guarda el evento en una tabla `outbox` en la misma transacción de la base de datos y un proceso en segundo plano (o CDC como Debezium) lee y publica los eventos al Broker de forma confiable.
+        </div>
+        <button class="btn btn-primary" style="margin-top: 14px; width: 100%; display: none;" id="quiz-next-btn" onclick="loadNextQuizQuestion()">Siguiente Pregunta →</button>
+      </div>
+    </div>
+
+    <!-- TAB 5: CHEAT SHEET & SNIPPETS -->
+    <div id="tab-code" class="tab-content">
+      <div class="card-title" style="margin-bottom: 12px; color: var(--accent-cyan);">
+        ⚡ Snippets de Código Senior
+      </div>
+
+      <!-- Snippet 1: Go Concurrency Worker Pool -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title"><span class="tag tag-go">GO</span> Worker Pool + Context Timeout</span>
+        </div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copiar</button><code><span class="kw">package</span> main
+
+<span class="kw">import</span> (
+    <span class="str">"context"</span>
+    <span class="str">"fmt"</span>
+    <span class="str">"sync"</span>
+    <span class="str">"time"</span>
+)
+
+<span class="kw">func</span> worker(ctx <span class="kw">context.Context</span>, id <span class="kw">int</span>, jobs &lt;-<span class="kw">chan int</span>, results <span class="kw">chan</span>&lt;- <span class="kw">int</span>, wg *<span class="kw">sync.WaitGroup</span>) {
+    <span class="kw">defer</span> wg.Done()
+    <span class="kw">for</span> job := <span class="kw">range</span> jobs {
+        <span class="kw">select</span> {
+        <span class="kw">case</span> &lt;-ctx.Done():
+            <span class="kw">return</span>
+        <span class="kw">default</span>:
+            results &lt;- job * 2
+        }
+    }
+}</code></pre>
+      </div>
+
+      <!-- Snippet 2: Redis Rate Limiter Script (Lua) -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title"><span class="tag tag-db">REDIS</span> Rate Limiter Atómico (Lua)</span>
+        </div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copiar</button><code>-- KEYS[1]: Client IP key, ARGV[1]: Max Requests, ARGV[2]: Window Seconds
+local current = redis.call('INCR', KEYS[1])
+if current == 1 then
+    redis.call('EXPIRE', KEYS[1], ARGV[2])
+end
+if current > tonumber(ARGV[1]) then
+    return 0 -- Denegado (HTTP 429 Rate Limit Exceeded)
+end
+return 1 -- Permitido</code></pre>
+      </div>
+
+      <!-- Snippet 3: NestJS Custom Guard -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title"><span class="tag tag-ts">NESTJS</span> Custom Auth Guard & Reflector</span>
+        </div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copiar</button><code><span class="kw">import</span> { Injectable, CanActivate, ExecutionContext } <span class="kw">from</span> <span class="str">'@nestjs/common'</span>;
+<span class="kw">import</span> { Reflector } <span class="kw">from</span> <span class="str">'@nestjs/core'</span>;
+
+<span class="kw">@Injectable</span>()
+<span class="kw">export class</span> RolesGuard <span class="kw">implements</span> CanActivate {
+  <span class="kw">constructor</span>(<span class="kw">private</span> reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): <span class="kw">boolean</span> {
+    <span class="kw">const</span> requiredRoles = <span class="kw">this</span>.reflector.get&lt;<span class="kw">string</span>[]&gt;(<span class="str">'roles'</span>, context.getHandler());
+    <span class="kw">if</span> (!requiredRoles) <span class="kw">return true</span>;
+    <span class="kw">const</span> { user } = context.switchToHttp().getRequest();
+    <span class="kw">return</span> requiredRoles.some((role) => user.roles?.includes(role));
+  }
+}</code></pre>
+      </div>
+
+      <!-- Snippet 4: Foundry Test in Solidity -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title"><span class="tag tag-web3">FOUNDRY</span> Solidity Fuzz Test</span>
+        </div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copiar</button><code><span class="kw">pragma solidity</span> ^0.8.20;
+<span class="kw">import</span> <span class="str">"forge-std/Test.sol"</span>;
+<span class="kw">import</span> <span class="str">"../src/Vault.sol"</span>;
+
+<span class="kw">contract</span> VaultTest <span class="kw">is</span> Test {
+    Vault vault;
+    <span class="kw">function</span> setUp() <span class="kw">public</span> {
+        vault = <span class="kw">new</span> Vault();
+    }
+
+    <span class="kw">function</span> testFuzz_Deposit(<span class="kw">uint256</span> amount) <span class="kw">public</span> {
+        vm.assume(amount > 0 && amount &lt; 10000 ether);
+        vm.deal(address(<span class="kw">this</span>), amount);
+        vault.deposit{value: amount}();
+        assertEq(vault.getBalance(address(<span class="kw">this</span>)), amount);
+    }
+}</code></pre>
+      </div>
+
+      <!-- Snippet 5: Go Ethereum Event Listener -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-title"><span class="tag tag-web3">GO-ETHEREUM</span> Listening Contract Events</span>
+        </div>
+        <pre><button class="copy-btn" onclick="copyCode(this)">Copiar</button><code><span class="kw">package</span> main
+
+<span class="kw">import</span> (
+    <span class="str">"context"</span>
+    <span class="str">"fmt"</span>
+    <span class="str">"github.com/ethereum/go-ethereum"</span>
+    <span class="str">"github.com/ethereum/go-ethereum/common"</span>
+    <span class="str">"github.com/ethereum/go-ethereum/ethclient"</span>
+)
+
+<span class="kw">func</span> main() {
+    client, _ := ethclient.Dial(<span class="str">"wss://eth-mainnet.g.alchemy.com/v2/YOUR_KEY"</span>)
+    contractAddr := common.HexToAddress(<span class="str">"0x..."</span>)
+    
+    query := ethereum.FilterQuery{ Addresses: []common.Address{contractAddr} }
+    logs := make(<span class="kw">chan</span> types.Log)
+    sub, _ := client.SubscribeFilterLogs(context.Background(), query, logs)
+
+    <span class="kw">for</span> log := <span class="kw">range</span> logs {
+        fmt.Println(<span class="str">"Nuevo evento detectado en bloque:"</span>, log.BlockNumber)
+    }
+}</code></pre>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Bottom Navigation Bar -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" onclick="switchTab('roadmap')">
+      <svg viewBox="0 0 24 24"><path d="M9 20l-5-5 5-5M15 4l5 5-5 5"/></svg>
+      Roadmap
+    </button>
+    <button class="nav-item" onclick="switchTab('temario')">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h7"/></svg>
+      Temario
+    </button>
+    <button class="nav-item" onclick="switchTab('flashcards')">
+      <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/></svg>
+      Fichas
+    </button>
+    <button class="nav-item" onclick="switchTab('quiz')">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+      Quiz
+    </button>
+    <button class="nav-item" onclick="switchTab('code')">
+      <svg viewBox="0 0 24 24"><path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/></svg>
+      Snippets
+    </button>
+  </nav>
+
+  <!-- Application Logic JavaScript -->
+  <script>
+    // State & Storage Initialization
+    let completedTopics = JSON.parse(localStorage.getItem('senior_prep_completed')) || [];
+    let currentFCIndex = 0;
+    let fcScore = 0;
+    let quizScore = 0;
+    let currentQuizIndex = 0;
+
+    const flashcardsData = [
+      {
+        tag: "GO CONCURRENCY",
+        tagClass: "tag-go",
+        q: "¿Cuál es la diferencia entre un Buffered Channel y un Unbuffered Channel en Go?",
+        a: "Un <b>Unbuffered Channel</b> requiere que tanto el sender como el receiver estén listos simultáneamente (bloqueante/sincrónico).<br><br>Un <b>Buffered Channel</b> permite enviar mensajes sin bloquear hasta llenar la capacidad especificada del buffer."
+      },
+      {
+        tag: "GO ECOSYSTEM",
+        tagClass: "tag-go",
+        q: "¿Para qué sirve context.Context en peticiones HTTP y microservicios?",
+        a: "Permite propagar señales de <b>cancelación</b>, <b>timeouts</b> y deadlines a través de goroutines y capas de servicios, evitando llamadas colgadas cuando el cliente aborta la petición."
+      },
+      {
+        tag: "NESTJS ENTERPRISE",
+        tagClass: "tag-ts",
+        q: "¿En qué orden exacto se ejecutan las capas de middleware y guardias en NestJS?",
+        a: "1. Middlewares global/modulo<br>2. Guards (Autenticación/RBAC)<br>3. Interceptors (Pre-controller)<br>4. Pipes (Validación DTO)<br>5. Controller Handler<br>6. Interceptors (Post-controller)<br>7. Exception Filters"
+      },
+      {
+        tag: "EVENT-DRIVEN",
+        tagClass: "tag-eda",
+        q: "¿Qué diferencia a Kafka de RabbitMQ en cuanto a retención y consumo de mensajes?",
+        a: "<b>Kafka</b> es un log distribuido ordenado y persistente donde los consumidores leen mediante offsets y los mensajes no se borran al consumirse.<br><br><b>RabbitMQ</b> es un broker de mensajes donde por defecto el mensaje se borra tras el ACK del consumidor."
+      },
+      {
+        tag: "PATRONES DISTRIBUIDOS",
+        tagClass: "tag-eda",
+        q: "¿Cómo resuelve el Transactional Outbox Pattern el problema de dual-write?",
+        a: "Escribe la entidad de negocio y el evento en una tabla `outbox` en la <b>misma transacción SQL local</b>. Un proceso worker/CDC lee la tabla y publica al broker sin riesgo de inconsistencia si falla la red."
+      },
+      {
+        tag: "AWS CLOUD-NATIVE",
+        tagClass: "tag-cloud",
+        q: "¿Cuál es la diferencia principal entre AWS ECS Fargate y ECS EC2?",
+        a: "En <b>ECS Fargate</b> no gestionas ni aprovisionas servidores/instancias (Serverless containers). En <b>ECS EC2</b> debes administrar y escalar las instancias EC2 del cluster."
+      },
+      {
+        tag: "REDIS AVANZADO",
+        tagClass: "tag-db",
+        q: "¿Cómo se implementa un Rate Limiter atómico en Redis evitando race conditions?",
+        a: "Ejecutando un <b>Script Lua</b> directamente dentro del servidor Redis. Al ser monohilo y atómico, no existen carreras entre la verificación del contador y el incremento."
+      },
+      {
+        tag: "POSTGRESQL",
+        tagClass: "tag-db",
+        q: "¿Cuándo se debe usar un índice GIN en lugar de un índice B-Tree en PostgreSQL?",
+        a: "El índice <b>GIN (Generalized Inverted Index)</b> es ideal para columnas con elementos compuestos o múltiples valores como datos <b>JSONB</b>, arrays y búsqueda de texto completo (Full-Text Search)."
+      },
+      {
+        tag: "HEXAGONAL ARCH",
+        tagClass: "tag-go",
+        q: "¿Cuál es la regla fundamental de las dependencias en la Arquitectura Hexagonal?",
+        a: "La <b>Lógica de Dominio (Centro)</b> nunca debe depender de elementos externos (DB, HTTP, Frameworks). Las dependencias siempre apuntan <b>hacia adentro</b> a través de Puertos (Interfaces)."
+      },
+      {
+        tag: "WEB3 & EVM",
+        tagClass: "tag-web3",
+        q: "¿En qué consiste la vulnerabilidad de Reentrancy en Smart Contracts y cómo se mitiga?",
+        a: "Ocurre cuando un contrato externo llama de vuelta a una función del contrato emisor antes de que este actualice su estado interno.<br><br>Se mitiga aplicando el patrón <b>Checks-Effects-Interactions</b> o usando modificadores <code>ReentrancyGuard</code>."
+      }
+    ];
+
+    const quizQuestions = [
+      {
+        tag: "EVENT-DRIVEN ARCHITECTURE",
+        q: "¿Qué patrón garantiza la consistencia atómica entre la modificación de una base de datos relacional y la publicación de un evento a Kafka?",
+        options: ["A) CQRS Pattern", "B) Transactional Outbox Pattern", "C) Saga Orchestration", "D) Two-Phase Commit (2PC)"],
+        correct: 1,
+        exp: "¡Correcto! El Transactional Outbox Pattern guarda el evento en una tabla `outbox` dentro de la misma transacción SQL de la base de datos, y un proceso en segundo plano (o CDC como Debezium) lee y publica los eventos al Broker de forma confiable."
+      },
+      {
+        tag: "GO CONCURRENCY",
+        q: "¿Qué sucede si varias Goroutines intentan escribir en el mismo mapa nativo (map[string]int) sin sincronización?",
+        options: ["A) Se sobrescriben valores de forma segura", "B) Go lanza un fatal error de runtime (concurrent map writes)", "C) El Garbage Collector bloquea las Goroutines", "D) Se genera un deadlock estático"],
+        correct: 1,
+        exp: "¡Correcto! Los mapas nativos de Go no son concurrent-safe. Intentar escrituras concurrentes provocará un 'fatal error: concurrent map writes' que destruirá el proceso."
+      },
+      {
+        tag: "WEB3 & SOLIDITY",
+        q: "¿Qué estándar ERC introduce Account Abstraction para permitir transacciones pagadas por sponsor (Gasless) y Smart Contract Wallets?",
+        options: ["A) ERC-20", "B) ERC-721", "C) ERC-1155", "D) ERC-4337"],
+        correct: 3,
+        exp: "¡Correcto! ERC-4337 introduce Account Abstraction a nivel de infraestructura sin cambiar el protocolo EVM básico, utilizando UserOperations y Paymasters para transacciones patrocinadas."
+      },
+      {
+        tag: "MICROSERVICES & GRPC",
+        q: "¿Por qué gRPC ofrece un rendimiento significativamente mayor que REST/JSON tradicional?",
+        options: ["A) Utiliza conexiones UDP sin garantía", "B) Usa serialización binaria (Protobuf) sobre multiplexación HTTP/2", "C) Elimina el uso de TLS/SSL", "D) No requiere parseo de datos"],
+        correct: 1,
+        exp: "¡Correcto! gRPC utiliza Protocol Buffers (formato binario denso) y HTTP/2 (multiplexación, cabeceras comprimidas), lo que reduce drásticamente la latencia y el tamaño del payload."
+      }
+    ];
+
+    // Initial Setup
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProgress();
+      renderFlashcard();
+      loadQuizQuestion();
+    });
+
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+
+      document.getElementById(`tab-${tabId}`).classList.add('active');
+      event.currentTarget.classList.add('active');
+      window.scrollTo(0, 0);
+    }
+
+    // Accordion Toggle
+    function toggleAccordion(moduleId) {
+      const mod = document.getElementById(moduleId);
+      const content = mod.querySelector('.module-content');
+      content.classList.toggle('open');
+      const arrow = mod.querySelector('.module-trigger small');
+      arrow.textContent = content.classList.contains('open') ? '▲' : '▼';
+    }
+
+    function openModule(moduleId) {
+      const mod = document.getElementById(moduleId);
+      const content = mod.querySelector('.module-content');
+      content.classList.add('open');
+      mod.querySelector('.module-trigger small').textContent = '▲';
+      mod.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Topic Expand & Completion
+    function toggleTopic(element) {
+      const item = element.parentElement;
+      const details = item.querySelector('.topic-details');
+      const isCompletedTarget = event.target.classList.contains('checkbox-custom');
+
+      if (isCompletedTarget) {
+        item.classList.toggle('completed');
+        const topicId = item.dataset.id;
+        if (item.classList.contains('completed')) {
+          if (!completedTopics.includes(topicId)) completedTopics.push(topicId);
+        } else {
+          completedTopics = completedTopics.filter(id => id !== topicId);
+        }
+        saveProgress();
+      } else {
+        details.style.display = details.style.display === 'none' ? 'block' : 'none';
+      }
+    }
+
+    // Progress Calculation
+    function saveProgress() {
+      localStorage.setItem('senior_prep_completed', JSON.stringify(completedTopics));
+      loadProgress();
+    }
+
+    function loadProgress() {
+      const allTopics = document.querySelectorAll('.topic-item');
+      allTopics.forEach(item => {
+        if (completedTopics.includes(item.dataset.id)) {
+          item.classList.add('completed');
+        }
+      });
+
+      const total = allTopics.length;
+      const count = completedTopics.length;
+      const pct = total > 0 ? Math.round((count / total) * 100) : 0;
+
+      document.getElementById('global-progress-fill').style.width = `${pct}%`;
+      document.getElementById('global-progress-text').textContent = `${pct}%`;
+    }
+
+    // Flashcard Logic
+    function renderFlashcard() {
+      const fc = flashcardsData[currentFCIndex];
+      const fcElem = document.getElementById('flashcard-element');
+      fcElem.classList.remove('flipped');
+
+      document.getElementById('fc-index').textContent = currentFCIndex + 1;
+      document.getElementById('fc-total').textContent = flashcardsData.length;
+      document.getElementById('fc-tag').textContent = fc.tag;
+      document.getElementById('fc-tag').className = `tag ${fc.tagClass}`;
+      document.getElementById('fc-question').innerHTML = fc.q;
+      document.getElementById('fc-answer').innerHTML = fc.a;
+    }
+
+    function flipFlashcard() {
+      document.getElementById('flashcard-element').classList.toggle('flipped');
+    }
+
+    function nextFlashcard(known) {
+      if (known) fcScore++;
+      currentFCIndex = (currentFCIndex + 1) % flashcardsData.length;
+      renderFlashcard();
+    }
+
+    function resetFlashcards() {
+      currentFCIndex = 0;
+      fcScore = 0;
+      renderFlashcard();
+    }
+
+    // Quiz Logic
+    function loadQuizQuestion() {
+      const q = quizQuestions[currentQuizIndex];
+      document.getElementById('quiz-tag').textContent = q.tag;
+      document.getElementById('quiz-question').textContent = q.q;
+
+      const optsContainer = document.getElementById('quiz-options');
+      optsContainer.innerHTML = '';
+      document.getElementById('quiz-explanation').style.display = 'none';
+      document.getElementById('quiz-next-btn').style.display = 'none';
+
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'quiz-option';
+        btn.textContent = optText;
+        btn.onclick = () => checkAnswer(btn, idx);
+        optsContainer.appendChild(btn);
+      });
+    }
+
+    function checkAnswer(btn, selectedIndex) {
+      const q = quizQuestions[currentQuizIndex];
+      const allOptions = document.querySelectorAll('.quiz-option');
+
+      allOptions.forEach(b => b.onclick = null);
+
+      if (selectedIndex === q.correct) {
+        btn.classList.add('correct');
+        quizScore += 100;
+        document.getElementById('quiz-score').textContent = quizScore;
+      } else {
+        btn.classList.add('incorrect');
+        allOptions[q.correct].classList.add('correct');
+      }
+
+      const exp = document.getElementById('quiz-explanation');
+      exp.innerHTML = q.exp;
+      exp.style.display = 'block';
+      document.getElementById('quiz-next-btn').style.display = 'block';
+    }
+
+    function loadNextQuizQuestion() {
+      currentQuizIndex = (currentQuizIndex + 1) % quizQuestions.length;
+      loadQuizQuestion();
+    }
+
+    // Search Filter
+    function filterContent() {
+      const query = document.getElementById('global-search').value.toLowerCase();
+      const topicItems = document.querySelectorAll('.topic-item');
+
+      if (query.trim() === '') {
+        topicItems.forEach(item => item.style.display = 'block');
+        return;
+      }
+
+      switchTab('temario');
+
+      topicItems.forEach(item => {
+        const text = item.textContent.toLowerCase();
+        if (text.includes(query)) {
+          item.style.display = 'block';
+          const parentContent = item.closest('.module-content');
+          if (parentContent) parentContent.classList.add('open');
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Copy Code Helper
+    function copyCode(btn) {
+      const code = btn.nextElementSibling.innerText;
+      navigator.clipboard.writeText(code).then(() => {
+        btn.textContent = '¡Copiado!';
+        setTimeout(() => btn.textContent = 'Copiar', 2000);
+      });
+    }
+  </script>
+</body>
+</html>
