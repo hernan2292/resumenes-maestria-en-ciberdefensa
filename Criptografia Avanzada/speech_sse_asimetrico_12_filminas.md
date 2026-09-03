@@ -12,7 +12,7 @@
 
 | # | Título de la Filmina | Idea en una frase |
 |:-:|:---|:---|
-| 1 | Portada | Encuadre: hoy vemos la parte asimétrica de SSE |
+| 1 | Portada | Encuadre: la búsqueda sigue simétrica, hoy vemos cómo delegar acceso con clave pública |
 | 2 | De lo simétrico a lo asimétrico | Puente con el trabajo anterior + agenda |
 | 3 | El límite del modelo simétrico | Una sola clave no alcanza si hay varios escritores |
 | 4 | PEKS | Buscar sobre datos cifrados, pero con clave pública |
@@ -30,17 +30,20 @@
 ## Filmina 1 — Portada
 
 ### 📋 Qué dice la filmina
-- **Título:** *"SSE — Cifrado Asimétrico y el Modelo Híbrido"*.
-- **Subtítulo:** de la búsqueda simétrica cifrada al intercambio de claves de clave pública: PEKS, ECIES sobre X25519, firmas Ed25519 y el caso OSA.
+- **Título:** *"SSE Simétrico, Delegación Asimétrica"*.
+- **Subtítulo:** PEKS es el SSE asimétrico real de los papers — y por qué solo no alcanza. Cómo OSA delega acceso con cifrado híbrido, sin volver asimétrica la búsqueda.
 - Etiqueta: *"Continuación de: SSE — Cifrado Simétrico"*.
 
+> [!NOTE]
+> Cambio de título respecto a una versión anterior: no decimos que OSA "es SSE asimétrico" — eso técnicamente describe a PEKS, no a OSA. Lo que hace OSA es buscar de forma simétrica (igual que el trabajo anterior) y usar clave pública solo para delegar y firmar. Es una distinción que un jurado de nivel maestría puede preguntar, así que la charla la deja explícita desde el título.
+
 ### 🧠 La idea en una frase
-Esta charla completa el trabajo anterior: ahí vimos cómo buscar rápido sobre datos cifrados con una sola clave secreta; hoy vemos qué hacer cuando hay más de una persona involucrada y esa clave secreta compartida no alcanza.
+Esta charla completa el trabajo anterior: ahí vimos cómo buscar rápido sobre datos cifrados con una sola clave secreta; hoy vemos qué hacer cuando hay más de una persona involucrada y esa clave secreta compartida no alcanza — sin que la búsqueda en sí deje de ser simétrica.
 
 ### 🗣️ Discurso sugerido
 > "Buenas. En el trabajo anterior de Criptografía vimos SSE, cifrado simétrico buscable. Hoy, para Criptografía Avanzada, retomamos el mismo problema pero miramos el otro lado: qué pasa cuando no hay una sola persona con una sola clave, sino varias personas —por ejemplo un paciente y varios médicos— que necesitan compartir capacidades sin haber acordado nunca un secreto entre ellos.
 >
-> Vamos a ver una construcción de clave pública pensada para esto, por qué sola no alcanza, cómo se resuelve combinándola con lo que ya vimos, y todo esto bajado a una aplicación real que construimos: OSA, una historia clínica donde el servidor nunca ve nada en claro."
+> Vamos a ver una construcción de clave pública pensada para esto —PEKS, el SSE asimétrico real de la literatura—, por qué sola no alcanza, cómo se resuelve combinándola con lo que ya vimos, y todo esto bajado a una aplicación real que construimos: OSA, una historia clínica donde el servidor nunca ve nada en claro y donde, aclaro desde ya, la búsqueda sigue siendo simétrica — lo asimétrico entra solo para delegar el acceso."
 
 ---
 
@@ -163,7 +166,9 @@ Todo lo visto hasta ahora, bajado a una aplicación real que funciona.
 ### 🗣️ Discurso sugerido
 > "Para no quedarnos solo en la teoría, construimos OSA: una historia clínica donde el servidor —sin frameworks de terceros, a propósito, para reducir riesgos— nunca ve contenido clínico, ni claves, ni las palabras que alguien busca.
 >
-> La contraseña del paciente nunca sale de su navegador. De ahí se deriva una semilla, y de esa semilla salen cuatro cosas: un par de claves pública/privada para identidad y firma, una clave para cifrar documentos, una clave para armar el índice de búsqueda, y una clave auxiliar. La clave pública del paciente es, justamente, pública: cualquier médico la usa para cifrar hacia él. Su clave privada vive solo en la memoria de su propio navegador."
+> La contraseña del paciente nunca sale de su navegador. De ahí se deriva una semilla, y de esa semilla salen cuatro cosas: un par de claves pública/privada para identidad y firma, una clave para cifrar documentos, una clave para armar el índice de búsqueda, y una clave auxiliar. La clave pública del paciente es, justamente, pública: cualquier médico la usa para cifrar hacia él. Su clave privada vive solo en la memoria de su propio navegador.
+>
+> Y una aclaración importante, porque es fácil confundirla: de estas cuatro cosas, la única que es asimétrica es el par de identidad. La clave del índice de búsqueda sigue siendo simétrica, el mismo esquema HMAC del trabajo anterior. Lo asimétrico no busca nada — solo permite delegar y firmar quién puede usar esa clave simétrica."
 
 ---
 
